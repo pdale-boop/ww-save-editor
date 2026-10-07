@@ -45,8 +45,11 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
 - [ ] **Progress sliders as the front page.** Not started until the chains are mapped
       (`research/story-flags.md`); the window is rebuilt around them, not before. Decided
       2026-10-07:
-  - One slider per *fully mapped* chain (main story, Medli, Makar, Mrs. Marie, stage layers so
-    far); more as chains are mapped. Moving a chain to step n puts steps 1 to n on, the rest off.
+  - One slider per *story arc*, not per actor or flag group: an arc is what the player sees as
+    one stretch of story, and its steps come from several actors. Example, the prologue: wake-up,
+    Grandma and the clothes, birthday and Telescope, the postman, `zelda_fly`, the sword, the
+    forest, Aryll kidnapped, setting sail with the pirates. Only fully mapped arcs get a slider;
+    more as they are mapped. Moving an arc to step n puts steps 1 to n on, the rest off.
   - Chains converge and diverge (Makar needs the half-power Master Sword from Medli's chain; the
     main story contains both sage chains; the layers follow the main story), so moving one
     slider can move or limit others. Show the story order warnings as sliders move.

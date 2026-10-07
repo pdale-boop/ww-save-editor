@@ -1,0 +1,362 @@
+{
+  "id": "prologue",
+  "name": "Prologue",
+  "status": "partial",
+  "summary": "Outset Island to the first Forsaken Fortress visit: from waking up on the lookout to Tetra's gossip stone message.",
+  "notes": "Partial: the Forsaken Fortress steps between entering (0x0801) and the gossip stone (0x0520) are not mapped, and the forest has unplaced flags. See 'unplaced'.",
+  "steps": [
+    {
+      "id": "new_file",
+      "label": "Aryll wakes Link on the lookout",
+      "sets": {},
+      "restart": {
+        "stage": "sea",
+        "room": 44,
+        "point": 128,
+        "evidence": "dComIfGs_setGameStartStage, d_com_inf_game.cpp:1300-1312 (no row matches: Outset)"
+      },
+      "evidence": [
+        "Aryll type 3 exists only while 0x2A80 is off: daNpc_Ls1_c::decideType, d_a_npc_ls1.cpp:1443"
+      ],
+      "basis": "code"
+    },
+    {
+      "id": "clothes",
+      "label": "Grandma gives the Hero's Clothes",
+      "sets": {
+        "flags": [
+          "0x2A80"
+        ],
+        "switches": [
+          {
+            "area": 11,
+            "switch": "0x02",
+            "why": "spawn switch of TALE_DEMO and TALE_DEMO2 (LinkRM EVNT)"
+          }
+        ]
+      },
+      "evidence": [
+        "walk-up to Grandma: daNpc_Ba1_c::wait_0, d_a_npc_ba1.cpp:1408-1418; LinkRM spawn 200 starts TALE_DEMO",
+        "tale.stb demo data: d_a_demo00 flag table index 1 = 0x2A80 (d_a_demo00.cpp:654)",
+        "0x2A80 off = casual clothes: d_a_player_main.cpp:12345",
+        "switch 0x02 in area 11 is on in every catalog save after the prologue"
+      ],
+      "basis": "code+disc",
+      "seen": "Talking to Grandma the first time (owner's account)."
+    },
+    {
+      "id": "telescope",
+      "label": "Aryll's birthday: the Telescope",
+      "sets": {
+        "items": [
+          "Telescope"
+        ]
+      },
+      "evidence": [
+        "omedeto: walk-up to Aryll, d_a_npc_ls1.cpp:1929-1933; get_telescope follows",
+        "no flag: the Telescope is the only record; Aryll's state comes from it (wait_action1, d_a_npc_ls1.cpp:2124-2140)"
+      ],
+      "basis": "code",
+      "warn": "0x0001 on without the Telescope puts Aryll in her finished state and nothing gives the Telescope again."
+    },
+    {
+      "id": "postman",
+      "label": "Looking at the postman through the Telescope",
+      "sets": {
+        "flags": [
+          "0x0310"
+        ]
+      },
+      "requires": [
+        "prologue:telescope"
+      ],
+      "evidence": [
+        "telescope_proc sets 0x0310 when message 0xBC2 closes: d_a_npc_ls1.cpp:1831",
+        "0x0310 shows Helmaroc (d_a_dk.cpp:252-268), the pirates and their ship (d_a_npc_p1.cpp:1302, d_a_obj_pirateship.cpp:431,485)"
+      ],
+      "basis": "code",
+      "notes": "The Randomizer labels 0x0310 as the Hero's Clothes event; the code sets it at the postman. Differs from our reading, not checked further."
+    },
+    {
+      "id": "zelda_fly",
+      "label": "Helmaroc carries Tetra over Outset",
+      "sets": {
+        "flags": [
+          "0x0001"
+        ]
+      },
+      "evidence": [
+        "zelda_fly ordered from telescope_proc; 0x0001 set at its end: daNpc_Ls1_c::event_proc, d_a_npc_ls1.cpp:1620"
+      ],
+      "basis": "code",
+      "warn": "Aryll's telescope progress is kept in the actor, not the save; a save between postman and zelda_fly replays the postman step (untested)."
+    },
+    {
+      "id": "orca_talk",
+      "label": "Orca: talk about getting equipped",
+      "sets": {
+        "flags": [
+          "0x0108"
+        ]
+      },
+      "evidence": [
+        "Ji1_EquipTalk on creation while 0x0001 on and 0x0108 off: d_a_npc_ji1.cpp:4779-4781; first talk sets 0x0108 (msg 0x965)"
+      ],
+      "basis": "code"
+    },
+    {
+      "id": "sword",
+      "label": "Orca's training: the Hero's Sword",
+      "sets": {
+        "flags": [
+          "0x2F10"
+        ],
+        "items": [
+          "Hero's Sword"
+        ]
+      },
+      "evidence": [
+        "5+ hits with 0x0001 on and 0x2F10 off sets 0x2F10 and gives dItemNo_SWORD_e: d_a_npc_ji1.cpp:1503, 3009-3016"
+      ],
+      "basis": "code"
+    },
+    {
+      "id": "forest",
+      "label": "The forest: Tetra caught in the tree",
+      "sets": {
+        "flags": [
+          "0x0280"
+        ]
+      },
+      "evidence": [
+        "look_tetra (A_mori) sets 0x0280 as it starts: d_event_manager.cpp:601"
+      ],
+      "basis": "code+disc"
+    },
+    {
+      "id": "kidnapping",
+      "label": "Meeting Tetra; Aryll is taken",
+      "sets": {
+        "flags": [
+          "0x0101",
+          "0x0E20"
+        ]
+      },
+      "evidence": [
+        "daTag_Event demo start sets 0x0101 (type 2) and 0x0E20 (type 3): d_a_tag_event.cpp:90-98",
+        "Outset layers: 0x0101 -> 9, 0x0E20 -> 2 (getLayerNo)"
+      ],
+      "basis": "code"
+    },
+    {
+      "id": "tetra_outset",
+      "label": "Tetra and Quill on Outset",
+      "sets": {
+        "flags": [
+          "0x0802"
+        ]
+      },
+      "evidence": [
+        "yuukaigo on arrival while 0x0E20 on, 0x2401 off: d_a_npc_zl1.cpp:312, sets 0x0802 at :1844"
+      ],
+      "basis": "code"
+    },
+    {
+      "id": "shield_missing",
+      "label": "The shield is gone from Grandma's wall",
+      "sets": {
+        "flags": [
+          "0x3202"
+        ],
+        "switches": [
+          {
+            "area": 11,
+            "switch": "0x11",
+            "why": "LOOK_SHIELD's tag switch and spawn switch"
+          }
+        ]
+      },
+      "evidence": [
+        "TagEv type 0xA in LinkRM room 0 (params 0x02FF110A) hunts once 0x0E20 is on: d_a_tag_event.cpp:304-310",
+        "0x3202 at the end of LOOK_SHIELD: demoEndProc, d_a_tag_event.cpp:148-149",
+        "switch 0x11 in area 11 is on in every catalog save after the prologue"
+      ],
+      "basis": "code+disc"
+    },
+    {
+      "id": "shield",
+      "label": "Grandma gives the Hero's Shield",
+      "sets": {
+        "items": [
+          "Hero's Shield"
+        ],
+        "switches": [
+          {
+            "area": 11,
+            "switch": "0x15",
+            "why": "spawn switch of get_shield (LinkRM EVNT)"
+          }
+        ]
+      },
+      "evidence": [
+        "Grandma type 1 with 0x3202 and no shield sends Link to LinkRM spawn 201, layer 9: d_a_npc_ba1.cpp:1548-1568",
+        "get_shield.stb demo item table index 7 = Hero's Shield (d_a_demo00.cpp)",
+        "switch 0x15 in area 11 is on in every catalog save after the prologue"
+      ],
+      "basis": "code+disc"
+    },
+    {
+      "id": "departure",
+      "label": "Setting sail with the pirates",
+      "sets": {
+        "flags": [
+          "0x2401"
+        ]
+      },
+      "requires": [
+        "prologue:shield"
+      ],
+      "restart": {
+        "stage": "A_umikz",
+        "room": 0,
+        "point": 204,
+        "evidence": "l_checkData row 0x2401, d_com_inf_game.cpp:1309"
+      },
+      "evidence": [
+        "Tetra asks if Link is ready only with the shield; yes goes to sea spawn 0xCD: d_a_npc_zl1.cpp:1008-1016, 2192-2206",
+        "departure.stb demo data: flag table index 5 = 0x2401; event list EventFlag 0x2401"
+      ],
+      "basis": "code+disc"
+    },
+    {
+      "id": "deck",
+      "label": "On deck, Tetra sends Link to Niko",
+      "sets": {
+        "optional_flags": [
+          "0x0810"
+        ]
+      },
+      "evidence": [
+        "message 0x1005 sets 0x0810: d_a_npc_zl1.cpp:2203"
+      ],
+      "basis": "code",
+      "notes": "Optional: only if Link talks to Tetra on deck (message 0x1005). Off in the whole playthrough catalog."
+    },
+    {
+      "id": "rope_game",
+      "label": "Niko's rope test",
+      "sets": {
+        "flags": [
+          "0x0720",
+          "0x0710"
+        ]
+      },
+      "evidence": [
+        "compiled d_a_npc_p2.rel: onEventBit(0x0720) in demo_jump (.text+0x1E94), onEventBit(0x0710) in demo_goal (.text+0x28C0)"
+      ],
+      "basis": "compiled"
+    },
+    {
+      "id": "spoils_bag",
+      "label": "The Spoils Bag from the hold's chest",
+      "sets": {
+        "items": [
+          "Spoils Bag"
+        ]
+      },
+      "evidence": [
+        "chest event DEFAULT_TREASURE; Niko's treasure_wait waits for an event end (compiled d_a_npc_p2.rel)"
+      ],
+      "basis": "compiled+play",
+      "notes": "Which chest flag in area 13 (Asoko) records the opened chest is not read yet."
+    },
+    {
+      "id": "arrival_call",
+      "label": "Tetra shouts: the Forsaken Fortress",
+      "sets": {
+        "flags": [
+          "0x0808"
+        ],
+        "optional_flags": [
+          "0x0704"
+        ]
+      },
+      "restart": {
+        "stage": "MajyuE",
+        "room": 0,
+        "point": 18,
+        "evidence": "l_checkData row 0x0808, d_com_inf_game.cpp:1308"
+      },
+      "evidence": [
+        "P2B_ARRIVE_MAJYU (message 0x102B); compiled d_a_npc_p2.rel: onEventBit(0x0808) in demo_arrive (.text+0x2ADC)",
+        "0x0704: dLib_setFirstMsg in Niko's getMsg on the first talk after 0x0808 (.text+0x1660, msg 0x1029)"
+      ],
+      "basis": "compiled+play",
+      "notes": "0x0704 is set only if Link talks to Niko after the call (on in the catalog)."
+    },
+    {
+      "id": "tetra_ooi",
+      "label": "Tetra calls Link over at the fortress",
+      "sets": {
+        "flags": [
+          "0x0804"
+        ]
+      },
+      "evidence": [
+        "ooi: walk-up, d_a_npc_zl1.cpp:2233-2240; sets 0x0804 at :1850"
+      ],
+      "basis": "code"
+    },
+    {
+      "id": "into_fortress",
+      "label": "Launched into the Forsaken Fortress",
+      "sets": {
+        "flags": [
+          "0x0801"
+        ]
+      },
+      "restart": {
+        "stage": "MajyuE",
+        "room": 0,
+        "point": 0,
+        "evidence": "l_checkData row 0x0801, d_com_inf_game.cpp:1307"
+      },
+      "evidence": [
+        "majyuu_shinnyuu: walk-up, d_a_npc_zl1.cpp:2244-2257; sets 0x0801 at :1860",
+        "sword taken away in the first fortress stage: d_s_play.cpp:1370"
+      ],
+      "basis": "code"
+    },
+    {
+      "id": "gossip_stone",
+      "label": "Tetra's message through the gossip stone",
+      "sets": {
+        "flags": [
+          "0x0520"
+        ]
+      },
+      "evidence": [
+        "TagHt2 type 5 with flag 0x0520 (message 0x044D) in MajyuE stage and majroom room 3: daTag_Hint_c::startProc, d_a_tag_hint.cpp:472-475"
+      ],
+      "basis": "code+disc",
+      "seen": "Clean-up seen on the next visit to Outset, which play first allows after Farore's Pearl (sailing limits)."
+    }
+  ],
+  "unplaced": {
+    "flags": [
+      "0x0004",
+      "0x0104",
+      "0x0180",
+      "0x0201",
+      "0x0301",
+      "0x0302",
+      "0x0401",
+      "0x0402",
+      "0x0480",
+      "0x0510",
+      "0x0820",
+      "0x1401"
+    ],
+    "notes": "On by the end of the prologue in the catalog (entry 03) but not placed in a step. Leads: 0x0004 daTag_Event type 1; 0x0301/0x0480 d_a_bk (Bokoblins); 0x0401 barrel / hint tag; 0x0402 d_a_himo3 (rope); 0x0820 Senza's nudge (d_a_npc_p1); 0x1401 Quill (d_a_npc_bm1). Next arc: 0x2580 (find_sister), 0x2E01 and 0x0F80 (meeting the King of Red Lions)."
+  }
+}

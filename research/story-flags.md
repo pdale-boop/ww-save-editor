@@ -265,14 +265,14 @@ What sets each one:
 |---|---|---|
 | 0x0101 | `daTag_Event` demo start (`demoInitProc`) | 44 (prologue, Aryll taken) |
 | 0x0E20 | `daTag_Event` demo start | 44 |
-| 0x0520 | event data (no code names it) | 03 (go find a sail) |
+| 0x0520 | Forsaken Fortress hint tags (`TagHt2` type 5, flag from the disc's actor data) | 03 (go find a sail) |
 | 0x0F80 | `dEvent_manager_c::exceptionProc` | 03 |
 | 0x2D01 | `rescue.stb` (`M2tower`), per the decomp's note | 22 |
 | 0x1820 | `daWarpdm20` creation | 23 |
 | 0x3280 | `runaway_majuto.stb`, per the decomp's note | 22 |
 | 0x3802 | event data | 20 |
 | 0x3B40 | event data | 20 |
-| 0x2C01 | event data | 36 |
+| 0x2C01 | the `kenroom` fire wall, `daObjFirewall_c::retire_act_proc` (compiled code; the decomp's is NonMatching) | 36 |
 | 0x3B02 | `kugutu_ganon.stb` (`GanonK`) | 40 |
 | 0x4002 | `g2before.stb` (`GTower`) | never (playthrough ended before it) |
 
@@ -445,11 +445,16 @@ it as soon as it is created, or a spawn point's event starts it. Temporary flags
 
 | Step | Started by | Needs | Sets |
 |---|---|---|---|
-| Opening scene | a demo: `d_a_demo00.cpp:654` sets 0x2A80 for demo prm id 4, value 1 (which demo is not known) | — | 0x2A80 |
-| `omedeto` (birthday) | walk-up, 200 units (`wait_1`, `d_a_npc_ls1.cpp:1929-1933`) | 0x2A80 (her type 0, `decideType`), 0x0001 off, no Telescope | no flag |
+| Aryll wakes Link on the lookout | her type 3, which exists only while 0x2A80 is off (`decideType`, `d_a_npc_ls1.cpp:1443`); in `wait_action1` 0x2A80 off gives state 4 (`:2128`) | 0x2A80 off | — |
+| `tale_1`, then `tale.stb` (Grandma, `LinkRM`) | walk-up to Grandma (`d_a_npc_ba1.cpp:1408-1418`); until then she waits in state 7 while 0x2A80 is off (`:1637`) | 0x2A80 off | a temporary flag; `LinkRM` spawn 200 starts `TALE_DEMO` (`tale.stb`), or spawn 202 `TALE_DEMO2` (`tale_2.stb`) in a second quest |
+| Hero's clothes | `tale.stb` (Grandma's scene): its demo data passes index 1 to `d_a_demo00`'s flag table, which is 0x2A80 (`d_a_demo00.cpp:654`). `tale_2.stb` (second quest) passes the same index | — | 0x2A80 |
+| Orca: sword lesson (`Ji1_EquipTalk`) | arrival: Orca starts it on creation while 0x0001 is on and 0x0108 off (`d_a_npc_ji1.cpp:4779-4781`); talking first time after 0x0001 also sets 0x0108 (msg 0x965) | 0x0001 | 0x0108 |
+| Orca gives the Hero's Sword | his training: with 0x0001 on, 5 or more hits in a session (`field_0xD70 >= 5`) and 0x2F10 off (`:3009-3016`) | 0x0001 | 0x2F10; the sword (`createItem`, `dItemNo_SWORD_e`, `:1503`) |
+| `omedeto` (birthday) | walk-up, 200 units (`wait_1`, `d_a_npc_ls1.cpp:1929-1933`) | 0x2A80 (her type 0), 0x0001 off, no Telescope | no flag |
 | `get_telescope` | follows `omedeto` at once (`event_proc`, m850 = 5) | — | no flag; the Telescope item is the only record (who gives it is not in her code) |
 | Postman through the telescope | `telescope_proc` (no event) | the Telescope | 0x0310 when message 0xBC2 closes (`:1831`) |
 | `zelda_fly` | aiming above the postman (`telescope_proc`, m850 = 3) | 0x0310 in the same visit | 0x0001 at the end (`event_proc`, `onEventBit(1)`, `:1620`) |
+| `look_tetra` (`A_mori`, the forest where Tetra fell) | not traced | | 0x0280 when the event starts (`dEvent_manager_c` exception events, `d_event_manager.cpp:601`) |
 | `meet_tetra`, then the kidnapping | (see above: `daTag_Event`) | | 0x0101, 0x0E20 |
 | `yuukaigo` (Tetra on Outset) | arrival (`daNpc_Zl1_c`, type 2) | 0x0E20 on, 0x2401 off (`init_ZL1_2`, `d_a_npc_zl1.cpp:312`), 0x0802 off | 0x0802 at the end (`:1844`) |
 
@@ -457,13 +462,103 @@ The Helmaroc King (`d_a_dk.cpp:252-268`) orders nothing. It shows from 0x0310, p
 `zelda_fly` and hides once 0x0001 is on. 0x0310 also shows the pirates and their ship
 (`d_a_npc_p1.cpp:1302`, `d_a_obj_pirateship.cpp:431,485`). Aryll's progress through the
 telescope steps is kept in the actor, not the save: a save with 0x0310 on and 0x0001 off
-probably restarts at the postman (untested). One of Aryll's lines needs 0x0280, which nothing in
-her code sets.
+probably restarts at the postman (untested). 0x2A80 means "wearing the Hero's clothes": Link wears his casual clothes while it is off, or in a
+second quest (`d_a_player_main.cpp:12345`). That is why the Grandma scene comes before it and
+`tale_2.stb` exists: the second-quest version, where Link keeps his own clothes (a reading of the
+code, not checked against the `.stb`). It also means 0x2A80 cannot be set right after the
+opening legend: Aryll's wake-up scene needs it off. Aryll's talk lines on the lookout (`getMsg_LS1_0`, `:1134-1145`;
+meanings paraphrased from the disc's messages): with 0x0001 on, right after `zelda_fly`, she
+says the girl fell into the forest (0xBC4/0xBC5, depending on whether Link has a sword); later,
+without a sword, she says Link needs something to fight the bird off (0xBC7, so getting the sword
+is a step of this arc); with 0x0280 on, the bird is searching for the girl and Link must hurry
+(0xBC9). So 0x0280 marks that Link has reached the forest, and 0xBC9 is what she says if he goes
+back to her before the kidnapping. Before 0x0001, with the Telescope owned, she explains how to
+put it on X, Y or Z (0xBC0) and how to use it (0xBCB-0xBCD), matching the control the game
+gives back after the gift.
+
+Saves in the middle of the telescope steps: Aryll picks her state from the save each time she
+loads (`wait_action1`, `:2124-2140`): 0x0001 on gives state 3 (done), else owning the Telescope
+gives state 2 (the postman), else state 1 (the birthday). So the Telescope gift depends only on
+not owning the Telescope, and the postman step needs the Telescope; neither depends on 0x0310.
+The postman (`daNpc_Bm1_c`) doesn't read 0x0310. A save with 0x0310 on, the Telescope owned and
+0x0001 off should replay the postman step from its start, with the Helmaroc King and the pirates
+already showing. A soft lock isn't ruled out (untested), and one hazard is clear: 0x0001 on
+without the Telescope puts Aryll in state 3, so nothing gives the Telescope any more. A slider
+must set the Telescope with 0x0001.
+
+**Flags and items given by cutscene data.** `d_a_demo00` reads two tables from a cutscene's demo
+data: data ID 4 indexes a story-flag table, data ID 5 an item table (`d_a_demo00.cpp:651-730`). In
+the `.stb` files the payload is the bytes `00 00 00 0N 31 xx` (ID N, a one-byte value xx). Read from
+every `.stb` on the disc (48 files): flags: `tale.stb` and `tale_2.stb` 1 (0x2A80), `departure.stb`
+5 (0x2401), `rescue.stb` 0x17 (0x2D01), `rebirth_hyral.stb` 0x31 (`COLORS_IN_HYRULE`);
+`find_sister.stb` 7 and `seal.stb` 0x22 point at empty table entries. Items: `swing_sword.stb` 0
+(Master Sword), `pray_zola.stb` 1 (Master Sword, half power), `getperl_komori.stb` 3 (Din's
+Pearl), `getperl_deku.stb` 4 (Farore's), `getperl_jab.stb` 5 (Nayru's), `dragontale.stb` 6
+(Delivery Bag), `get_shield.stb` 7 (Hero's Shield), `fairy.stb` and `fairy_flag_on.stb` 8
+(magic arrows). The known ones (0x2401, 0x2D01, the shield) agree with the decomp's notes and the
+timeline, which checks the reading.
+
+**Prologue, part 2: the shield and the pirate ship.** After the kidnapping (0x0E20) and Tetra's
+scene on Outset (`yuukaigo`, 0x0802):
+
+| Step | Started by | Needs | Sets |
+|---|---|---|---|
+| The shield is missing (`LOOK_SHIELD`, `LinkRM` event 2) | walk-up to an event tag in Grandma's house (`TagEv` type 0xA, params 0x02FF110A); type 0xA only hunts once 0x0E20 is on (`d_a_tag_event.cpp:304-310`) | 0x0E20, room switch 0x11 off | room switch 0x11 as it starts; 0x3202 at the end (`demoEndProc`, `:148-149`) |
+| Grandma gives the shield (`get_shield.stb`) | her type 1 (0x0520 off, 0x0001 on) with no shield (`checkCollect(1)`) and 0x3202 on: she moves, and once Link is on her floor the stage changes to `LinkRM` spawn 201, layer 9 (`d_a_npc_ba1.cpp:1548-1568`), whose spawn event is `get_shield` | 0x3202, no shield | the Hero's Shield (`get_shield.stb`, demo item table index 7) |
+| Tetra lets Link aboard | talking to her (`daNpc_Zl1_c` type 2): without a shield she sends him to find one (0xCA1); with it, she asks if he's ready (0xC90); "yes" goes to `sea` spawn 0xCD, Outset, layer 10 (`d_a_npc_zl1.cpp:1008-1016, 2192-2206`) | the shield | 0x2908 if he says no (0xC91) |
+| Departure (`departure_DEMO`, `sea`) | that spawn | | 0x2401 (`departure.stb`; also the demo's flag table, index 5); then `A_umikz` spawn 204 |
+| On deck, Tetra sends Link to Niko | talking to her (`daNpc_Zl1_c` type 4) | | 0x0810 (msg 0x1005, `:2203`) |
+| Niko's rope game | Niko (`daNpc_P2_c`) | | 0x0720 (`demo_jump`), 0x0710 (`demo_goal`) |
+| Spoils Bag | the hold's chest (`DEFAULT_TREASURE`) | | the Spoils Bag |
+| Tetra calls Link up (`P2B_ARRIVE_MAJYU`, `Asoko`) | Niko, once the chest event ends (`treasure_wait` waits on `endCheckOld`); message 0x102B, Tetra: "we've reached the Forsaken Fortress" | the Spoils Bag | **0x0808** (`daNpc_P2_c::demo_arrive`) |
+| Talking to Niko afterwards | Niko (`getMsg`): his lessons must wait (0x1029) | 0x0808 | 0x0704 (`dLib_setFirstMsg`) |
+
+The Niko rows come from the compiled game, not the decomp: `d_a_npc_p2` is NonMatching and its
+functions are empty. Method: find `li r4, <flag>` in `rels/d_a_npc_p2.rel`, then resolve the next
+`bl` through the module's relocations against the decomp's symbol tables
+(`config/GZLE01/symbols.txt` and `rels/d_a_npc_p2/symbols.txt`). 0x0808 is set at `.text+0x2ADC`
+(in `demo_arrive`, `onEventBit`); 0x0720 at `+0x1E94` (`demo_jump`); 0x0710 at `+0x28C0`
+(`demo_goal`); 0x0704 at `+0x1660` (`getMsg`, `dLib_setFirstMsg`). From play (the owner's account): after Link shows the Spoils Bag, Tetra shouts from outside;
+that is `P2B_ARRIVE_MAJYU`. In Niko's compiled code `treasure_wait` checks for an event's end and
+`DEFAULT_TREASURE` is the only treasure event named in his module; the state change from there to
+ordering `P2B_ARRIVE_MAJYU` (`eventOrder`, index from a variable) isn't read instruction by
+instruction. 0x0704 (ZeldaSpeedRuns: after the Spoils Bag) is set on the first talk *after* 0x0808. With 0x0808 on,
+saves restart at `MajyuE` spawn 18 (`d_com_inf_game.cpp:1308`), leaving the hold goes to the
+fortress (`d_stage.cpp:2322-2328`), and the pirates say the ship has arrived (0x1017).
+
+0x0520 (Aryll and the pirates leave Outset) is set by hint tags in the Forsaken Fortress
+(`TagHt2` type 5, flag in the actor's Z angle, message 0x044D: `MajyuE` stage and `majroom` room 3;
+`daTag_Hint_c::startProc`, `d_a_tag_hint.cpp:472-475`), found by scanning the disc's actor lists. It is clean-up: the player only sees it on the next visit to
+Outset (`getLayerNo` uses Outset's layer 4 once it is on). In play that visit is during the Endless
+Night (the owner's account), because the King of Red Lions keeps Link inside sailing limits.
+
+**Sailing limits.** `daShip_c::checkOutRange` (`d_a_ship.cpp:990-1110`) tests the ship against the
+paths that start at index `fopAcM_GetParam` (0: the only `Ship` actor, `sea` stage) in the `sea`
+stage's own `RPAT`/`RPPN` (stage file, not a room; point offsets are relative to `RPPN`). Read
+from the disc; squares are counted by whether their centre lies inside each path:
+
+| Path | Applies until (the check skips it once this holds) | Area |
+|---|---|---|
+| 0 | 0x0902 on (Dragon Roost arrival) | keep-in: Windfall (11), Pawprint (12) and the western half of Dragon Roost's square (13): its edge is at x 199225, the square's centre at 200000, which is why a centre test leaves 13 out |
+| 1 | Farore's Pearl owned | keep-in: 11, 12, Dragon Roost (13), Fire Mountain (20), Eastern Triangle (27), Bomb Island (34), Forest Haven (41) |
+| 2 | Master Sword equipped | keep-out: the Forsaken Fortress square (1). Its points wind the other way from paths 0, 1 and 3 (signed area positive, theirs negative), and the check turns the ship back on one side of each edge |
+| 3 | always applies | keep-in: the whole 7 x 7 sea, i.e. the edge of the world |
+
+The King's line for paths 0-2 is 0x0609 (too soon to go this way; sail to the next destination),
+for path 3 0x05DD (too dangerous to go further), and 0x060A during a minigame. So the pens are:
+before 0x0902, Windfall to Dragon Roost ("pen zero"); from 0x0902 until Farore's Pearl, the
+eastern corridor down to Forest Haven; after Farore's Pearl, the whole sea except the Forsaken
+Fortress until the Master Sword. From play (the owner's account): the King won't set out from
+Dragon Roost until Link has Din's Pearl and can change the wind, so in practice pen 1 starts
+after Din's Pearl; that is a different check, not read yet. To test in game: a save just after
+Forest Haven, sailing outside the eastern corridor.
+
+So Outset (44) can't be reached until Farore's Pearl. From then on nothing in this check stops a
+visit before Greatfish Isle and the Endless Night, though play doesn't lead there.
 
 **First Forsaken Fortress visit (`MajyuE`).** Leaving the ship's hold (`Asoko` exit 0x3C) with
 0x0808 on and 0x0520 off leads to `MajyuE` spawn 18 (`d_stage.cpp:2322-2328`), where the pirate
-ship creates Tetra (`d_a_obj_pirateship.cpp:508-511`). What sets 0x0808 is not in the code
-(probably event data).
+ship creates Tetra (`d_a_obj_pirateship.cpp:508-511`). 0x0808 is set by Niko (above).
 
 | Step | Started by | Needs | Sets |
 |---|---|---|---|
@@ -505,7 +600,7 @@ event's spawn switch). This adds two room-switch steps before the chain above (0
 
 | Step | Started by | Needs | Sets |
 |---|---|---|---|
-| Zelda taken | **unknown**: no code turns 0x2C01 on, and it has no `.stb` note | 8 shards (guess) | 0x2C01 |
+| 0x2C01 ("Zelda taken" in the King's hints) | the fire wall (`Yswdr00`, `daObjFirewall_c::retire_act_proc`, found in the compiled `d_a_obj_firewall.rel` at `.text+0x1BC8`; the decomp's version is NonMatching). It stands in `kenroom` on layers 4 and 5, used while all 8 shards are owned and 0x2C01 is off (`d_com_inf_game.cpp:237-248`). From play (the owner's account): Ganondorf has taken Zelda, two Darknuts drop in and a fire wall rings the arena; 0x2C01 is set when the fire wall goes, after the fight. The layer's Darknuts and `ALLdie` tag fit | 8 shards | 0x2C01 |
 | `go_up_stairs2` (barrier cutscene) | arrival: the Hero statue orders it on creation (`d_a_obj_YLzou.cpp:127-136, 500-508`) | 8 shards, 0x2C01, 0x3980 off | 0x3980 at the end (`:466-472`) |
 | `seal` (barrier broken) | a sword swing with the full-power Master Sword equipped, 8800+ units from the barrier (`d_a_obj_barrier.cpp:228-254`, USA build) | 0x3980 | 0x2C02 *before* the event; `seal.stb` sets 0x3B08 |
 | Light warp appears (`APPEAR_WARP`) | a stage switch (`d_a_warpgn.cpp:189-194`) | 0x3D02 off | 0x3D02 at the end (`:405-409`) |
@@ -515,7 +610,10 @@ event's spawn switch). This adds two room-switch steps before the chain above (0
 | Ending, `endhr.stb` | after Ganondorf | | 0x3F40 |
 
 With 0x2C02 on, the barrier is never created (`d_a_obj_barrier.cpp:496-508`), so moving back past
-this step must clear it. The JPN build breaks the barrier without the sword check. Which spawn
+this step must clear it. The JPN build breaks the barrier without the sword check. From play (the owner's account): Link sneaks in and sees Zelda asleep in the middle of the arena
+before Puppet Ganon, and `g2before` is either after Puppet Ganon or on reaching the roof. The
+disc fits the roof: `kugutu_ganon` and `to_roof` are in `GanonK`'s event list, `g2before` and
+`endhr` in `GTower`'s. Which spawn
 points lead into `kugutu_ganon` and `g2before`, and where the light warp sits in the order, are
 not settled (the order of 0x2C02 and 0x3D02 comes from the King's hints).
 
@@ -543,10 +641,14 @@ main story (the Triforce charts, for example). The plan:
 4. **Check the flags that code doesn't read**, the 49 that turned on in play, against the disc's
    event and message data.
 
+Settled since: 0x0280 (`look_tetra`), 0x0808 (Niko), 0x0520 (fortress hint tags), 0x2C01 (the
+`kenroom` fire wall). Flags with no setter in the decomp: search the compiled modules on the disc
+(`li r4, <flag>`, then the call's relocation); `main.dol` is not covered by that search yet.
+
 Done so far (2026-10-07): the spawn-point chains and the actor-started cutscenes above
 (prologue, both Forsaken Fortress visits, Grandma, the Master Sword, the endgame). Next in
-order: the main story's remaining gaps (what sets 0x2A80's demo, 0x0280, 0x0808, 0x2C01; the
-spawns into `kugutu_ganon` and `g2before`), then the chains that feed it (pearls, sages,
+order: the main story's remaining gaps (which `.stb` sets 0x2A80, what starts `P2B_ARRIVE_MAJYU`;
+the spawns into `kugutu_ganon` and `g2before`), then the chains that feed it (pearls, sages,
 Triforce), then quest chains, working from `research/actor-events.md`.
 
 Your knowledge of the game is the check on each chain. Anything the code doesn't settle stays
