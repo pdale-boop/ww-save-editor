@@ -51,6 +51,10 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
       quest log; work out where and how before offering them.
 - [ ] **More named restart spots.** Add confirmed spots (like Windfall's post-rescue alcove,
       `sea 11 128`) as they are found, and list a room's spawn points by name where known.
+- [ ] **Better story presets.** The current ones are tests made from save states taken whenever
+      it was convenient during play. Replace them with states made at deliberately chosen points
+      in the story, or with presets built from the required flags, items and spawn points once
+      the Research items above are settled.
 - [ ] Clean preset files: `make_presets.py` copies whole saves, so the two unused quest logs in
       each preset hold whatever was on the card. Blank them when copying.
 
