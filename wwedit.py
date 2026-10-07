@@ -644,3 +644,81 @@ def sync_song_flags(save, before):
         if changed & (1 << bit):
             for v in flags:
                 save.set_flag(v, bool(save.q[SONGS] & (1 << bit)))
+
+
+# ---- story order: flags that only make sense after others (research/story-flags.md)
+# Main story milestones, earliest first. The order is the one daShip_c::setInitMessage checks
+# (latest first) for the King of Red Lions' hints, and the full playthrough set them in this
+# order. Only flags every playthrough sets are listed: arrival scenes (daTag_Island), the King's
+# forced talks (daShip_c::checkForceMessage) and event flags. Talks he only gives when asked
+# (0x0A10, 0x2B80, 0x0A04, 0x1940) are left out. Labels are paraphrases, not the game's text.
+STORY_MILESTONES = [
+    (0x0908, "the King of Red Lions' sailing lesson"),
+    (0x2A08, 'first ride on the King of Red Lions'),
+    (0x0902, 'Dragon Roost Island arrival scene'),
+    (0x0A80, "the King's talk after Din's Pearl"),
+    (0x0A20, 'Forest Haven arrival scene'),
+    (0x0A08, "the King's talk after Farore's Pearl"),
+    (0x0A02, 'the Endless Night'),
+    (0x0A01, "the King's talk about Jabun"),
+    (0x1F04, 'arrival scene during the Endless Night'),
+    (0x1F02, "the King's talk after getting bombs"),
+    (0x3E10, 'return to Outset (arrival scene)'),
+    (0x2F20, "the King's talk after Nayru's Pearl"),
+    (0x1E40, 'Tower of the Gods raised'),
+    (0x3040, 'Forsaken Fortress landing'),
+    (0x1820, "Forsaken Fortress's later layer"),
+    (0x1608, 'Medli aboard the King of Red Lions'),
+    (0x2E04, 'Headstone Island arrival with Medli'),
+    (0x2920, 'Earth Temple song stone broken'),
+    (0x3A02, "the Zora sage's prayer (Earth Temple done)"),
+    (0x1604, 'Makar aboard the King of Red Lions'),
+    (0x2E02, 'Gale Isle arrival with Makar'),
+    (0x2910, 'Wind Temple song stone broken'),
+    (0x4004, "the Kokiri sage's prayer (Wind Temple done)"),
+    (0x2D08, 'Hyrule warp scene'),
+    (0x2C01, "Zelda taken to Ganon's Tower"),
+    (0x2C02, "the barrier around Ganon's Tower broken"),
+    (0x3D02, "inside Ganon's Tower"),
+]
+# Rules the code itself enforces: (later, earlier, why). A rule is broken when 'later' is on
+# and 'earlier' is off. ('sword', n) means mCollect sword bit n (2: Master Sword at half power).
+STORY_RULES = [
+    (0x2E04, 0x1608, 'the Headstone arrival scene only plays with Medli aboard (daTag_Island::otherCheck)'),
+    (0x2E02, 0x1604, 'the Gale Isle arrival scene only plays with Makar aboard (daTag_Island::otherCheck)'),
+    (0x2920, 0x2E04, 'Medli is only in the Earth Temple and its entrance after 0x2E04 (daNpc_Md_c::create)'),
+    (0x1604, ('sword', 2), 'Makar only appears to be awakened once the Master Sword is at half power '
+                           '(daNpc_Cb1_c::create)'),
+    (0x0520, 0x0E20, "Outset's layers: 0x0520 follows 0x0E20 (dComIfG_play_c::getLayerNo)"),
+    (0x0E20, 0x0101, "Outset's layers: 0x0E20 follows 0x0101 (dComIfG_play_c::getLayerNo)"),
+]
+
+
+def _story_on(save, cond):
+    if isinstance(cond, tuple):
+        return bool(save.q[COLLECT] & (1 << cond[1]))
+    return save.flag(cond)
+
+
+def _story_name(cond):
+    if isinstance(cond, tuple):
+        return SWORDS[cond[1] + 1][0]
+    label = dict(STORY_MILESTONES).get(cond)
+    return f'0x{cond:04X}' + (f' ({label})' if label else '')
+
+
+def story_order_problems(save):
+    """What in this save is out of the story's usual order, as readable lines. These are
+    warnings: a crafted or randomized save can be out of order on purpose."""
+    problems = []
+    on = [i for i, (v, _) in enumerate(STORY_MILESTONES) if save.flag(v)]
+    if on:
+        last = on[-1]
+        missing = [v for v, _ in STORY_MILESTONES[:last] if not save.flag(v)]
+        if missing:
+            problems.append(f'{_story_name(STORY_MILESTONES[last][0])} is on, but these earlier milestones '
+                            'are off: ' + '; '.join(_story_name(v) for v in missing))
+    for later, earlier, why in STORY_RULES:
+        if _story_on(save, later) and not _story_on(save, earlier):
+            problems.append(f'{_story_name(later)} is on without {_story_name(earlier)}: {why}')
+    return problems

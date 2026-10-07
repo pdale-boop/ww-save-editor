@@ -1208,14 +1208,28 @@ class App(tk.Tk):
             changes.append(f'flag 0x{v:04X} {"on" if on else "off"}')
         return s, changes
 
+    def story_order(self, s):
+        """(new, existing) story order warnings for the built save: new ones come from the edits,
+        existing ones were already in the save as opened."""
+        before = set(wwedit.story_order_problems(self.loaded))
+        problems = wwedit.story_order_problems(s)
+        return [p for p in problems if p not in before], [p for p in problems if p in before]
+
     def review(self):
         if not self.save:
             return messagebox.showinfo('Review', 'Load a save first.')
         try:
-            _, changes = self.build_save()
+            s, changes = self.build_save()
         except ValueError as error:
             return messagebox.showerror('Review', f'Check the values: {error}')
-        messagebox.showinfo('Review', '\n'.join(f'\u2022 {c}' for c in changes) or 'Nothing has changed yet.')
+        text = '\n'.join(f'\u2022 {c}' for c in changes) or 'Nothing has changed yet.'
+        new, existing = self.story_order(s)
+        if new or existing:
+            text += ('\n\nStory order (warnings only; a save can be out of order on purpose):\n' +
+                     '\n'.join(f'\u2022 {p}' for p in new) +
+                     ('\n' if new and existing else '') +
+                     '\n'.join(f'\u2022 {p} [already so in the save as opened]' for p in existing))
+        messagebox.showinfo('Review', text)
 
     def finish(self, mode):
         """mode 'card': write into the chosen card; 'copy': save a .gci where you choose."""
@@ -1228,6 +1242,13 @@ class App(tk.Tk):
         except ValueError as error:
             return messagebox.showerror('Save', f'Check the values: {error}')
         if not changes and not messagebox.askyesno('Save', 'Nothing has changed. Save it anyway?'):
+            return
+        new, _ = self.story_order(s)
+        if new and not messagebox.askyesno('Story order', 'These changes put the story out of its usual order:\n\n' +
+                                           '\n'.join(f'• {p}' for p in new) +
+                                           '\n\nWhat this does in the game is mostly untested; clearing a '
+                                           'flag can replay its scene (tested with the King\'s sail speech). '
+                                           'Save anyway?', icon='warning'):
             return
         if mode == 'card':
             card, target = self.card_path.get().strip(), self.target_slot.get()

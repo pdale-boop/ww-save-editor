@@ -76,7 +76,10 @@ are untested.
 2. **Open card…** and choose the quest log to edit. The editor reads a copy, so the card is not
    touched yet.
 3. **Make changes** on the tabs, or apply a story preset. *Revert* discards all edits.
-4. **Review changes** lists exactly what will be written.
+4. **Review changes** lists exactly what will be written. It also warns when story flags are out
+   of the story's usual order, for example a later milestone on while an earlier one is off.
+   The warnings never block anything, since a save can be out of order on purpose; saving asks
+   first if your edits are what put it out of order.
 5. **Write to card**, choosing the quest log to write into. You are shown what the card holds
    first, and a backup is kept next to it as `.before-craft`.
 6. **Start BlueWake** and load that quest log.
