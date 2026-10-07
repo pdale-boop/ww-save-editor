@@ -42,6 +42,21 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
 
 ## Features
 
+- [ ] **Progress sliders as the front page.** Not started until the chains are mapped
+      (`research/story-flags.md`); the window is rebuilt around them, not before. Decided
+      2026-10-07:
+  - One slider per *fully mapped* chain (main story, Medli, Makar, Mrs. Marie, stage layers so
+    far); more as chains are mapped. Moving a chain to step n puts steps 1 to n on, the rest off.
+  - Chains converge and diverge (Makar needs the half-power Master Sword from Medli's chain; the
+    main story contains both sage chains; the layers follow the main story), so moving one
+    slider can move or limit others. Show the story order warnings as sliders move.
+  - By default a step sets everything it involves: flags, items (pearls, sword level, the Cabana
+    Deed), counters (the Joy Pendant total) and other records (the partner position).
+  - A save whose chain isn't a clean "first n steps on" shows as mixed (for example "steps 3 and
+    5 on, 4 off") instead of snapping to a position.
+  - **Expert mode** toggle: each slider opens out into its individual flags.
+  - Health as a stepped slider (heart containers and pieces) on the same page.
+  - Design so it can become a controller-friendly tab in BlueWake's F1 menu (see BlueWake).
 - [ ] **Read and write cards directly**, in Python, instead of through BlueWake's
       `card_to_gci.py` and the compiled injector. BlueWake's `scripts/card_container.py` documents
       the container format (GPLv3, same as this project). Removes the build step from setup.
@@ -74,6 +89,31 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
 - [ ] **Mod-menu version.** The BlueWake developer was interested in an editor in the F1 menu.
       Write a short spec for them: every offset and rule the editor uses, where each comes from in
       the decomp, and which ones are confirmed in game. An in-app editor could also edit the live
-      save in memory (`0x803C4C08`) instead of the card.
+      save in memory (`0x803C4C08`) instead of the card. The progress sliders (Features) are
+      the front page to carry over, as a controller-friendly F1 menu tab.
+- [ ] **Developer saves just before key cutscenes**, so audio fixes (and other cutscene work) in
+      BlueWake can be tested without replaying up to them. Each save has the scene's own flag
+      off, everything before it on, and a restart place next to where it triggers. The flag
+      chains in `research/story-flags.md` give the scene flags (for example the island arrival
+      scenes, `daTag_Island`), and the story order check confirms the rest of the save is
+      consistent. Scope: every scripted cutscene. The disc has 54 full cutscenes (`.stb`
+      files, in `res/Object/DemoNN.arc` and a few stage archives); 24 story flags already
+      have a decomp note naming the `.stb` that sets them. Shorter in-engine events (the
+      stages' event lists) are many more and come after.
+- [ ] **Quality-of-life skips, like Ship of Harkinian does for Ocarina of Time.** Two halves:
+  - *In the save (this editor):* "already seen" story flags, stage switches and boss-intro bits
+    skip cutscenes and camera pans, as the Randomizer's new file does (`init_save_with_tweaks`).
+    Could be an option on presets once the flag chains are mapped (`research/story-flags.md`).
+    Some first-time item fanfares are save data too: the Randomizer marks every spoil and bait
+    as owned before (`0x803C4C9C`/`0x803C4C9D` in RAM) so their first pickup has no fanfare.
+    Repeated nags may be save bits as well, like the King of Red Lions' "where to go next" hints
+    (`daShip_c::setInitMessage`). The rule for all of these: only flip a bit where the code
+    shows it can't soft- or hard-lock the game.
+  - *In the game code (a BlueWake proposal):* item-get fanfares, chest-opening animations and
+    the camera showing a puzzle switch's result run every time, so a save can't turn them off.
+    New option sites alongside BlueWake's Better Wind Waker settings (`mods/betterww/options.txt`,
+    `docs/MODS.md`) could skip them entirely, or end the cutscene early and give control back
+    while the item's message box stays up until it times out. Find each site in the decomp
+    first.
 - [ ] Keep the decomp and Randomizer sources current: re-check offsets if BlueWake's verified
       source changes (its digest has been `54f54434…` since 0.5.0).

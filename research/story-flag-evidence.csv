@@ -1,0 +1,488 @@
+flag,decomp_name,decomp_note,rando_note,read_by,written_by,picks_layer,rando_new_file,first_on_in_timeline,current_guess
+0x0080,UNK_0080,,,,,,,,optional
+0x0020,UNK_0020,,,,,,,,optional
+0x0010,UNK_0010,,,,,,,,optional
+0x0008,UNK_0008,,,,,,,,optional
+0x0004,UNK_0004,,,d_a_andsw0 d_a_tag_event,d_a_bk d_a_tag_event,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0002,UNK_0002,,,d_a_npc_ji1,d_a_npc_ji1,,,"28 room with music door, have mirror shield",required
+0x0001,UNK_0001,,,d_a_dk d_a_npc_ba1 d_a_npc_bm1 d_a_npc_ji1 d_a_npc_ls1 d_a_npc_zl1 d_a_obj_pirateship d_a_obj_shelf,,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0180,UNK_0180,,,,,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",optional
+0x0140,UNK_0140,,,,,,,,optional
+0x0120,UNK_0120,,,,,,,,optional
+0x0108,UNK_0108,,,d_a_npc_ji1,d_a_npc_ji1,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0104,UNK_0104,,,,,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0102,UNK_0102,,,d_menu_fmap,,,,,optional
+0x0101,UNK_0101,,,d_a_npc_zl1 d_a_tag_event d_com_inf_game,d_a_tag_event,yes,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0280,UNK_0280,,SAW_TETRA_IN_FOREST_OF_FAIRIES,d_a_npc_ls1,d_event_manager,,always,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0240,UNK_0240,,,,,,,,optional
+0x0220,UNK_0220,,,,,,,,optional
+0x0210,UNK_0210,,,,,,,,optional
+0x0208,UNK_0208,,,,,,,,optional
+0x0201,UNK_0201,,,,,,,03 go find a sail,required
+0x0380,UNK_0380,,,,,,,09 pre grappling hook mid fight with moblin,required
+0x0340,UNK_0340,,,,,,,,required
+0x0310,UNK_0310,,Saw event where Grandma gives you the Hero's Clothes,d_a_dk d_a_npc_p1 d_a_obj_pirateship d_throwstone,d_a_npc_ls1,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0308,UNK_0308,,,,,,,,optional
+0x0304,UNK_0304,,,,,,,,optional
+0x0302,UNK_0302,,,,,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",optional
+0x0301,UNK_0301,,,d_a_andsw0 d_a_bk,d_a_bk,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0480,UNK_0480,,,d_a_andsw0,d_a_bk,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0420,UNK_0420,,,d_a_himo2,d_a_himo2,,,11 link displays the deku leaf [mid-cutscene],optional
+0x0404,UNK_0404,,,d_a_tag_hint,d_a_tag_hint,,,,required
+0x0402,UNK_0402,,,,d_a_himo3,,,03 go find a sail,optional
+0x0401,UNK_0401,,,d_a_tag_hint,d_a_obj_barrel d_a_tag_hint,,,03 go find a sail,optional
+0x0580,UNK_0580,,,,d_a_himo2,,,11 link displays the deku leaf [mid-cutscene],optional
+0x0540,UNK_0540,,,,d_a_himo2,,,11 link displays the deku leaf [mid-cutscene],optional
+0x0520,UNK_0520,,GOSSIP_STONE_AT_FF1 (Causes Aryll and the pirates to disappear from Outset),d_a_kb d_a_knob00 d_a_npc_ah d_a_npc_ba1 d_a_npc_ji1 d_a_obj_pirateship d_a_tag_ba1 d_com_inf_game d_stage,,yes,always,03 go find a sail,required
+0x0510,UNK_0510,,,,,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",optional
+0x0508,UNK_0508,,,,,,,,required
+0x0504,UNK_0504,,,,,,,,required
+0x0502,UNK_0502,,,d_a_tag_msg,,,,,required
+0x0501,UNK_0501,,,d_a_npc_ji1,d_a_npc_ji1,,,,required
+0x0640,UNK_0640,,,d_a_npc_ji1,d_a_npc_ji1,,,,required
+0x0608,UNK_0608,Set by an unused dialogue,,d_a_npc_ba1,d_a_npc_ba1,,,,optional
+0x0604,UNK_0604,,,,,,,,optional
+0x0602,UNK_0602,Grandma dialogue after sword obtained,,d_a_npc_ba1,d_a_npc_ba1,,,,optional
+0x0601,UNK_0601,Grandma dialogue after Helmaroc cutscene (prologue),,d_a_npc_ba1,d_a_npc_ba1,,,,optional
+0x0780,UNK_0780,,,d_a_npc_ba1,,,,,optional
+0x0740,UNK_0740,Grandma dialogue after Aryll kidnapped,,d_a_npc_ba1,d_a_npc_ba1,,,,optional
+0x0720,UNK_0720,,,,,,,03 go find a sail,required
+0x0710,UNK_0710,,,,,,,03 go find a sail,required
+0x0704,UNK_0704,,,,,,,03 go find a sail,optional
+0x0702,UNK_0702,,,,,,,,optional
+0x0701,UNK_0701,,,,,,,,optional
+0x0880,UNK_0880,,,d_a_npc_p1,d_a_npc_p1,,,,optional
+0x0840,UNK_0840,,,d_a_npc_p1,d_a_npc_p1,,,,optional
+0x0820,UNK_0820,,,d_a_npc_p1,d_a_npc_p1,,,03 go find a sail,required
+0x0810,UNK_0810,,,d_a_npc_zl1,d_a_npc_zl1,,,,optional
+0x0808,UNK_0808,,Needed so that exiting the pirate ship takes you to Windfall instead of the tutorial,d_a_npc_p1 d_stage,,,always,03 go find a sail,required
+0x0804,UNK_0804,,,d_a_npc_zl1,d_a_npc_zl1,,,03 go find a sail,required
+0x0802,UNK_0802,,,d_a_npc_zl1,d_a_npc_zl1,,,03 go find a sail,required
+0x0801,UNK_0801,,,d_a_npc_zl1 d_meter d_s_play,d_a_npc_zl1,,,03 go find a sail,required
+0x0940,UNK_0940,,,,,,,,optional
+0x0920,UNK_0920,,,,,,,,optional
+0x0910,UNK_0910,,,d_a_npc_p1,d_a_npc_p1,,,,optional
+0x0908,UNK_0908,,SAIL_INTRODUCTION_TEXT_AND_MAP_UNLOCKED,d_a_agb d_a_ship d_menu_collect d_menu_window d_meter,d_a_ship,,always,05 go find a sail post convo with king,required
+0x0904,UNK_0904,,,,,,,,optional
+0x0902,UNK_0902,,SAW_DRAGON_ROOST_ISLAND_INTRO,d_a_ship,,,always,07 after delivery of letter from father to komali,required
+0x0901,UNK_0901,,TRIGGERED_MAP_FISH,d_a_npc_so,d_a_npc_so,,always,11 link displays the deku leaf [mid-cutscene],required
+0x0A80,UNK_0A80,,KORL_DINS_PEARL_TEXT_ALLOWING_YOU_TO_ENTER_HIM,d_a_ship,d_a_ship,,always,11 link displays the deku leaf [mid-cutscene],required
+0x0A40,UNK_0A40,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x0A20,UNK_0A20,,WATCHED_FOREST_HAVEN_INTRO_CUTSCENE,d_a_ship,,,always,11 link displays the deku leaf [mid-cutscene],required
+0x0A10,UNK_0A10,,,d_a_ship,d_a_ship,,,,required
+0x0A08,UNK_0A08,,TALKED_TO_KORL_AFTER_LEAVING_FH,d_a_ship,d_a_ship,,always,16 niko's trial numero dos pre win,required
+0x0A04,UNK_0A04,,,d_a_ship,d_a_ship,,,,required
+0x0A02,ENDLESS_NIGHT,,,d_a_knob00 d_a_npc_bm1 d_a_npc_people d_a_obj_auzu d_a_obj_pbco d_a_ship d_a_tag_event d_kankyo,,,,16 niko's trial numero dos pre win,required
+0x0A01,UNK_0A01,,,d_a_ship,d_a_ship,,,16 niko's trial numero dos pre win,required
+0x0B80,UNK_0B80,,,d_a_npc_people d_a_npc_tc d_a_npc_tc_msg_red d_a_npc_tc_msg_white,d_a_npc_tc,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x0B40,UNK_0B40,,,d_a_npc_tc,d_a_npc_tc,,,,optional
+0x0B20,UNK_0B20,,,d_a_npc_ji1 d_a_player_sword,d_a_npc_ji1,,,"28 room with music door, have mirror shield",required
+0x0B08,UNK_0B08,,,d_a_npc_tt,d_a_npc_tt,,,11 link displays the deku leaf [mid-cutscene],optional
+0x0B04,UNK_0B04,,,,,,,,required
+0x0B02,UNK_0B02,,,,,,,,optional
+0x0B01,UNK_0B01,,,,,,,,optional
+0x0C80,UNK_0C80,,,,,,,,optional
+0x0C40,UNK_0C40,,,d_a_npc_tt,d_a_npc_tt,,,11 link displays the deku leaf [mid-cutscene],required
+0x0C20,UNK_0C20,,,,,,,,optional
+0x0C10,UNK_0C10,,,,,,,,optional
+0x0C08,UNK_0C08,,,,,,,,optional
+0x0C04,UNK_0C04,,,,,,,,optional
+0x0C02,UNK_0C02,,,,,,,"14 on a platform outside forest haven, about to use updraft to get to dungeon",optional
+0x0D80,UNK_0D80,,,d_a_npc_ji1,d_a_npc_ji1,,,"28 room with music door, have mirror shield",required
+0x0D40,UNK_0D40,,,,,,,,optional
+0x0D20,UNK_0D20,,,,,,,,optional
+0x0D10,UNK_0D10,,,,,,,,optional
+0x0D08,UNK_0D08,,,,,,,,optional
+0x0D04,UNK_0D04,,,d_shop,,,,,optional
+0x0D02,UNK_0D02,,,d_shop,,,,,optional
+0x0E80,UNK_0E80,,,,,,,,optional
+0x0E40,UNK_0E40,,,,,,,,optional
+0x0E20,UNK_0E20,,,d_a_npc_ba1 d_a_npc_zl1 d_a_spc_item01 d_a_tag_event d_com_inf_game,d_a_tag_event,yes,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x0E10,UNK_0E10,,,,,,,,optional
+0x0E08,UNK_0E08,,,d_a_npc_rsh1,d_a_npc_rsh1,,,,required
+0x0E04,UNK_0E04,,,,,,,,optional
+0x0E02,MEDLI_GAVE_FATHERS_LETTER,,,d_a_npc_md,d_a_npc_md,,,07 after delivery of letter from father to komali,required
+0x0E01,UNK_0E01,,,d_a_lbridge,d_a_lbridge,,,"20 just got the master sword, sailing from tower towards ganon",optional
+0x0F80,MET_KORL,,KORL_UNLOCKED_AND_SPAWN_ON_WINDFALL,d_a_agb d_a_agbsw0 d_a_player_main d_a_ship d_com_inf_game d_menu_fmap,d_event_manager,yes,always,03 go find a sail,required
+0x0F40,UNK_0F40,,,d_a_lbridge,d_a_lbridge,,,"20 just got the master sword, sailing from tower towards ganon",optional
+0x0F20,UNK_0F20,,,d_a_npc_ji1,d_a_npc_ji1,,,,required
+0x0F10,UNK_0F10,,,d_a_npc_ji1,d_a_npc_ji1,,,,optional
+0x0F08,UNK_0F08,,,,,,,07 after delivery of letter from father to komali,optional
+0x0F04,UNK_0F04,,,,,,,07 after delivery of letter from father to komali,optional
+0x0F02,UNK_0F02,,,,,,,17 grandma needs help,required
+0x0F01,UNK_0F01,,,,,,,,optional
+0x1080,UNK_1080,,,,,,,,optional
+0x1040,UNK_1040,,,,,,,,optional
+0x1020,UNK_1020,,,,,,,,optional
+0x1010,UNK_1010,,,d_a_obj_bemos,d_a_obj_bemos,,,"20 just got the master sword, sailing from tower towards ganon",optional
+0x1008,UNK_1008,,,,,,,,optional
+0x1004,UNK_1004,,,,,,,,optional
+0x1002,UNK_1002,,,,,,,,optional
+0x1001,UNK_1001,Set by fairy.stb fairy_flag_on.stb (stage: sea),WATCHED_FIRE_AND_ICE_ARROWS_CUTSCENE,d_a_npc_photo d_a_tag_event d_a_warphr,,,always,"23 inside ice ring, just aquired boots",required
+0x1140,UNK_1140,,,d_a_npc_md,d_a_mdoor,,,"10 post fight, have grappling hook",required
+0x1120,UNK_1120,,,,,,,,optional
+0x1110,UNK_1110,,,d_a_npc_rsh1,d_a_npc_rsh1,,,,optional
+0x1108,UNK_1108,,,d_a_npc_roten d_a_npc_rsh1,d_a_npc_rsh1,,,,required
+0x1104,UNK_1104,,,d_a_npc_md,d_a_npc_md,,,08 filled fountain dragon roost cave entrance,required
+0x1102,UNK_1102,,,d_a_npc_bm1 d_a_npc_md,d_a_npc_md,,,08 filled fountain dragon roost cave entrance,required
+0x1101,UNK_1101,,,d_a_bb d_a_mdoor d_a_mo2 d_a_npc_md d_a_tag_event,d_a_npc_md,,,"10 post fight, have grappling hook",required
+0x1280,UNK_1280,,,d_a_npc_md,d_a_npc_md,,,"10 post fight, have grappling hook",optional
+0x1240,UNK_1240,,,d_a_npc_tc_msg_red,,,,,optional
+0x1220,UNK_1220,,,d_a_npc_bm1 d_npc,d_a_obj_toripost,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1210,UNK_1210,,,d_a_npc_mk,d_a_npc_mk,,,,optional
+0x1208,UNK_1208,,,d_a_npc_mk,,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1204,UNK_1204,,,,,,,,optional
+0x1202,UNK_1202,,,,,,,,optional
+0x1201,UNK_1201,,,,,,,,optional
+0x1380,UNK_1380,,,d_a_npc_mk,d_a_npc_ho,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1340,UNK_1340,,,d_a_npc_ho d_a_npc_mk,d_a_npc_mk,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1320,UNK_1320,,,,,,,,optional
+0x1310,UNK_1310,,,,,,,,optional
+0x1308,UNK_1308,,,,,,,,optional
+0x1304,UNK_1304,,,,d_kankyo_dayproc,,,,optional
+0x1302,UNK_1302,,,,d_kankyo_dayproc,,,,optional
+0x1301,UNK_1301,,,,d_kankyo_dayproc,,,,optional
+0x1480,PLACED_DINS_PEARL,,Placed Din's Pearl,d_a_agb d_a_obj_doguu d_menu_collect d_menu_fmap,d_a_obj_doguu,,,"19 post tower cutscene, waiting to sail inside",required
+0x1440,PLACED_FARORES_PEARL,,Placed Farore's Pearl,d_a_agb d_a_obj_doguu d_menu_collect d_menu_fmap,d_a_obj_doguu,,,"18 sailing to northern triangle island, two orbs have been placed",required
+0x1420,UNK_1420,,,,,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1410,PLACED_NAYRUS_PEARL,,Placed Nayru's Pearl,d_a_agb d_a_obj_doguu d_menu_collect d_menu_fmap,d_a_obj_doguu,,,"18 sailing to northern triangle island, two orbs have been placed",required
+0x1408,UNK_1408,,,,,,,,optional
+0x1404,UNK_1404,,,,,,,,optional
+0x1402,UNK_1402,,,d_a_npc_md,d_a_npc_md,,,25 mid awakening medli sage [mid-cutscene],required
+0x1401,UNK_1401,,,d_a_npc_bm1,d_a_npc_bm1,,,03 go find a sail,optional
+0x1580,UNK_1580,,,,d_s_room,,,,required
+0x1540,UNK_1540,,,d_a_obj_hbrf1,d_a_obj_hbrf1,,,33 just got boss key,required
+0x1520,UNK_1520,,,d_a_obj_hbrf1,d_a_obj_hbrf1,,,33 just got boss key,required
+0x1510,UNK_1510,,,d_a_obj_hbrf1,d_a_obj_hbrf1,,,,optional
+0x1508,UNK_1508,,,d_a_obj_hbrf1,d_a_obj_hbrf1,,,,optional
+0x1504,UNK_1504,,,d_a_npc_md,d_a_npc_md,,,25 mid awakening medli sage [mid-cutscene],required
+0x1502,UNK_1502,,,,,,,,optional
+0x1501,UNK_1501,,,,,,,"35 tingle island, sailing toward needle rock to get a chart",required
+0x1680,UNK_1680,,,,,,,,optional
+0x1640,UNK_1640,,,,,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1620,UNK_1620,,Medli is in dungeon mode and can be lifted/called,d_a_npc_bm1 d_a_npc_md d_a_player_main d_a_ship,d_a_npc_md,,always,25 mid awakening medli sage [mid-cutscene],required
+0x1610,UNK_1610,,Makar is in dungeon mode and can be lifted/called,d_a_mmusic d_a_npc_cb1 d_a_ship,d_a_npc_cb1,,always,32 5 crack floor puzzle,required
+0x1608,UNK_1608,,,d_a_tag_island,d_a_npc_md,,,25 mid awakening medli sage [mid-cutscene],required
+0x1604,UNK_1604,,,d_a_npc_cb1 d_a_tag_island,d_a_npc_cb1,,,32 5 crack floor puzzle,required
+0x1602,UNK_1602,,,,d_a_npc_mk,,,,required
+0x1601,UNK_1601,,,,d_a_tag_photo,,,,required
+0x1780,UNK_1780,,,d_a_npc_os d_a_pedestal,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x1740,UNK_1740,,,d_a_npc_os d_a_pedestal,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x1720,UNK_1720,,,d_a_npc_os d_a_pedestal,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x1710,UNK_1710,,,d_a_npc_os d_a_pedestal d_door,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x1708,UNK_1708,,,d_a_agb d_a_agbsw0 d_a_npc_tc d_a_npc_tc_msg_normal2 d_a_npc_tc_msg_white,d_a_agb,,,,optional
+0x1704,UNK_1704,,,d_a_npc_os d_a_pedestal d_door,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x1701,UNK_1701,,,d_a_knob00,,,,,optional
+0x1880,UNK_1880,,,d_a_npc_cb1,d_a_npc_cb1,,,32 5 crack floor puzzle,optional
+0x1840,UNK_1840,,,d_a_npc_cb1,d_a_npc_cb1,,,32 5 crack floor puzzle,required
+0x1820,UNK_1820,,,d_a_agb d_a_agbsw0 d_a_lod_bg d_a_npc_bm1 d_a_npc_cb1 d_a_ship d_a_tag_event d_com_inf_game d_kankyo_dayproc d_menu_fmap d_resorce,d_a_warpdm20,yes,,"23 inside ice ring, just aquired boots",required
+0x1810,UNK_1810,,,,,,,07 after delivery of letter from father to komali,required
+0x1808,UNK_1808,,,d_a_npc_bm1 d_a_npc_people,,,,,required
+0x1804,UNK_1804,,,,,,,,optional
+0x1802,UNK_1802,,,,,,,,optional
+0x1801,UNK_1801,,WATCHED_DEKU_TREE_CUTSCENE,d_a_deku_item d_a_jbo d_a_tag_hint,,,always,11 link displays the deku leaf [mid-cutscene],required
+0x1980,UNK_1980,,,d_a_ship,d_a_ship,,,11 link displays the deku leaf [mid-cutscene],required
+0x1940,UNK_1940,,,d_a_ship,d_a_ship,,,,required
+0x1920,UNK_1920,,,,,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1910,UNK_1910,,,d_a_knob00,d_a_knob00,,,16 niko's trial numero dos pre win,required
+0x1908,UNK_1908,,,d_a_npc_bm1,d_a_npc_bm1,,,,required
+0x1904,UNK_1904,,,d_a_npc_cb1,d_a_npc_cb1,,,,optional
+0x1902,UNK_1902,,,d_a_obj_Yboil d_a_tag_volcano,d_a_tag_volcano,,,"24 have boots and bracelets, heading to earth temple to learn song",required
+0x1901,UNK_1901,,,d_a_tag_volcano,d_a_tag_volcano,,,"23 inside ice ring, just aquired boots",required
+0x1A80,UNK_1A80,,,d_a_knob00 d_a_npc_bm1,d_s_room,,,11 link displays the deku leaf [mid-cutscene],required
+0x1A20,UNK_1A20,,,d_a_npc_tc d_a_npc_tc_msg_normal2 d_a_npc_tc_msg_red,d_a_agb,,,,optional
+0x1A10,UNLOCK_TINGLE_BALLOON_DISCOUNT,,,d_a_agb d_a_agbsw0,d_a_agb,,,,optional
+0x1A08,UNLOCK_TING_DISCOUNT,,,d_a_agb d_a_agbsw0,d_a_agb,,,,required
+0x1A04,UNK_1A04,,,,,,,16 niko's trial numero dos pre win,required
+0x1A02,UNK_1A02,,,d_a_npc_bmsw,d_a_npc_bmsw,,,,optional
+0x1A01,UNK_1A01,,,d_a_npc_bmsw,d_a_npc_bmsw,,,,optional
+0x1B80,UNK_1B80,,,,,,,,optional
+0x1B40,UNK_1B40,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x1B20,UNK_1B20,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x1B10,UNK_1B10,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x1B04,UNK_1B04,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x1B01,UNK_1B01,,,d_a_npc_os d_a_pedestal,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x1C80,UNK_1C80,,,,,,,,optional
+0x1C40,UNK_1C40,,,,d_s_room,,,16 niko's trial numero dos pre win,required
+0x1C20,UNK_1C20,,,,,,,,optional
+0x1C08,UNK_1C08,,,d_a_npc_ho d_a_npc_people,d_a_npc_ho,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1C04,UNK_1C04,,,d_a_npc_ho,d_a_npc_ho,,,,optional
+0x1C02,UNK_1C02,,,d_a_npc_people d_com_static,,,,,optional
+0x1C01,UNK_1C01,,,,,,,,optional
+0x1D80,UNK_1D80,,,,,,,,optional
+0x1D40,UNK_1D40,,,,,,,,optional
+0x1D20,UNK_1D20,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x1D10,UNK_1D10,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x1D08,UNK_1D08,,,d_a_npc_tc_msg_red,,,,,optional
+0x1D04,UNK_1D04,,,d_a_npc_tc_msg_red,,,,,optional
+0x1D02,UNK_1D02,,,d_a_npc_tc_msg_red,,,,,optional
+0x1D01,UNK_1D01,,,d_a_npc_tc_msg_red,,,,,optional
+0x1E80,UNK_1E80,,,d_a_npc_bm1 d_a_obj_toripost d_menu_fmap,d_a_npc_bm1,,,16 niko's trial numero dos pre win,required
+0x1E40,UNK_1E40,,TOWER_OF_THE_GODS_RAISED,d_a_agb d_a_agbsw0 d_a_lod_bg d_a_npc_so d_a_obj_tower d_a_ship,d_a_obj_doguu,,,"19 post tower cutscene, waiting to sail inside",required
+0x1E20,UNK_1E20,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x1E10,UNK_1E10,,,d_a_npc_people,d_a_npc_people,,,11 link displays the deku leaf [mid-cutscene],optional
+0x1E08,UNK_1E08,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x1E04,UNK_1E04,,,d_a_npc_ho d_a_tag_mk,d_a_npc_mk,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1E02,UNK_1E02,,,d_a_npc_ho d_a_npc_mk d_a_tag_mk,d_a_tag_mk,,,,optional
+0x1E01,UNK_1E01,,,d_a_npc_ho,d_a_npc_ho,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1F80,UNK_1F80,,,d_a_npc_ho d_a_npc_mk,d_a_npc_ho,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x1F40,UNK_1F40,,SAW_QUILL_CUTSCENE_ON_DRI,d_a_npc_bm1,d_a_npc_bm1,,always,07 after delivery of letter from father to komali,required
+0x1F20,UNK_1F20,,,d_a_npc_bs1,d_a_npc_bs1,,,"42 t chart hunting, one to go, cheesing the warp maze",optional
+0x1F10,UNK_1F10,,,d_a_npc_bs1 d_kankyo_dayproc,d_a_npc_bs1,,,,optional
+0x1F08,UNK_1F08,,,d_a_npc_bs1 d_a_obj_bscurtain,d_kankyo_dayproc,,,,optional
+0x1F04,UNK_1F04,,,d_a_ship,,,,16 niko's trial numero dos pre win,required
+0x1F02,UNK_1F02,,TALKED_TO_KORL_AFTER_GETTING_BOMBS,d_a_ship,d_a_ship,,always,17 grandma needs help,required
+0x1F01,UNK_1F01,,,,d_a_ship,,,,optional
+0x2080,UNK_2080,,,,d_kankyo_dayproc,,,,optional
+0x2040,UNK_2040,,,d_a_npc_bs1,d_a_npc_bs1,,,,optional
+0x2020,UNK_2020,,,d_a_npc_bs1,d_a_npc_bs1,,,,optional
+0x2010,UNK_2010,,,,d_a_npc_bs1,,,,optional
+0x2008,UNK_2008,,,,d_a_npc_bs1,,,,optional
+0x2004,UNK_2004,,,,d_kankyo_dayproc,,,,optional
+0x2002,UNK_2002,,,,d_kankyo_dayproc,,,,optional
+0x2001,UNK_2001,,,d_a_npc_bm1,d_a_npc_bm1,,,,optional
+0x2180,UNK_2180,,,d_a_npc_bm1,d_a_npc_bm1,,,,optional
+0x2140,UNK_2140,,,d_a_npc_bm1,d_a_npc_bm1,,,,optional
+0x2120,UNK_2120,,,d_a_npc_bm1,d_a_npc_bm1,,,,optional
+0x2110,UNK_2110,Set by bombshop.stb (stage: Obombh),,d_a_knob00 d_a_ship,d_a_tag_event,,,16 niko's trial numero dos pre win,required
+0x2108,UNK_2108,,,d_a_npc_bs1,d_a_npc_bs1,,,,optional
+0x2104,UNK_2104,,,d_a_npc_people,d_a_obj_ferris,,,,required
+0x2102,UNK_2102,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2101,UNK_2101,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2280,UNK_2280,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2240,UNK_2240,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2220,UNK_2220,,,d_a_npc_people,d_a_npc_people,,,,required
+0x2210,UNK_2210,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2208,UNK_2208,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2204,UNK_2204,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2202,UNK_2202,,,d_a_npc_bm1,d_a_npc_bm1,,,,optional
+0x2201,UNK_2201,,,d_a_npc_ho,d_a_npc_mk,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x2340,UNK_2340,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2320,UNK_2320,,,d_a_npc_people,d_a_npc_people,,,,required
+0x2310,UNK_2310,,,d_a_npc_people,d_a_npc_people,,,,required
+0x2308,UNK_2308,,,d_a_npc_people,d_a_npc_people,,,,required
+0x2304,UNK_2304,,,d_a_npc_people,d_a_npc_people,,,11 link displays the deku leaf [mid-cutscene],optional
+0x2302,UNK_2302,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2301,UNK_2301,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2480,UNK_2480,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2440,UNK_2440,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2420,UNK_2420,,,d_a_npc_rsh1,d_a_npc_rsh1,,,05 go find a sail post convo with king,optional
+0x2410,UNK_2410,,,,,,,,optional
+0x2408,UNK_2408,,,,,,,,optional
+0x2404,UNK_2404,,,,,,,,optional
+0x2402,UNK_2402,,,,,,,,optional
+0x2401,UNK_2401,Set by departure_DEMO.stb (stage: sea),,,,,,03 go find a sail,required
+0x2580,UNK_2580,Set by FIND_SISTER.stb (stage: Mjtower),,,,,,03 go find a sail,required
+0x2540,UNK_2540,,,,,,,,optional
+0x2520,UNK_2520,,,,,,,,optional
+0x2510,UNK_2510,,Learned Command Melody from the TotG stone tablet,d_a_npc_os d_a_obj_hsehi1,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x2508,UNK_2508,,,,,,,,optional
+0x2504,UNK_2504,,,d_a_npc_people,d_a_npc_people,,,,required
+0x2502,UNK_2502,,,,d_a_tag_event,,,07 after delivery of letter from father to komali,required
+0x2501,UNK_2501,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2680,UNK_2680,,,d_a_npc_people,d_a_npc_people d_kankyo_dayproc,,,,optional
+0x2640,UNK_2640,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2620,UNK_2620,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2608,UNK_2608,,,d_a_npc_os,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x2604,UNK_2604,,,d_a_npc_os,d_a_npc_os,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x2602,UNK_2602,,,d_door,d_door,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x2601,UNK_2601,,,,d_door,,,,optional
+0x2780,UNK_2780,,,,,,,,required
+0x2740,UNK_2740,,,d_a_tag_event,d_a_tag_event,,,"23 inside ice ring, just aquired boots",required
+0x2710,UNK_2710,,,d_a_npc_hr d_a_tornado,d_a_npc_hr,,,21 just got a bomb upgrade,required
+0x2708,UNK_2708,,,d_a_npc_hr,d_a_npc_hr,,,07 after delivery of letter from father to komali,required
+0x2704,UNK_2704,,,d_a_npc_btsw,d_a_npc_btsw,,,,optional
+0x2702,UNK_2702,,,d_a_npc_btsw,d_a_npc_btsw,,,,optional
+0x2701,UNK_2701,,,d_a_npc_bmsw d_a_npc_btsw,d_a_npc_btsw,,,,required
+0x2880,UNK_2880,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2840,UNK_2840,,,,,,,,optional
+0x2820,UNK_2820,,,,,,,,optional
+0x2810,UNK_2810,,,,,,,,optional
+0x2808,UNK_2808,,,,,,,,optional
+0x2804,UNK_2804,,,,d_kankyo_dayproc,,,,optional
+0x2802,UNK_2802,,,,d_kankyo_dayproc,,,,optional
+0x2801,UNK_2801,,,,d_kankyo_dayproc,,,,optional
+0x2980,UNK_2980,,,,d_kankyo_dayproc,,,,optional
+0x2940,UNK_2940,,,,d_kankyo_dayproc,,,,optional
+0x2920,UNK_2920,,MEDLI_IN_EARTH_TEMPLE,,,,always,"27 earth temple, pre mirror shield",required
+0x2910,UNK_2910,,MAKAR_IN_WIND_TEMPLE,d_a_mmusic d_a_npc_cb1,,,always,32 5 crack floor puzzle,required
+0x2908,UNK_2908,,,d_a_npc_zl1,d_a_npc_zl1,,,,required
+0x2904,UNK_2904,,,,,,,,optional
+0x2902,UNK_2902,,,,,,,"13 just received deku leaf, idle on treetop",required
+0x2901,UNK_2901,,,,,,,,optional
+0x2A80,UNK_2A80,,"HAS_HEROS_CLOTHES (This should be set even if the player wants to wear casual clothes, it's overridden elsewhere)",d_a_npc_ba1 d_a_npc_ls1 d_a_player_main,,,always,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x2A40,UNK_2A40,,,,,,,,optional
+0x2A20,GRANDMA_HEALED,,,d_a_npc_ba1 d_a_tag_ba1 d_kankyo_dayproc,d_a_npc_ba1,,,"18 sailing to northern triangle island, two orbs have been placed",required
+0x2A10,UNK_2A10,,,d_a_tag_hint,d_a_mflft,,,11 link displays the deku leaf [mid-cutscene],required
+0x2A08,RODE_KORL,,ENTER_KORL_FOR_THE_FIRST_TIME_AND_SPAWN_ANYWHERE,d_a_player_main d_a_ship d_stage,d_a_ship,,always,05 go find a sail post convo with king,required
+0x2A04,UNK_2A04,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2A02,UNK_2A02,,,d_a_ship,d_a_ship,,,16 niko's trial numero dos pre win,required
+0x2A01,UNK_2A01,,,d_a_ship,d_a_ship,,,16 niko's trial numero dos pre win,required
+0x2B80,UNK_2B80,,,d_a_ship,d_a_ship,,,,required
+0x2B40,UNK_2B40,,,,,,,,optional
+0x2B20,UNK_2B20,,,,,,,15 wiggly thorn vine maze,required
+0x2B10,UNK_2B10,Command melody monument in Tower of the Gods has been revealed,,d_a_obj_hsehi1,d_a_obj_hsehi1,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x2B08,UNK_2B08,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2B04,UNK_2B04,,,d_a_npc_people,d_a_npc_people,,,,optional
+0x2C80,UNK_2C80,,,,,,,,required
+0x2C40,UNK_2C40,,,,,,,,optional
+0x2C20,UNK_2C20,,,,,,,,optional
+0x2C08,UNK_2C08,,,d_a_npc_md,d_a_npc_md,,,,optional
+0x2C04,UNK_2C04,,,,,,,,optional
+0x2C02,BARRIER_BREAK,,BARRIER_DOWN,d_a_obj_barrier d_a_ship,d_a_obj_barrier,,swordless only,36 just killed 4 dungeon bosses,required
+0x2C01,UNK_2C01,,,d_a_obj_YLzou d_a_ship d_com_inf_game,,yes,,36 just killed 4 dungeon bosses,required
+0x2D80,UNK_2D80,,,d_a_knob00 d_a_tag_mk d_menu_fmap d_message,d_a_tag_mk,,,"41 t chart hunting, have 3",required
+0x2D40,UNK_2D40,Set by dance_zola.stb (stage: Edaichi),,d_a_npc_photo,,,,25 mid awakening medli sage [mid-cutscene],required
+0x2D20,UNK_2D20,Set by dance_kokiri.stb (stage: Ekaze),,d_a_npc_photo,,,,25 mid awakening medli sage [mid-cutscene],required
+0x2D10,UNK_2D10,Set by warp_in.stb (stage: ADMumi),,d_a_ship d_a_warpf,,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x2D08,UNK_2D08,Set by warphole.stb (stage: ADMumi),HYRULE_3_WARP_CUTSCENE,d_a_ship d_a_tag_mk d_a_warpdm20 d_a_warphr,,,always,36 just killed 4 dungeon bosses,required
+0x2D04,MASTER_SWORD_CUTSCENE,Set by master_sword.stb (stage: kenroom),MASTER_SWORD_CUTSCENE,d_a_obj_YLzou d_a_obj_toripost d_a_obj_vmsms,,,always,"20 just got the master sword, sailing from tower towards ganon",required
+0x2D02,ZELDA_AWAKENED,Set by awake_zelda.stb (stage: kenroom),TETRA_TO_ZELDA_CUTSCENE,d_a_npc_photo d_a_npc_zl1 d_a_obj_YLzou d_a_ship d_a_tag_mk d_a_warpdm20,,,always,22 the king speaks to link and tetra [mid-cutscene],required
+0x2D01,UNK_2D01,Set by rescue.stb (stage: M2tower),ANIMATION_SET_2 (Saw cutscene before Helmaroc King where Aryll is rescued),d_a_agbsw0 d_a_npc_people d_a_npc_rsh1 d_a_obj_figure d_com_inf_game d_s_menu d_s_play,d_s_menu,yes,always,22 the king speaks to link and tetra [mid-cutscene],required
+0x2E80,UNK_2E80,"Set by towerd.stb, towerf.stb, towern.stb (stage: ADMumi)",PEARL_TOWER_CUTSCENE,,,,,"19 post tower cutscene, waiting to sail inside",required
+0x2E40,UNK_2E40,,,d_a_npc_md,d_a_npc_md,,,,optional
+0x2E20,UNK_2E20,,,,,,,,optional
+0x2E10,UNK_2E10,,,,,,,,optional
+0x2E08,UNK_2E08,,,d_a_agb d_a_agbsw0,d_a_agbsw0,,,"35 tingle island, sailing toward needle rock to get a chart",optional
+0x2E04,UNK_2E04,,MEDLI_IN_EARTH_TEMPLE_ENTRANCE,d_a_npc_bm1 d_a_npc_md d_a_ship,,,always,"27 earth temple, pre mirror shield",required
+0x2E02,UNK_2E02,,,d_a_mmusic d_a_npc_cb1 d_a_ship,,,,32 5 crack floor puzzle,required
+0x2E01,UNK_2E01,Set by MEETSHISHIOH.stb (stage: sea),WATCHED_MEETING_KORL_CUTSCENE (Necessary for Windfall music to play when warping there),,,,always,03 go find a sail,required
+0x2F80,UNK_2F80,,,,,,,,optional
+0x2F40,UNK_2F40,,,d_a_npc_ji1,d_a_npc_ji1,,,,required
+0x2F20,UNK_2F20,,Talked to KoRL after getting Nayru's Pearl,d_a_ship,d_a_ship,,always,"18 sailing to northern triangle island, two orbs have been placed",required
+0x2F10,UNK_2F10,,,d_a_npc_ji1,d_a_npc_ji1,,,"44 sister is snatched, tetra catches link when he tries to chase the bird and falls [mid-cutscene]",required
+0x2F08,UNK_2F08,,,d_a_npc_mn,d_a_npc_mn,,,,optional
+0x2F04,UNK_2F04,,,d_a_npc_mn,d_a_npc_mn,,,,optional
+0x2F02,UNK_2F02,,,d_a_npc_mt,d_a_npc_mt,,,,optional
+0x2F01,UNK_2F01,,,d_a_npc_mt d_kankyo_dayproc,d_a_npc_mt,,,,optional
+0x3080,UNK_3080,,,d_a_npc_mt,d_a_npc_mt d_kankyo_dayproc,,,,optional
+0x3040,UNK_3040,,,d_a_ship,d_a_tag_event,,,22 the king speaks to link and tetra [mid-cutscene],required
+0x3020,UNK_3020,,,d_a_npc_photo d_a_npc_tc_msg_normal2,,,,22 the king speaks to link and tetra [mid-cutscene],optional
+0x3010,UNK_3010,,,d_a_npc_photo,,,,"18 sailing to northern triangle island, two orbs have been placed",optional
+0x3008,UNK_3008,,,d_a_npc_photo,,,,"18 sailing to northern triangle island, two orbs have been placed",optional
+0x3004,UNK_3004,,,d_a_npc_photo,,,,21 just got a bomb upgrade,optional
+0x3002,UNK_3002,,,d_a_npc_photo,,,,"23 inside ice ring, just aquired boots",optional
+0x3001,UNK_3001,,,d_a_npc_photo,,,,"23 inside ice ring, just aquired boots",optional
+0x3180,UNK_3180,,,d_a_npc_photo,,,,"23 inside ice ring, just aquired boots",optional
+0x3140,UNK_3140,,,,,,,,optional
+0x3120,UNK_3120,,,d_a_npc_mn,d_a_npc_mn,,,,optional
+0x3104,UNK_3104,,,d_a_npc_btsw,d_a_npc_btsw,,,,optional
+0x3102,UNK_3102,,,d_a_npc_btsw2,d_a_npc_btsw2,,,25 mid awakening medli sage [mid-cutscene],optional
+0x3101,UNK_3101,,,,,,,,optional
+0x3280,UNK_3280,Set by runaway_majuto.stb (stage: ADMumi),,d_com_inf_game,,yes,,22 the king speaks to link and tetra [mid-cutscene],required
+0x3240,GOHMA_TRIALS_CLEAR,,,,d_a_btd,,,36 just killed 4 dungeon bosses,required
+0x3220,KALLE_DEMOS_TRIALS_CLEAR,,,,d_a_bmd,,,36 just killed 4 dungeon bosses,required
+0x3210,JALHALLA_TRIALS_CLEAR,,,,d_a_bpw,,,36 just killed 4 dungeon bosses,required
+0x3208,MOLGERA_TRIALS_CLEAR,,,,d_a_bwd,,,36 just killed 4 dungeon bosses,required
+0x3204,UNK_3204,,,,d_a_obj_vgnfd,,,36 just killed 4 dungeon bosses,required
+0x3202,UNK_3202,,,d_a_npc_ba1,d_a_tag_event,,,03 go find a sail,required
+0x3201,UNK_3201,,KoRL told you about the sages,,d_a_ship,,always,"23 inside ice ring, just aquired boots",required
+0x3380,UNK_3380,,KoRL told you about the Triforce shards,d_a_ship d_a_tag_mk,d_a_ship,,always,"23 inside ice ring, just aquired boots",required
+0x3340,UNK_3340,,,,,,,,optional
+0x3320,UNK_3320,,,d_a_npc_md d_a_tag_md_cb,d_a_tag_md_cb,,,"27 earth temple, pre mirror shield",required
+0x3310,UNK_3310,,,d_a_tag_md_cb,d_a_npc_md d_a_tag_md_cb,,,"27 earth temple, pre mirror shield",required
+0x3308,UNK_3308,,,d_a_tag_md_cb,d_a_tag_md_cb,,,"28 room with music door, have mirror shield",required
+0x3304,UNK_3304,,Saw event where Medli calls to you from within jail,d_a_tag_md_cb,d_a_tag_md_cb,,always,,required
+0x3302,UNK_3302,,,d_a_tag_md_cb,d_a_tag_md_cb,,,"28 room with music door, have mirror shield",required
+0x3301,UNK_3301,,,d_a_tag_md_cb,d_a_tag_md_cb,,,"31 have the boss key, about to ditch medli",required
+0x3480,UNK_3480,,,d_a_tag_md_cb,d_a_tag_md_cb,,,32 5 crack floor puzzle,required
+0x3440,UNK_3440,,Saw event where Makar calls to you from within jail,d_a_tag_md_cb,d_a_tag_md_cb,,always,32 5 crack floor puzzle,required
+0x3420,UNK_3420,,,d_a_tag_md_cb,d_a_obj_vmc d_a_tag_md_cb,,,33 just got boss key,required
+0x3410,UNK_3410,,,d_a_tag_md_cb,d_a_obj_homen d_a_tag_md_cb,,,34 at the boss door,required
+0x3408,UNK_3408,,,d_a_tag_md_cb,d_a_fm,,,32 5 crack floor puzzle,required
+0x3404,UNK_3404,,,d_a_tag_md_cb,d_a_fm,,,,optional
+0x3402,UNK_3402,,,,d_a_kb,,,,optional
+0x3401,UNK_3401,,,d_a_knob00,d_a_npc_mt,,,,optional
+0x3580,UNK_3580,,,,,,,,optional
+0x3540,UNK_3540,,,,,,,,optional
+0x3520,UNK_3520,,,,,,,36 just killed 4 dungeon bosses,required
+0x3510,UNK_3510,,HAS_SEEN_INTRO,d_s_name,d_menu_window,,always,,required
+0x3508,LITHOGRAPH_1,,,d_item,d_item,,,,optional
+0x3504,LITHOGRAPH_2,,,d_item,d_item,,,,optional
+0x3502,LITHOGRAPH_3,,,d_item,d_item,,,,optional
+0x3501,LITHOGRAPH_4,,,d_item,d_item,,,,optional
+0x3680,LITHOGRAPH_5,,,d_item,d_item,,,,optional
+0x3640,LITHOGRAPH_6,,,d_item,d_item,,,,optional
+0x3620,LITHOGRAPH_7,,,d_item,d_item,,,,optional
+0x3610,LITHOGRAPH_8,,,d_item,d_item,,,,optional
+0x3608,LITHOGRAPH_9,,,d_item,d_item,,,,optional
+0x3604,LITHOGRAPH_10,,,d_item,,,,,optional
+0x3602,UNK_3602,,,,,,,,optional
+0x3601,UNK_3601,,,,,,,,optional
+0x3780,UNK_3780,,,,,,,,optional
+0x3740,UNK_3740,,,,,,,,optional
+0x3720,UNK_3720,,,,,,,,optional
+0x3710,UNK_3710,,,,,,,,optional
+0x3708,UNK_3708,,,,,,,,optional
+0x3704,UNK_3704,,,,,,,,optional
+0x3702,UNK_3702,,,,,,,,optional
+0x3701,UNK_3701,,,,,,,,optional
+0x3880,UNK_3880,,,,d_a_obj_homen,,,33 just got boss key,required
+0x3840,UNK_3840,,TALKED_TO_KORL_POST_TOWER_CUTSCENE,,d_a_ship,,always,"19 post tower cutscene, waiting to sail inside",required
+0x3820,MOVED_HYRULE_STATUE,,,d_a_obj_YLzou,d_a_obj_YLzou,,,22 the king speaks to link and tetra [mid-cutscene],required
+0x3810,UNK_3810,,,d_a_ship,d_a_warphr,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x3808,UNK_3808,,,d_a_npc_photo,d_a_npc_photo,,,,optional
+0x3804,HYRULE_COURTYARD_CUTSCENE,,,d_a_npc_zl1 d_a_obj_YLzou d_a_ship,d_a_npc_zl1,,,22 the king speaks to link and tetra [mid-cutscene],required
+0x3802,COLORS_IN_HYRULE,,COLORS_IN_HYRULE,d_a_bk d_a_mo2 d_a_obj_Ygush00 d_a_tn d_com_inf_game d_s_play,,yes,always,"20 just got the master sword, sailing from tower towards ganon",required
+0x3801,UNK_3801,,,,,,,,optional
+0x3980,UNK_3980,,HYRULE_3_ELECTRICAL_BARRIER_CUTSCENE_1,d_a_obj_YLzou d_a_obj_barrier,d_a_obj_YLzou,,always,36 just killed 4 dungeon bosses,required
+0x3940,UNK_3940,,,,,,,,optional
+0x3920,UNK_3920,Set by getperl_jab.stb (stage: Pjavdou),,d_a_agb d_a_npc_photo d_menu_fmap,,,,"18 sailing to northern triangle island, two orbs have been placed",required
+0x3910,UNK_3910,Set by attack_ganon.stb (stage: M2ganon),,d_a_npc_photo d_a_ship,,,,22 the king speaks to link and tetra [mid-cutscene],required
+0x3908,UNK_3908,,,d_a_obj_rcloud,d_a_obj_rcloud,,,11 link displays the deku leaf [mid-cutscene],required
+0x3904,TRIALS_DOOR_LIGHT_GOHMA,,Recollection Gohma defeated,,,,skip rematch bosses only,36 just killed 4 dungeon bosses,required
+0x3902,TRIALS_DOOR_LIGHT_KALLE_DEMOS,,Recollection Kalle Demos defeated,,,,skip rematch bosses only,36 just killed 4 dungeon bosses,required
+0x3901,TRIALS_DOOR_LIGHT_JALHALLA,,Recollection Jalhalla defeated,,,,skip rematch bosses only,36 just killed 4 dungeon bosses,required
+0x3A80,TRIALS_DOOR_LIGHT_MOLGERA,,Recollection Molgera defeated,,,,skip rematch bosses only,36 just killed 4 dungeon bosses,required
+0x3A40,UNK_3A40,,,,,,,,optional
+0x3A20,UNK_3A20,,Fishman and KoRL talked about Forsaken Fortress after you beat Molgera,d_a_npc_so,d_a_npc_so,,always,"35 tingle island, sailing toward needle rock to get a chart",required
+0x3A10,UNK_3A10,,,d_a_npc_so,d_a_npc_so,,,,optional
+0x3A08,UNK_3A08,,,d_a_boko d_a_fganon,d_a_obj_vfan,,,39 outside puppet ganons room,required
+0x3A04,MASTER_SWORD_SWINGING_CUTSCENE,Set by swing_sword.stb (stage: kenroom),,d_a_obj_YLzou,,,,"20 just got the master sword, sailing from tower towards ganon",required
+0x3A02,UNK_3A02,Set by pray_zola.stb (stage: M_DaiB),,d_a_ship,,,,32 5 crack floor puzzle,required
+0x3A01,UNK_3A01,,,d_a_npc_mn d_a_npc_mt,d_a_npc_mt,,,,optional
+0x3B80,UNK_3B80,,,d_a_npc_md,d_a_npc_md,,,,optional
+0x3B40,UNK_3B40,,,d_com_inf_game,,yes,,"20 just got the master sword, sailing from tower towards ganon",required
+0x3B20,UNK_3B20,,,d_a_knob00 d_a_tag_event,d_a_knob00 d_a_tag_event,,,16 niko's trial numero dos pre win,optional
+0x3B10,UNK_3B10,Set by awake_zola.stb (stage: sea),,,,,,25 mid awakening medli sage [mid-cutscene],required
+0x3B08,UNK_3B08,Set by seal.stb (stage: Hyrule),"Another event flag set by the barrier. This one seems to have no effect, but set it anyway just to be safe.",,,,swordless only,36 just killed 4 dungeon bosses,required
+0x3B04,UNK_3B04,,,d_a_npc_bs1,d_a_npc_bs1,,,"42 t chart hunting, one to go, cheesing the warp maze",optional
+0x3B02,UNK_3B02,Set by kugutu_ganon.stb (stage: GanonK),Saw cutscene before Puppet Ganon fight,d_com_inf_game,,yes,always,40 door to the final fight,required
+0x3B01,UNK_3B01,,,,d_kankyo_dayproc,,,,optional
+0x3C80,UNK_3C80,,,,d_kankyo_dayproc,,,,optional
+0x3C40,UNK_3C40,,,,d_kankyo_dayproc,,,,optional
+0x3C20,UNK_3C20,,,,d_kankyo_dayproc,,,,optional
+0x3C10,UNK_3C10,,,,d_kankyo_dayproc,,,,optional
+0x3C08,UNK_3C08,,,,d_kankyo_dayproc,,,,optional
+0x3C04,UNK_3C04,,,,d_kankyo_dayproc,,,,optional
+0x3C02,UNK_3C02,,,,d_kankyo_dayproc,,,,optional
+0x3C01,UNK_3C01,,,d_a_tag_hint,d_a_bdk,,,22 the king speaks to link and tetra [mid-cutscene],required
+0x3D80,UNK_3D80,,,d_com_inf_game d_meter,d_meter,,,11 link displays the deku leaf [mid-cutscene],required
+0x3D40,UNK_3D40,,,d_com_inf_game d_meter,d_meter,,,16 niko's trial numero dos pre win,required
+0x3D20,UNK_3D20,,,d_com_inf_game d_meter,d_meter,,,32 5 crack floor puzzle,required
+0x3D10,UNK_3D10,,,d_com_inf_game d_meter,d_meter,,,"35 tingle island, sailing toward needle rock to get a chart",required
+0x3D08,UNK_3D08,,,d_a_npc_mn d_a_npc_mt,d_a_npc_mt,,,,optional
+0x3D04,UNK_3D04,,Saw the Triforce refuse,d_a_ship,d_a_ship,,8 starting shards only,36 just killed 4 dungeon bosses,required
+0x3D02,UNK_3D02,,,d_a_ship d_a_warpgn d_stage,d_a_warpgn,,,"38 portal opened, about to leave",required
+0x3D01,UNK_3D01,,,d_a_npc_hr,d_a_npc_hr,,,21 just got a bomb upgrade,optional
+0x3E80,UNK_3E80,,,d_a_agbsw0,d_a_oship,,,"41 t chart hunting, have 3",required
+0x3E40,UNK_3E40,,,d_a_ship,d_a_ship,,,,required
+0x3E20,UNK_3E20,,,,d_a_ship,,,,required
+0x3E10,UNK_3E10,,,d_a_player_main d_a_ship,,,,17 grandma needs help,required
+0x3E04,UNK_3E04,,,d_a_npc_roten,d_a_npc_roten,,,,optional
+0x3E02,UNK_3E02,,,d_a_agbsw0,d_a_salvage,,,"42 t chart hunting, one to go, cheesing the warp maze",optional
+0x3E01,UNK_3E01,,,d_a_ship,d_a_player_main,,,17 grandma needs help,required
+0x3F80,UNK_3F80,,,d_a_ship,d_a_player_main d_a_ship,,,"18 sailing to northern triangle island, two orbs have been placed",required
+0x3F40,UNK_3F40,Set by endhr.stb (stage: GTower),,d_a_player_sword,,,,,required
+0x3F20,UNK_3F20,,,d_a_tag_hint,d_a_fganon,,,22 the king speaks to link and tetra [mid-cutscene],required
+0x3F10,UNK_3F10,,,d_a_bgn,d_a_bgn,,,40 door to the final fight,required
+0x3F02,UNK_3F02,,,d_s_room,,,,,optional
+0x3F01,UNK_3F01,,,d_a_npc_mt,d_a_npc_mt,,,,optional
+0x4080,UNK_4080,,,d_a_npc_mt,d_a_npc_mt,,,,optional
+0x4040,UNK_4040,,,d_a_npc_mt,d_a_npc_mt,,,,optional
+0x4020,UNK_4020,,,d_a_tag_hint,d_a_player_grab d_a_tag_hint,,,,required
+0x4008,UNK_4008,,,d_a_auction,d_a_auction,,,,optional
+0x4004,UNK_4004,Set by pray_kokiri.stb (stage: kazeB),,d_a_ship,,,,"35 tingle island, sailing toward needle rock to get a chart",required
+0x4002,UNK_4002,Set by g2before.stb (stage: GTower),Saw cutscene before Ganondorf fight,d_com_inf_game,,yes,always,,required
+0x4001,UNK_4001,,,d_a_npc_md d_a_tag_md_cb,d_a_tag_md_cb,,,,optional
+0x4180,UNK_4180,,,d_a_tag_md_cb,d_a_npc_md d_a_tag_md_cb,,,"27 earth temple, pre mirror shield",required
