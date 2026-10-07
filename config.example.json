@@ -1,6 +1,5 @@
 {
   "bluewake_checkouts": ["C:\\src\\bluewake"],
   "inject": "C:\\src\\ww-save-editor\\bwinject.exe",
-  "cards": ["%APPDATA%\\BlueWake\\GZLE01.card"],
   "disc": ""
 }

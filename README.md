@@ -27,28 +27,47 @@ game's own.
 
 ## Requirements
 
-- Windows with Python 3.10 or newer. The installer from python.org includes Tk, which the window
-  uses.
+- Python 3.10 or newer with Tk, which the window uses.
+  - **Windows and macOS:** the installers from python.org include Tk.
+  - **Linux:** install your distribution's Tk package as well, for example `python3-tk`.
 - A [BlueWake](https://github.com/chrissotraidis/bluewake) source checkout, for its
   `scripts/card_to_gci.py` (reads cards) and the save injector source (writes cards).
 - Optional: your game disc image, for checking custom restart places. BlueWake builds keep a copy
-  in `build\...\BlueWake\game\`, which is found automatically.
+  in `build/.../BlueWake/game/`, which is found automatically.
+
+BlueWake's memory card is found automatically:
+
+| System | Card location |
+|---|---|
+| Windows | `%APPDATA%\BlueWake\GZLE01.card` |
+| macOS | `~/Library/Application Support/BlueWake/GZLE01.card` |
+| Linux | the macOS-style path if it exists, otherwise `~/.local/share/BlueWake/GZLE01.card` |
+
+Portable builds keep their own card in the build's `user` folder; open it with *Open card…*. The
+editor has been tested on Windows; the macOS and Linux locations come from BlueWake's source and
+are untested.
 
 ## Setup
 
 1. Clone this repository.
-2. Build the save injector from your BlueWake checkout, with the clang that comes with Visual
-   Studio or any other C compiler:
+2. Build the save injector from your BlueWake checkout with any C compiler.
 
+   **Windows** (the clang that comes with Visual Studio):
    ```
    cd C:\path\to\bluewake
    clang -std=c11 -O1 -o C:\path\to\ww-save-editor\bwinject.exe tests\dolphin_save_import_cli.c apple\ios\src\dolphin_save_import.c
    ```
-
    Two warnings about `fopen` are normal.
-3. Copy `config.example.json` to `config.json` and set `bluewake_checkouts` to your BlueWake
-   checkout. Every other setting has a default; `config.py` lists them all.
-4. Run `python wwgui.py`.
+
+   **macOS and Linux:**
+   ```
+   cd ~/path/to/bluewake
+   cc -std=c11 -O1 -o ~/path/to/ww-save-editor/bwinject tests/dolphin_save_import_cli.c apple/ios/src/dolphin_save_import.c
+   ```
+3. Copy `config.example.json` (or `config.example.macos.json`) to `config.json` and set
+   `bluewake_checkouts` to your BlueWake checkout. Every other setting has a default; `config.py`
+   lists them all.
+4. Run `python wwgui.py` (`python3 wwgui.py` on macOS and Linux).
 
 ## Using the editor
 
@@ -98,11 +117,11 @@ To add your own presets from a save catalog, use `tools/make_presets.py`.
   loaded).
 - A save with the sea chart reset to a new file's.
 
-
 ## Research tools
 
 The `tools` folder holds the command-line tools used to work out the save format from a full
-playthrough's save states. They are interactive; run them with no arguments.
+playthrough's save states. They are interactive; run them with no arguments. They were written and
+tested on Windows; `wwcat.py` in particular expects a Windows BlueWake build to open states in.
 
 - `wwcat.py`: browse save states, open each in BlueWake, turn them into saves, label them, check them against
   saves the game made, and compare story flags between saves in story order.

@@ -467,7 +467,7 @@ class App(tk.Tk):
         steps = [
             ('1.  Close BlueWake.', 'The game keeps its memory card open while running and could overwrite your '
              'changes when it saves.'),
-            ('2.  Open card\u2026', 'Pick your card (%APPDATA%\\BlueWake\\GZLE01.card, or user\\GZLE01.card in '
+            ('2.  Open card\u2026', f'Pick your card ({os.path.join(config.DATA, "GZLE01.card")}, or the one in '
              'a portable build) and the quest log to edit. The editor reads a copy; the card is untouched so far.'),
             ('3.  Make changes.', 'Use the tabs, or start from a story preset. Revert throws away all edits.'),
             ('4.  Review changes.', 'Lists everything that will be written.'),

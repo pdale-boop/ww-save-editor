@@ -5,6 +5,7 @@ config.json
 wwgui-settings.json
 zsr-event-flags.csv
 # Built from BlueWake's source, not distributed here
+bwinject
 bwinject.exe
 *.exe
 # Personal saves and research data

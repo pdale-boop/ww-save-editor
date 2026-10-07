@@ -1,0 +1,5 @@
+{
+  "bluewake_checkouts": ["~/src/bluewake"],
+  "inject": "~/src/ww-save-editor/bwinject",
+  "disc": ""
+}
