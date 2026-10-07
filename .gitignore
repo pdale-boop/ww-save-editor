@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+# Local settings and downloads
+config.json
+wwgui-settings.json
+zsr-event-flags.csv
+# Built from BlueWake's source, not distributed here
+bwinject.exe
+*.exe
+# Personal saves and research data
+catalog/
+*.card
+*.card.before-craft
+*.bwstate

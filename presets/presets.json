@@ -1,0 +1,50 @@
+[
+ {
+  "name": "Wake up sleepy head",
+  "file": "01.gci",
+  "slot": 1,
+  "source": "02 link wake up"
+ },
+ {
+  "name": "dupe",
+  "file": "02.gci",
+  "slot": 1,
+  "source": "02 link wake up"
+ },
+ {
+  "name": "We need a Sail",
+  "file": "03.gci",
+  "slot": 1,
+  "source": "03 go find a sail"
+ },
+ {
+  "name": "Dragon Roost Cavern entrance",
+  "file": "04.gci",
+  "slot": 1,
+  "source": "08 filled fountain dragon roost cave entrance"
+ },
+ {
+  "name": "Forbidden Woods entrance",
+  "file": "05.gci",
+  "slot": 1,
+  "source": "14 on a platform outside forest haven, about to use updraft to get to dungeon"
+ },
+ {
+  "name": "One orb left",
+  "file": "06.gci",
+  "slot": 1,
+  "source": "18 sailing to northern triangle island, two orbs have been placed"
+ },
+ {
+  "name": "Got the Sword",
+  "file": "07.gci",
+  "slot": 1,
+  "source": "20 just got the master sword, sailing from tower towards ganon"
+ },
+ {
+  "name": "New boots, New bracelet, lets go awaken some sages",
+  "file": "08.gci",
+  "slot": 1,
+  "source": "24 have boots and bracelets, heading to earth temple to learn song"
+ }
+]
