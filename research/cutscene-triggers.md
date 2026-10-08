@@ -3,8 +3,9 @@
 Working notes for the TODO item "Developer saves just before key cutscenes" (BlueWake section).
 Four scenes, worked out 2026-10-07 to build audio test saves for BlueWake 0.6.0. Mostly from the
 existing notes (`story-flags.md`, `arcs/prologue.json`, the catalog's flag timeline); new disc
-reads are marked "disc", decomp reads "code". **Nothing here has been tested in the game yet**:
-the saves were built and read back (checksums, flags, restart), not loaded.
+reads are marked "disc", decomp reads "code". All four saves were then played in BlueWake 0.6.0
+(they were used to confirm its cutscene audio fix): each loaded at its restart and its scenes
+played. Results are under each section.
 
 Method for each: find what starts the scene and what it needs (flags, items, stage switches),
 start from the closest clean catalog entry, change as little as possible, and restart at a spawn
@@ -30,6 +31,8 @@ New (disc, `sea` room 44 actors and `PLYR`):
 
 Save: catalog 02 + 0x2A80 + area 11 switch 0x02, restart `sea` 44 201.
 
+Tested in BlueWake 0.6.0: loads on the lookout; the scenes play through to `zelda_fly`.
+
 ## 2. First Forsaken Fortress arrival (`ooi`, `majyuu_shinnyuu`)
 
 Already mapped in `story-flags.md` ("First Forsaken Fortress visit"): with 0x0808 on and 0x0520
@@ -52,6 +55,10 @@ New:
   never turned on in the playthrough.
 
 Save: catalog 45 + shield + Spoils Bag + the flags and switches above, restart `MajyuE` 0 18.
+The Pirate's Charm collect bit was left off.
+
+Tested in BlueWake 0.6.0: loads on the ship's deck; climbing the ladder to Tetra starts the
+catapult launch (`majyuu_shinnyuu`).
 
 ## 3. Valoo after Gohma (`howling.stb`, then `getperl_komori.stb`)
 
@@ -75,8 +82,8 @@ The game never saves a restart inside a boss room.
 
 Tested in BlueWake 0.6.0 (during BlueWake bug-fix testing): the save loads as if Gohma's intro had
 just finished, with Link on safe ground in the arena and Gohma not yet spawned. A few steps
-forward start Gohma's cutscene. Not yet reported: whether `howling.stb` and `getperl_komori`
-follow the fight.
+forward start Gohma's cutscene. After the fight, Valoo's roar (`howling.stb`) and the Din's Pearl
+scene (`getperl_komori`) follow.
 
 ## 4. Tower of the Gods rising (third pearl)
 
@@ -91,10 +98,11 @@ Disc (`sea` room 18): `Doguu` (params 0x00FF00) is in the base actor list, so on
 
 Save: catalog 18, restart `sea` 18 0.
 
+Tested in BlueWake 0.6.0: loads on the island; placing the pearl raises the tower.
+
 ## Open
 
-- Lookout spawn 201 and Northern Triangle spawn 0 haven't been used as restarts before; `sea` 0 0
-  and 44 206 are the only `sea` restarts known to load (README, "Tested in the game").
-- Where the Pirate's Charm is given (test 2).
+- Where the Pirate's Charm is given (test 2 left its collect bit off and the scenes still played,
+  so the arrival doesn't need it).
 - Whether `howling.stb` is what players call "Valoo's speech", or that is part of
   `getperl_komori`.

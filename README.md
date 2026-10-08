@@ -117,8 +117,13 @@ To add your own presets from a save catalog, use `tools/make_presets.py`.
 - Clearing a story flag replays its event (the King of Red Lions' sail speech).
 - Restart places, including the cause of freezes: asking for a spawn point that does not exist in
   the chosen room freezes the game on load (`sea 0 206` froze, while `sea 0 0` and `sea 44 206`
-  loaded). A restart inside a boss room works too: `M_DragB 0 1` (Gohma) loads on safe ground
-  with Gohma not yet spawned, and walking forward starts the boss cutscene.
+  loaded). Also loaded: `sea 44 201` (Outset lookout), `sea 18 0` (Northern Triangle Island),
+  `MajyuE 0 18` (the pirate ship at the Forsaken Fortress), and a restart inside a boss room,
+  `M_DragB 0 1` (Gohma), which loads on safe ground with Gohma not yet spawned; walking forward
+  starts the boss cutscene.
+- Saves set up just before key cutscenes play them: Tetra carried off by the Helmaroc King, the
+  Forsaken Fortress catapult launch, Gohma through Valoo and Din's Pearl, and the Tower of the
+  Gods rising (`research/cutscene-triggers.md`).
 - A save with the sea chart reset to a new file's.
 
 ## Research tools
