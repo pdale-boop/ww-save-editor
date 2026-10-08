@@ -117,7 +117,8 @@ To add your own presets from a save catalog, use `tools/make_presets.py`.
 - Clearing a story flag replays its event (the King of Red Lions' sail speech).
 - Restart places, including the cause of freezes: asking for a spawn point that does not exist in
   the chosen room freezes the game on load (`sea 0 206` froze, while `sea 0 0` and `sea 44 206`
-  loaded).
+  loaded). A restart inside a boss room works too: `M_DragB 0 1` (Gohma) loads on safe ground
+  with Gohma not yet spawned, and walking forward starts the boss cutscene.
 - A save with the sea chart reset to a new file's.
 
 ## Research tools

@@ -71,8 +71,12 @@ Disc (`M_DragB` and `Adanmae` event lists, `PLYR`):
   bits go 0x03 -> 0x3F.
 
 Save: catalog 10, restart `M_DragB` 0 1, health filled; the fight then leads into both scenes.
-The game never saves a restart inside a boss room, so whether this loads cleanly is the open
-question.
+The game never saves a restart inside a boss room.
+
+Tested in BlueWake 0.6.0 (during BlueWake bug-fix testing): the save loads as if Gohma's intro had
+just finished, with Link on safe ground in the arena and Gohma not yet spawned. A few steps
+forward start Gohma's cutscene. Not yet reported: whether `howling.stb` and `getperl_komori`
+follow the fight.
 
 ## 4. Tower of the Gods rising (third pearl)
 
@@ -89,7 +93,6 @@ Save: catalog 18, restart `sea` 18 0.
 
 ## Open
 
-- Whether a restart in a boss room (`M_DragB`) loads cleanly (test 3).
 - Lookout spawn 201 and Northern Triangle spawn 0 haven't been used as restarts before; `sea` 0 0
   and 44 206 are the only `sea` restarts known to load (README, "Tested in the game").
 - Where the Pirate's Charm is given (test 2).
