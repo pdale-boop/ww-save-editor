@@ -103,6 +103,8 @@ Tested in BlueWake 0.6.0: loads on the island; placing the pearl raises the towe
 ## Open
 
 - Where the Pirate's Charm is given (test 2 left its collect bit off and the scenes still played,
-  so the arrival doesn't need it).
+  so the arrival doesn't need it). From play, not yet checked in the decomp: Tetra slips it to
+  Link offscreen around the launch, and it is revealed when she first calls him on it inside the
+  fortress. The code that sets `mCollect[3]` would settle it.
 - Whether `howling.stb` is what players call "Valoo's speech", or that is part of
   `getperl_komori`.
