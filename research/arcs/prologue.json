@@ -3,7 +3,7 @@
   "name": "Prologue",
   "status": "partial",
   "summary": "Outset Island to the first Forsaken Fortress visit: from waking up on the lookout to Tetra's gossip stone message.",
-  "notes": "Partial: the Forsaken Fortress steps between entering (0x0801) and the gossip stone (0x0520) are not mapped, and the forest has unplaced flags. See 'unplaced'.",
+  "notes": "Partial: 0x0201 (set during the first fortress visit, setter not found) is unplaced, and the order inside the ship ride and the fortress is not fixed by the code. See 'unplaced' and the steps' notes.",
   "steps": [
     {
       "id": "new_file",
@@ -134,6 +134,25 @@
       "basis": "code+disc"
     },
     {
+      "id": "forest_bokoblins",
+      "label": "Kargarocs drop Bokoblins; Link defeats them",
+      "sets": {
+        "flags": [
+          "0x0004",
+          "0x0301",
+          "0x0480"
+        ]
+      },
+      "evidence": [
+        "0x0004 when the drop starts: daTag_Event::demoInitProc type 1 (BGM BK_FLY_DOWN), d_a_tag_event.cpp:81-88, and the Bokoblin's carry_drop, d_a_bk.cpp:2942",
+        "0x0301 then 0x0480: the first and second Bokoblin defeated (any type but 4), fail, d_a_bk.cpp:2650-2655",
+        "the forest's manager reads all three: hajimarinomori_check, d_a_andsw0.cpp:239-262 (0x0004 removes the Kargarocs; 0x0301, 0x0480 keep defeated Bokoblins from returning)",
+        "all three first on in catalog 44 (Aryll taken); off in 43"
+      ],
+      "basis": "code",
+      "notes": "0x0301 and 0x0480 are not forest-specific: any Bokoblin's death sets them, so in normal play they record the forest's two. That the forest needs them defeated to go on is from andsw0's role, not traced to the switch it sets."
+    },
+    {
       "id": "kidnapping",
       "label": "Meeting Tetra; Aryll is taken",
       "sets": {
@@ -154,12 +173,17 @@
       "sets": {
         "flags": [
           "0x0802"
+        ],
+        "optional_flags": [
+          "0x1401"
         ]
       },
       "evidence": [
-        "yuukaigo on arrival while 0x0E20 on, 0x2401 off: d_a_npc_zl1.cpp:312, sets 0x0802 at :1844"
+        "yuukaigo on arrival while 0x0E20 on, 0x2401 off: d_a_npc_zl1.cpp:312, sets 0x0802 at :1844",
+        "0x1401: Quill's first talk (message 0xC92 then 0xC93), daNpc_Bm1_c::talk_1 / getMsg_PST_1, d_a_npc_bm1.cpp:1497, 3155-3157; Quill type 1 stands only in Outset's ACT2, the layer while 0x0E20 is on and 0x0520 off (getLayerNo, d_com_inf_game.cpp:193-197)"
       ],
-      "basis": "code"
+      "basis": "code",
+      "notes": "0x1401 is set only if Link talks to Quill here (on in the catalog)."
     },
     {
       "id": "shield_missing",
@@ -211,6 +235,12 @@
       "sets": {
         "flags": [
           "0x2401"
+        ],
+        "optional_flags": [
+          "0x0104",
+          "0x0180",
+          "0x0302",
+          "0x0510"
         ]
       },
       "requires": [
@@ -224,9 +254,12 @@
       },
       "evidence": [
         "Tetra asks if Link is ready only with the shield; yes goes to sea spawn 0xCD: d_a_npc_zl1.cpp:1008-1016, 2192-2206",
-        "departure.stb demo data: flag table index 5 = 0x2401; event list EventFlag 0x2401"
+        "departure.stb demo data: flag table index 5 = 0x2401; event list EventFlag 0x2401",
+        "Outset villagers' first talks, set in compiled code on the saved flags (r3 = game info + 0x624, as Niko's saved 0x0720; temporary flags use + 0x1158): Joel & Zill 0x0104 in daNpc_Ko1_c::check_landOn (d_a_npc_ko1.rel .text+0x28D4), Rose 0x0302 in daNpc_Ob1_c::talk_1 (d_a_npc_ob1.rel +0x29E8, with 0x2C20), Sturgeon 0x0510 in daNpc_Aj1_c::talk_1 (d_a_npc_aj1.rel +0x2DC4), Sue-Belle 0x0180 in daNpc_Yw1_c::talk_1 (d_a_npc_yw1.rel +0x3630)",
+        "they stand on Outset in layers 0 and 2 (sea room 44 ACT0, ACT2); all four first on in catalog 44"
       ],
-      "basis": "code+disc"
+      "basis": "code+disc",
+      "notes": "The villagers' flags are optional talks available through the whole Outset part; they are attached here, the last Outset step, so moving past the prologue sets them as a played save has them. check_landOn's condition (Joel & Zill) is not read."
     },
     {
       "id": "deck",
@@ -241,6 +274,21 @@
       ],
       "basis": "code",
       "notes": "Optional: only if Link talks to Tetra on deck (message 0x1005). Off in the whole playthrough catalog."
+    },
+    {
+      "id": "hold_pirate",
+      "label": "A pirate in the hold talks to Link",
+      "sets": {
+        "flags": [
+          "0x0820"
+        ]
+      },
+      "evidence": [
+        "P1c starts p1c_speakAction on creation while 0x0820 and 0x0808 are off: d_a_npc_p1.cpp:1066-1073; message 0x1014, 0x0820 set as he returns to his spot (:529) or on the first talk (:438-440)",
+        "P1c stands in Asoko (ACT0, ACT1: layers before 0x0520, getLayerNo d_com_inf_game.cpp:214-217)"
+      ],
+      "basis": "code+disc",
+      "notes": "Before 0x0808 (code). Its place relative to the rope test and the chest is not fixed by the code."
     },
     {
       "id": "rope_game",
@@ -328,6 +376,26 @@
       "basis": "code"
     },
     {
+      "id": "fortress_sneak",
+      "label": "Sneaking through the Forsaken Fortress",
+      "sets": {
+        "flags": [
+          "0x0401"
+        ],
+        "optional_flags": [
+          "0x0402"
+        ]
+      },
+      "evidence": [
+        "0x0401: picking up a barrel in majroom or MajyuE, daObjBarrel::Act_c::mode_carry_init (d_a_obj_barrel.cpp:193-203), or a type-0 hint tag starting, daTag_Hint_c::startProc (d_a_tag_hint.cpp:449); majroom room 0 has 17 type-0 tags, barrels are in MajyuE 0 and majroom 0-3",
+        "a type-1 hint tag plays only after 0x0401 and sets 0x0404: d_a_tag_hint.cpp:268-273",
+        "0x0402: the rope (d_a_himo3, RopeR) in majroom or MajyuE with parameter 1, himo3_control d_a_himo3.cpp:140-147",
+        "0x0401 and 0x0402 off in catalog 45, on in 46"
+      ],
+      "basis": "code+disc",
+      "notes": "0x0402 is optional here because how the game sets it differs from my reading: the decomp tests parameter == 1, but every placed RopeR (majroom 0, 1, 2, 4) has 0xFFFF3200. The catalog has it on."
+    },
+    {
       "id": "gossip_stone",
       "label": "Tetra's message through the gossip stone",
       "sets": {
@@ -344,19 +412,8 @@
   ],
   "unplaced": {
     "flags": [
-      "0x0004",
-      "0x0104",
-      "0x0180",
-      "0x0201",
-      "0x0301",
-      "0x0302",
-      "0x0401",
-      "0x0402",
-      "0x0480",
-      "0x0510",
-      "0x0820",
-      "0x1401"
+      "0x0201"
     ],
-    "notes": "On by the end of the prologue in the catalog (entry 03) but not placed in a step. Leads: 0x0004 daTag_Event type 1; 0x0301/0x0480 d_a_bk (Bokoblins); 0x0401 barrel / hint tag; 0x0402 d_a_himo3 (rope); 0x0820 Senza's nudge (d_a_npc_p1); 0x1401 Quill (d_a_npc_bm1). Next arc: 0x2580 (find_sister), 0x2E01 and 0x0F80 (meeting the King of Red Lions)."
+    "notes": "0x0201: off in catalog 45, on in 46, so set between the departure and Link waking on the King of Red Lions (most likely the first fortress visit). No setter found: not named in the decomp outside d_save.h, no 'li rX, 0x201' in any module (rels/ and the module archive), not in any event list's EventFlag data or d_a_demo00's cutscene flag table. Not searched: main.dol's undecompiled code and flags computed at run time. Next arc: 0x2580 (find_sister), 0x2E01 and 0x0F80 (meeting the King of Red Lions)."
   }
 }
