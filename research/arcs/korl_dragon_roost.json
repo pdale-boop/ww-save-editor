@@ -536,13 +536,14 @@
     "after": "gohma"
    },
    "evidence": [
+    "no fishman spawns anywhere until Dragon Roost Cavern's boss is beaten: daNpc_So_c::_create returns cPhs_ERROR_e without isStageBossEnemy(STAGE_DRC) (d_a_npc_so.cpp:1791-1793); the Tower of the Gods square also waits for 0x1E40 (:1777-1781)",
     "daNpc_So_c (d_a_npc_so.cpp, 'Fishman (blue fish)'): at sea room 13 with 0x0901 off and Dragon Roost Cavern's boss beaten (isStageBossEnemy(STAGE_DRC)) he starts his first-meeting event (MODE_EVENT_FIRST_WAIT, :1726-1728) and first-meeting messages (0x32CA, 0x32CE: :566-571, :587-590)",
     "0x0901 is set when a fishman dives away, modeDisappearInit (:1207-1208)",
     "catalog: on between 10 and 11, with Din's Pearl"
    ],
    "basis": "code+play",
    "seen": "The fishman's scene as you sail away from Dragon Roost after the pearl (owner's play).",
-   "notes": "Any fishman diving away sets the flag, so feeding one elsewhere first also sets it; nothing later reads it as a requirement, so it has a window with no end."
+   "notes": "Fishmen appear only after Gohma, and right after Gohma Link is at Dragon Roost, so the first one met is normally this one, with its scene (owner's play: they don't appear before it). Any fishman diving away sets 0x0901, so after Gohma one met elsewhere first would set it too. Nothing later needs the flag, so its window has no end."
   },
   {
    "id": "valoo_pearl",
