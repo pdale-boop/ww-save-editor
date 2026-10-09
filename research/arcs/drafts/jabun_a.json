@@ -1,0 +1,110 @@
+{
+ "part": "A: the Endless Night to Niko's second rope game",
+ "steps": [
+  {
+   "id": "endless_night",
+   "label": "Greatfish Isle destroyed; the Endless Night begins",
+   "sets": {
+    "flags": ["0x0A02"],
+    "switches": [{"area": 0, "switch": "0x19", "why": "the island tag's switch (TagIsl 0x05FF1903 in sea room 23: swbit 0x19), daTag_Island_c::actionReady (d_a_tag_island.cpp:399-406)"}]
+   },
+   "restart": {"stage": "sea", "room": 23, "point": 0, "evidence": "saving on an island after RODE_KORL restarts at the ground's restart number, 0 on the disc (dComIfGs_setGameStartStage, checkIsland)"},
+   "evidence": [
+    "TagIsl type 3 in sea room 23 (Greatfish Isle), parameters 0x05FF1903: event 5 ARRIVAL_BRK, switch 0x19; getArrivalFlag type 3 = ENDLESS_NIGHT (d_a_tag_island.cpp:82-92), set by demoInitProc (:133-135)",
+    "dKy_checkEventNightStop: ENDLESS_NIGHT without Nayru's Pearl (d_kankyo.cpp:3161-3167); while it holds the time stays at night (d_kankyo.cpp:478-479) and Windfall uses layers 2|3 (getLayerNo; the stage select names Windfall's layer 3 'pirates')",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc",
+   "notes": "arrivalTerms has no story condition for type 3 beyond the flag itself (d_a_tag_island.cpp:111-127); in play the King's hint after Farore's Pearl marks this square."
+  },
+  {
+   "id": "quill_sunken_island",
+   "label": "Quill at the sunken island",
+   "sets": {"flags": ["0x1E80"]},
+   "window": {"after": "endless_night"},
+   "evidence": [
+    "Quill (Bm1) type 4 stands in sea room 23 (ACTR, parameters 0x0001FF04) while 0x1E80 is off, init_PST_4 (d_a_npc_bm1.cpp:586-592); his event 3 is Skn_Islnd (l_evn_tbl, :503-508) and its end sets 0x1E80 and removes him (:2994-2998)",
+    "wait_2 reacts to ENDLESS_NIGHT (:3391-3398)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc",
+   "notes": "Nothing found that requires 0x1E80 later (its readers: the Tingle Tuner d_a_agb.cpp:1213, the post box d_a_obj_toripost.cpp:939, the sea chart d_menu_fmap.cpp:914), so it is a window with no end."
+  },
+  {
+   "id": "korl_endless_night",
+   "label": "The King of Red Lions: Jabun has survived",
+   "sets": {"flags": ["0x0A01"]},
+   "evidence": [
+    "message 0x607 while ENDLESS_NIGHT is on and 0x0A01 off, daShip_c::setInitMessage (d_a_ship.cpp:353-355); reading 0x607 sets 0x0A01, setNextMessage (:647-648)",
+    "hint ladder rung 6 (research/story-flags.md)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "set_off_endless_night",
+   "label": "Setting off in the Endless Night",
+   "sets": {"flags": ["0x2A01"]},
+   "evidence": [
+    "daShip_c::procPaddleMove_init sets 0x2A01 when the boat moves with ENDLESS_NIGHT on (d_a_ship.cpp:1580-1581)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "windfall_endless_night",
+   "label": "Windfall in the Endless Night: the pirates in town",
+   "sets": {
+    "flags": ["0x1F04"],
+    "optional_flags": ["0x1F01"],
+    "switches": [{"area": 0, "switch": "0x5B", "why": "the island tag's switch (TagIsl 0x1CFF5B04 on Windfall's layers 2 and 3: swbit 0x5B), daTag_Island_c::actionReady"}]
+   },
+   "restart": {"stage": "sea", "room": 11, "point": 0, "evidence": "catalog 16 holds sea 11 0"},
+   "evidence": [
+    "TagIsl type 4 on Windfall's layers 2 and 3 (SCO2, SCO3), parameters 0x1CFF5B04: event 0x1C ARRIVAL_TWN, switch 0x5B; getArrivalFlag type 4 = 0x1F04, and arrivalTerms requires dKy_checkEventNightStop (d_a_tag_island.cpp:116-120)",
+    "the King's hints: with 0x1F04 and without 0x2110 message 0x621 (see what the pirates are doing), d_a_ship.cpp:519-522; message 0x622 sets 0x1F01 (:650-651), never on in the catalog",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "password_cutscene",
+   "label": "The pirates' password, overheard in the bomb shop",
+   "sets": {"flags": ["0x2110", "0x3B20"]},
+   "evidence": [
+    "TagEv type 9 in the bomb shop (Obombh room 0, SCOB, parameters 0x00FF1009): its start sets 0x3B20 if off and picks the password into event register 0xBA0F (daTag_Event_c, d_a_tag_event.cpp:108-120); its end sets 0x2110 (:145-146); bombshop.stb sets 0x2110 too (the decomp's note in d_save_event_flag.inc; d_a_demo00.cpp:670)",
+    "Tetra and the pirates (Zl1, P1a, P1b, P1c) stand in the bomb shop on both its layers",
+    "catalog: 0x2110 and 0x3B20 off in 15, on in 16; register 0xBA0F 0 -> 1"
+   ],
+   "basis": "code+disc",
+   "notes": "0x3B20 can come earlier, from talking to the password door before the cutscene (daKnob00_c::actionPassward2, d_a_knob00.cpp:609-611), which also picks the password. The register 0xBA0F (0-5, random) is not checked here."
+  },
+  {
+   "id": "password_door",
+   "label": "The password entered at the pirate ship's door",
+   "sets": {"flags": ["0x1910"]},
+   "evidence": [
+    "the pirate ship on Windfall's layers 2 and 3 (Pirates, parameters 0xFFFF0100, door byte 1) creates its deck door with parameters 0x101004FF, door type 4, the password door (daObj_Pirateship, d_a_obj_pirateship.cpp:214, 238, 253; dDoor_info_c::getType, d_door.cpp:26-28); Outset's pirate ship has door byte 0",
+    "the door stays locked without 0x1910 (d_a_knob00.cpp:710-714); the right password needs 0x2110 (chkPassward, :172) and sets 0x1910 (actionPassward2, :630-633)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "niko_rope_2",
+   "label": "Niko's second rope game",
+   "sets": {"flags": ["0x1A04"]},
+   "evidence": [
+    "compiled d_a_npc_p2.rel (Zuko, Niko and Mako): 0x1A04 is set in daNpc_P2_c::demo_intro_2 (.text+0x1AC4) and read in intro_action and createInit (research/scratch/relcalls.py)",
+    "Niko (P2b, parameters 0x00030005) stands in the pirate ship's interior (Asoko) on layers 2 and 3, which Asoko uses after 0x0520 (getLayerNo)",
+    "catalog 16 ('niko's trial numero dos pre win'): on"
+   ],
+   "basis": "compiled+disc",
+   "notes": "Winning the game and the Bombs are part B."
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "Every flag that first turns on between catalog 15 and 16 outside the Forest Haven arc is placed here. Event registers not placed: 0xBA0F is the password number (0-5); 0x7B03 (LETTER_ORCA) and 0xB503 (LETTER_KOMALIS_FATHER) are letters; 0xAB03 (1 -> 3) and 0xCF03 (1 -> 3) were not identified."
+ }
+}
