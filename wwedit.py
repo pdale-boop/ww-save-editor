@@ -484,9 +484,10 @@ CODE_EXITS = {
     ('sea', 11, 128): [('sea', 11, 'a fall into the sea before riding the King of Red Lions: back to '
                                    'the alcove, beside him')],
     ('sea', 44, 128): [('sea', 44, 'a fall into the sea before riding the King of Red Lions')],
-    # Actors with fixed targets (dComIfGp_setNextStage with literal arguments). Not listed: those
-    # whose point or room comes from a variable (d_a_ghostship, d_a_tag_ghostship, d_a_obj_doguu,
-    # d_a_npc_p1, the pirates: Ocean point 1 in their own room, after one of their conversations).
+    # Actors with fixed targets (dComIfGp_setNextStage with literal arguments). Not listed: the
+    # pirates (d_a_npc_p1: Ocean point 1 in their own room, after one of their conversations) and
+    # the way out of the Ghost Ship (d_a_tag_ghostship: the sea point and room saved in event
+    # registers 0x85FF and 0xC3FF when you entered, from the sea's nearest exit).
     ('sea', 11, 15): [('Pnezumi', 0, "a rat trapdoor in the tunnels behind Tingle's cell (Nzfall, "
                                      'd_a_obj_pfall, event NZFALL): you drop into the water of the alcove')],
     ('sea', 11, 3): [('*', -1, 'the end of the auction (d_a_auction)')],
@@ -500,7 +501,25 @@ CODE_EXITS = {
     ('Hyrule', 0, 233): [('*', -1, 'breaking the barrier (d_a_obj_barrier, BARRIER_BREAK), layer 9')],
     ('GanonK', 0, 4): [('*', -1, 'd_a_bgn, layer 9')],
     ('majroom', 0, 0): [('*', -1, 'd_a_mo2')],
+    ('PShip', 2, 0): [('*', -1, 'entering the Ghost Ship (d_a_ghostship); the way back out is saved '
+                                'in event registers 0xC3FF and 0x85FF')],
+    # The Triangle Islands' statues (d_a_obj_doguu::setJDemo): ADMumi room 0, layer 8, at the point
+    # given by the statue's parameters (low byte): 0, 1 and 2 on the disc.
+    ('ADMumi', 0, 0): [('sea', 18, "the statue's cutscene (d_a_obj_doguu)")],
+    ('ADMumi', 0, 1): [('sea', 27, "the statue's cutscene (d_a_obj_doguu)")],
+    ('ADMumi', 0, 2): [('sea', 32, "the statue's cutscene (d_a_obj_doguu)")],
 }
+# Where a save continues (dComIfGs_setGameStartStage, the restart place written when saving).
+# Before RODE_KORL it is fixed by the first of these flags that is set; after it, it follows the
+# place: on the sea the island's point (checkIsland) once its landing event is done, else the sea's
+# nearest exit; in dungeons, minibosses, bosses and Hyrule the stage's exit 0 (its entrance); in
+# the Ghost Ship the saved way out (event registers 0xC3FF, 0x85FF); in caves and other small
+# stages point 0 of their sea square (from the stage's map info).
+for _key, _flag in ((('sea', 11, 128), 'MET_KORL'), (('MajyuE', 0, 0), '0x0801'),
+                    (('MajyuE', 0, 18), '0x0808'), (('A_umikz', 0, 204), '0x2401'),
+                    (('sea', 44, 128), 'none of MET_KORL, 0x0801, 0x0808, 0x2401')):
+    CODE_EXITS.setdefault(_key, []).append(
+        ('*', -1, f'continuing a save made before riding the King of Red Lions, with {_flag}'))
 SEA_QUARTERS = ('north-west', 'north-east', 'south-west', 'south-east')
 
 
@@ -624,22 +643,29 @@ START_MODES = {
     3: ('stand', 'standing (mode 3 has no case of its own)'),
     4: ('event', 'knocked down, Forsaken Fortress jail music (procLargeDamage)'),
     5: ('walk', 'walking or crawling in, as Link left the last scene'),
-    6: ('event', 'starts event 0xCF'),
+    6: ('door', 'through a shutter door (event SHUTTER_START, or BS_SHUTTER_START in a boss stage)'),
     7: ('event', 'thrown out (procVomitJump)'),
     8: ('stand', 'standing (mode 8 has no case of its own)'),
     9: ('boat', 'in the boat, arriving by the Ballad of Gales warp'),
-    0xA: ('event', 'starts event 0xD2'),
-    0xB: ('event', 'starts event 0xD3'),
-    0xC: ('event', 'starts event 0xD0'),
+    0xA: ('door', 'through a door with a knob (event KNOB_START)'),
+    0xB: ('door', 'through a door with a knob (event KNOB_START_B)'),
+    0xC: ('door', 'through a shutter door (event SHUTTER_START_STOP)'),
     0xD: ('jump', 'a small jump (procSmallJump)'),
-    0xE: ('event', 'starts event 0xD4, carried in by a Floormaster (FM actor)'),
-    0xF: ('event', 'starts event 0xD5, falling slowly (procSlowFall)'),
+    0xE: ('event', 'carried in by a Floormaster (event FMASTER_START, FM actor)'),
+    0xF: ('fall', 'falling in slowly (event FALL_START, procSlowFall)'),
 }
+# The game's built-in events, 0xC9-0xD5 (dEvent_manager_c's name table, soecial_table): a start
+# mode or a spawn point's start event can name them instead of an entry in the stage's list.
+BUILTIN_EVENTS = {0xC9: 'NORMAL_COMEBACK', 0xCA: 'MAGMA_COMEBACK', 0xCB: 'TORNADO_COMEBACK',
+                  0xCC: 'TIMEWARP_COMEBACK', 0xCD: 'SHIP_COMEBACK', 0xCE: 'DEFAULT_START',
+                  0xCF: 'SHUTTER_START', 0xD0: 'SHUTTER_START_STOP', 0xD1: 'BS_SHUTTER_START',
+                  0xD2: 'KNOB_START', 0xD3: 'KNOB_START_B', 0xD4: 'FMASTER_START', 0xD5: 'FALL_START'}
 
 
 def spawn_arrival(params, events=()):
     """(kind, event, description) for a PLYR entry's parameters. Kinds, from the start mode:
-    'stand', 'walk', 'jump', 'boat', 'event'; event is the start event's name or None.
+    'stand', 'walk', 'jump', 'boat', 'door', 'fall', 'event'; event is the start event's name
+    or None.
 
     The top byte is a start event (getStartEvent): 0xFF is none; below 200 it indexes the
     stage's EVNT list (events, from Stage.dzs: dEvent_exception_c::setStartDemo reads
@@ -652,7 +678,8 @@ def spawn_arrival(params, events=()):
     event = params >> 24
     name = None
     if event != 0xFF:
-        name = events[event] if event < min(200, len(events)) else f'0x{event:02X}'
+        name = (events[event] if event < min(200, len(events)) else
+                BUILTIN_EVENTS.get(event, f'0x{event:02X}'))
         text = f'starts event {name} (the first time); then {text}'
     if params & 0x80:
         text += '; waits to land on a ship actor (OBJ_IKADA)'

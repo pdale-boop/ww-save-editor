@@ -400,7 +400,8 @@ def stage_label(stage):
 
 # Short words for wwedit.spawn_arrival kinds, shown after each spawn point.
 ARRIVAL_WORDS = {'stand': 'on foot', 'walk': 'walking in', 'jump': 'jumping in',
-                 'boat': 'in the boat', 'event': 'cutscene'}
+                 'boat': 'in the boat', 'door': 'through a door', 'fall': 'falling in',
+                 'event': 'cutscene'}
 
 
 def arrival_word(kind, event):
