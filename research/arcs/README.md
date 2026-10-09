@@ -33,6 +33,7 @@ A step:
 | `sets.dungeon_items` | `{"area", "items"}`: the area's dungeon-item bits (`dSv_memBit_c::mDungeonItem`, area block + 0x21): `MAP`, `COMPASS`, `BOSS_KEY`, `STAGE_BOSS_ENEMY` (boss beaten), `STAGE_LIFE` (heart container taken), `STAGE_BOSS_DEMO` (boss intro seen); checked |
 | `sets.switches` | saved stage switches: `{"area", "switch", "why"}`. `area` is the stage's save area (`STAG`, `dStage_stagInfo_GetSaveTbl`); switches 0x00-0x7F are saved at area block + 0x04 (`dSv_memBit_c::mSwitch`). Spawn switches stop a scene replaying, so moving forward sets them and moving back clears them |
 | `restart` | where the game would put the restart on saving at this step (`dComIfGs_setGameStartStage`, `l_checkData`) |
+| `window` | `{"after", "by"}` (step ids): a step the player can do any time in that stretch. It is left out of the order and checked against it: not started before `after` is done, done once `by` is |
 | `requires` | other steps (`arc:step`) that must be done first |
 | `evidence` | decomp lines, disc data, compiled code |
 | `basis` | `code`, `disc`, `compiled` (read from the game's compiled modules), `play` (the owner's account), or a mix |

@@ -77,8 +77,26 @@ def checked_count(step):
 
 def position(save, arc):
     """(n, None) when steps 1..n are done and the rest not started; (None, text) when mixed.
-    A step with nothing checkable counts as done. Partly done steps count as not done."""
-    steps = arc['steps']
+    A step with nothing checkable counts as done. Partly done steps count as not done.
+    Steps with a window ({"after", "by"}: step ids) are left out of the order and checked
+    against it instead: started only once "after" is done, done once "by" is."""
+    floating = [s for s in arc['steps'] if 'window' in s]
+    steps = [s for s in arc['steps'] if 'window' not in s]
+    n, mixed = ordered_position(save, steps)
+    if mixed:
+        return None, mixed
+    ids = [s['id'] for s in steps]
+    for s in floating:
+        after, by = ids.index(s['window']['after']), ids.index(s['window']['by'])
+        missing = step_missing(save, s)
+        if n > by and missing:
+            return None, f"past {s['window']['by']}, but {s['id']} lacks {', '.join(missing)}"
+        if n <= after and len(missing) < checked_count(s):
+            return None, f"{s['id']} started before {s['window']['after']} is done"
+    return n, None
+
+
+def ordered_position(save, steps):
     done = [not step_missing(save, s) for s in steps]
     checked = [checked_count(s) for s in steps]
     started = [c > 0 and len(step_missing(save, s)) < c for s, c in zip(steps, checked)]
@@ -104,13 +122,14 @@ def main():
         for p in paths:
             save = wwedit.Save(p)
             n, mixed = position(save, arc)
-            where = mixed and f'MIXED: {mixed}' or (arc['steps'][n - 1]['id'] if n else 'not started')
+            steps = [s for s in arc['steps'] if 'window' not in s]
+            where = mixed and f'MIXED: {mixed}' or (steps[n - 1]['id'] if n else 'not started')
             if mixed:
                 n_done = 0
-                while n_done < len(arc['steps']) and not step_missing(save, arc['steps'][n_done]):
+                while n_done < len(steps) and not step_missing(save, steps[n_done]):
                     n_done += 1
-                if n_done < len(arc['steps']):
-                    where += f" (first gap: {arc['steps'][n_done]['id']} lacks {', '.join(step_missing(save, arc['steps'][n_done]))})"
+                if n_done < len(steps):
+                    where += f" (first gap: {steps[n_done]['id']} lacks {', '.join(step_missing(save, steps[n_done]))})"
             print(f"  {os.path.basename(os.path.dirname(p))[:44]:44} {where}")
 
 

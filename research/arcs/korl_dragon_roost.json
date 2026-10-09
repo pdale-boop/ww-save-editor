@@ -3,7 +3,7 @@
  "name": "The King of Red Lions and Dragon Roost",
  "status": "partial",
  "summary": "From finding your sister gone in the Forsaken Fortress tower to Din's Pearl: meeting the King of Red Lions on Windfall, the sail and the first sail, Dragon Roost Island and Komali, Dragon Roost Cavern and Gohma, Valoo, and the south wind towards Forest Haven.",
- "notes": "Joined from three parts researched in parallel (drafts/korl_a, korl_b, korl_c, with their evidence in the matching .md files). Follows the prologue arc (after gossip_stone); the next arc starts at the Forest Haven arrival (0x0A20). Unchecked here: bottles, the letter leaving the Delivery Bag (delivery_passed), and the order of wind_requiem and quill_dri, which the code does not fix.",
+ "notes": "Joined from three parts researched in parallel (drafts/korl_a, korl_b, korl_c, with their evidence in the matching .md files). Follows the prologue arc (after gossip_stone); the next arc starts at the Forest Haven arrival (0x0A20). Unchecked here: bottles and the letter leaving the Delivery Bag (delivery_passed). wind_requiem has a window (any time from the Wind Waker to the south wind, owner's play), so it is not part of the order.",
  "steps": [
   {
    "id": "find_sister",
@@ -179,8 +179,12 @@
     "his lesson checks the Wind Waker on a button (d_a_npc_hr.cpp:250), so it follows dri_arrival",
     "0x2708 is the Wind's Requiem learned flag in wwedit.SONG_FLAGS (song bit 0); the song itself isn't checkable by arcs.py (songs aren't items there)"
    ],
-   "basis": "code+disc",
-   "notes": "The song (collection bit 0) goes with 0x2708; arcs.py can't check songs yet."
+   "basis": "code+play",
+   "notes": "Can be learned any time between getting the Wind Waker and changing the wind to the south (owner's play): Zephos needs the Wind Waker on a button (d_a_npc_hr.cpp:250), and the south wind needs the song. So it is checked within that window, not in order.",
+   "window": {
+    "after": "dri_arrival",
+    "by": "south_wind"
+   }
   },
   {
    "id": "quill_dri",
@@ -220,8 +224,9 @@
     "disc: Atorizk room 0 SCOB TagEv params 0x00FF0908 at (-41, -53, 671): type 8, switch 0x09, event 0 of Atorizk's EVNT list, demo10, which plays dragontale.stb (Atorizk event_list.dat)",
     "the Delivery Bag (dItemNo_DELIVERY_BAG_e, 0x30): on in catalog 07. No event list on the disc gives item 0x30; the giver wasn't found (possibly in dragontale.stb)"
    ],
-   "basis": "code+disc",
-   "notes": "Which actor gives the Delivery Bag is unsettled; the step records it because the letter needs a bag slot."
+   "basis": "code+disc+play",
+   "notes": "Which actor gives the Delivery Bag is unsettled; the step records it because the letter needs a bag slot.",
+   "seen": "The cutscene of meeting the Chief; at its end Quill hands over the Delivery Bag (owner's play; the disc has no event list giving item 0x30)."
   },
   {
    "id": "fathers_letter",
