@@ -680,9 +680,11 @@ def event_scene_changes(evl):
 
 
 def evnt_names(dzx):
-    """Event names in the 'EVNT' chunk (dStage_Event_dt_c, 0x18 bytes, name at 0x04)."""
+    """Event names in the 'EVNT' chunk (dStage_Event_dt_c, 0x18 bytes). The name (15 bytes) starts
+    at 0x01, right after the first byte: the decomp's offset comment says 0x04, but its struct and
+    the disc put it at 1 (sea entry 2 reads MEETSHISHIOH)."""
     num, off = dzx_chunk(dzx, b'EVNT')
-    return [dzx[off + i * 0x18 + 4:off + i * 0x18 + 0x13].split(b'\0')[0].decode('ascii', 'replace')
+    return [dzx[off + i * 0x18 + 1:off + i * 0x18 + 0x10].split(b'\0')[0].decode('ascii', 'replace')
             for i in range(num)]
 
 
