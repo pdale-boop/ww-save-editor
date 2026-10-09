@@ -428,32 +428,242 @@ def rarc_files(data):
     return out
 
 
+def dzx_chunk(dzx, tag):
+    """(count, offset) of a chunk in a stage/room data file (.dzs/.dzr), or (0, 0)."""
+    chunks = struct.unpack('>I', dzx[0:4])[0]
+    for c in range(chunks):
+        t, num, off = struct.unpack('>4sII', dzx[4 + c * 12:16 + c * 12])
+        if t == tag:
+            return num, off
+    return 0, 0
+
+
 def plyr_entries(dzx):
     """Player spawn points in a stage/room data file (.dzs/.dzr): the 'PLYR' chunk.
 
     Each 32-byte entry is an actor record; dStage_playerInit matches the requested spawn
     point against the low byte of the Z rotation, and takes the room from the entry's
-    parameters (low 6 bits). Returns [(spawn id, room, x, y, z)].
+    parameters (low 6 bits). Returns [(spawn id, room, x, y, z, parameters)]; spawn_arrival
+    reads the parameters.
     """
-    chunks = struct.unpack('>I', dzx[0:4])[0]
-    for c in range(chunks):
-        tag, num, off = struct.unpack('>4sII', dzx[4 + c * 12:16 + c * 12])
-        if tag == b'PLYR':
-            out = []
-            for i in range(num):
-                e = dzx[off + i * 0x20:off + (i + 1) * 0x20]
-                params = struct.unpack('>I', e[8:12])[0]
-                x, y, z = struct.unpack('>fff', e[12:24])
-                angle_z = struct.unpack('>H', e[0x1C:0x1E])[0]
-                out.append((angle_z & 0xFF, params & 0x3F, x, y, z))
-            return out
-    return []
+    num, off = dzx_chunk(dzx, b'PLYR')
+    out = []
+    for i in range(num):
+        e = dzx[off + i * 0x20:off + (i + 1) * 0x20]
+        params = struct.unpack('>I', e[8:12])[0]
+        x, y, z = struct.unpack('>fff', e[12:24])
+        angle_z = struct.unpack('>H', e[0x1C:0x1E])[0]
+        out.append((angle_z & 0xFF, params & 0x3F, x, y, z, params))
+    return out
+
+
+def scls_entries(dzx):
+    """Exits in a stage/room data file: the 'SCLS' chunk (stage_scls_info_class, 0xC bytes:
+    stage name, spawn point, room, wipe). Doors and exit triggers name an index in it.
+    Returns [(stage, spawn point, room)]."""
+    num, off = dzx_chunk(dzx, b'SCLS')
+    return [(dzx[off + i * 12:off + i * 12 + 8].split(b'\0')[0].decode('ascii', 'replace'),
+             dzx[off + i * 12 + 8], dzx[off + i * 12 + 9]) for i in range(num)]
+
+
+# Scene changes written into the code instead of the stage data, as
+# {(stage, room, point): [(from stage, from room, condition)]}; from stage '*' is "anywhere".
+# First the pirate ship's hatch, collision exit 0x3C (dStage_changeSceneExitId). Not listed: exits
+# 0x3E (Beedle's shop ship, Obshop), 0x3B (Abship) and 0x3D (back to the sea,
+# dStage_playerInitIkada), whose point and room come from the ship actor's parameters.
+CODE_EXITS = {
+    ('Asoko', 0, 0): [('*', -1, 'the pirate ship hatch, from any other stage')],
+    ('A_umikz', 0, 0): [('Asoko', -1, 'the hatch, before flag 0x0808')],
+    ('MajyuE', 0, 18): [('Asoko', -1, 'the hatch, with flag 0x0808 but not 0x0520')],
+    ('sea', 11, 5): [('Asoko', -1, 'the hatch, with flags 0x0808 and 0x0520')],
+    # daPy_lk_c's fall into the sea (the code after setDamagePoint): before RODE_KORL, at Windfall
+    # or Outset, if the room has a point 0x80. Windfall's point 128 stands in the alcove (point 200,
+    # after FIND_SISTER, is in the same spot), next to the King of Red Lions: before RODE_KORL
+    # dStage_shipInfoInit moors him there (ship position 0x80), and 128's own ship id is 0x80 too.
+    # The traps in the tunnels behind Tingle's cell go to point 15 above the alcove instead (below).
+    ('sea', 11, 128): [('sea', 11, 'a fall into the sea before riding the King of Red Lions: back to '
+                                   'the alcove, beside him')],
+    ('sea', 44, 128): [('sea', 44, 'a fall into the sea before riding the King of Red Lions')],
+    # Actors with fixed targets (dComIfGp_setNextStage with literal arguments). Not listed: those
+    # whose point or room comes from a variable (d_a_ghostship, d_a_tag_ghostship, d_a_obj_doguu,
+    # d_a_npc_p1, the pirates: Ocean point 1 in their own room, after one of their conversations).
+    ('sea', 11, 15): [('Pnezumi', 0, "a rat trapdoor in the tunnels behind Tingle's cell (Nzfall, "
+                                     'd_a_obj_pfall, event NZFALL): you drop into the water of the alcove')],
+    ('sea', 11, 3): [('*', -1, 'the end of the auction (d_a_auction)')],
+    ('sea', 48, 1): [('*', -1, 'the end of the boat race (d_a_goal_flag), or falling out of it (daPy_lk_c)')],
+    ('sea', 20, 2): [('*', -1, 'the volcano tag (d_a_tag_volcano, event TAG_VOLCANO)')],
+    ('sea', 40, 2): [('*', -1, 'the volcano tag (d_a_tag_volcano, event TAG_VOLCANO)')],
+    ('sea', 13, 227): [('*', -1, 'Medli (d_a_npc_md), layer 8')],
+    ('sea', 44, 205): [('*', -1, 'Tetra (d_a_npc_zl1), layer 10, after flags 0x2908 and 0x0810')],
+    ('LinkRM', 0, 201): [('*', -1, 'Grandma (d_a_npc_ba1), layer 9')],
+    ('Otkura', 0, 230): [('*', -1, 'Makar (d_a_npc_cb1), layer 8')],
+    ('Hyrule', 0, 233): [('*', -1, 'breaking the barrier (d_a_obj_barrier, BARRIER_BREAK), layer 9')],
+    ('GanonK', 0, 4): [('*', -1, 'd_a_bgn, layer 9')],
+    ('majroom', 0, 0): [('*', -1, 'd_a_mo2')],
+}
+SEA_QUARTERS = ('north-west', 'north-east', 'south-west', 'south-east')
+
+
+def disc_exits(iso_path, index=None):
+    """Every exit: {(stage, room, spawn point): [(from stage, from room, condition)]}, from the
+    'SCLS' chunks on the disc (condition ''), the cutscenes' scene changes in each event_list.dat
+    (event_scene_changes) and CODE_EXITS. From room -1 is an exit in a stage's
+    own data (Stage.dzs). An exit's room is stored as s8, so 255 is -1: dStage_Create then loads
+    no room first, and the point has to be in the stage's own spawn list (see exits_to).
+
+    Two uses of a stage's own list come from daPy_lk_c's fall and death handling: on the sea,
+    entries 0-195 are where a fall into the sea without a restart point goes, four per square
+    (entry = quarter + 4 * (room - 1), quarter from x and z: dStage_changeScene(scls_idx));
+    elsewhere entry 0 is where a game over sends you (dStage_changeScene(0))."""
+    index = index or disc_index(iso_path)
+    out = {key: list(v) for key, v in CODE_EXITS.items()}
+    with open(iso_path, 'rb') as f:
+        for stage, rooms in disc_rooms(iso_path, index).items():
+            for room, arc, ext in ([(-1, f'res/Stage/{stage}/Stage.arc', '.dzs')] +
+                                   [(r, f'res/Stage/{stage}/Room{r}.arc', '.dzr') for r in sorted(rooms)]):
+                if arc not in index:
+                    continue
+                off, size = index[arc]
+                f.seek(off)
+                for name, blob in rarc_files(f.read(size)).items():
+                    if name.lower().endswith(ext):
+                        for i, (dest, point, dest_room) in enumerate(scls_entries(yaz0_decompress(blob))):
+                            src = (stage, room, '')
+                            if room == -1 and stage == 'sea' and i < 196:
+                                src = ('sea', i // 4 + 1, f'a fall into the sea in the {SEA_QUARTERS[i % 4]} '
+                                                          'quarter of the square')
+                            elif room == -1 and i == 0:
+                                src = (stage, -1, 'continuing after a game over there, or exit 0 of the stage')
+                            sources = out.setdefault((dest, dest_room, point), [])
+                            if src not in sources:
+                                sources.append(src)
+                    elif name.lower() == 'event_list.dat':
+                        for event, dest, point, dest_room in event_scene_changes(yaz0_decompress(blob)):
+                            sources = out.setdefault((dest, dest_room & 0xFF, point), [])
+                            if (stage, room, f'the cutscene {event}') not in sources:
+                                sources.append((stage, room, f'the cutscene {event}'))
+    return out
+
+
+def exits_to(exits, stage, point, room=None):
+    """[(from stage, from room, condition)] for the exits that lead to a spawn point. room is the
+    room whose data holds the point, or None for a point in the stage's own list (Stage.dzs).
+    dStage_playerInit finds a point by its id in the list that was loaded, so a room's point is
+    reached by exits that load that room, whatever the room bits in the point's parameters say
+    (Savage Labyrinth room 11's point says room 6), and a stage-list point by any exit to the
+    stage with its id."""
+    if room is not None:
+        return exits.get((stage, room, point), [])
+    return [src for (s, _, p), sources in exits.items() if s == stage and p == point for src in sources]
+
+
+def event_scene_changes(evl):
+    """Scene changes in an event list (event_list.dat): [(event name, stage, start code, room)].
+
+    Layout from d_event_data.h: a 0x40 header (event_binary_data_header) of (offset, count) pairs
+    for events (dEvDtEvent_c, 0xB0), staff (dEvDtStaff_c, 0x50), cuts (dEvDtCut_c, 0x50), data
+    (dEvDtData_c, 0x40), floats, integers and strings. A cut's data is a chain from mFirstDataIdx
+    through mNextIdx; dEvDt_Next_Stage changes scene from a cut with "Stage" and "StartCode"
+    ("RoomNo" defaults to 0). A staff's cuts chain from mFirstCutIdx through mNextCutIdx."""
+    (ev_top, ev_num, st_top, st_num, cut_top, cut_num, dat_top, dat_num,
+     _f_top, _f_num, i_top, _i_num, s_top, _s_num) = struct.unpack('>14I', evl[:0x38])
+
+    def name(off):
+        return evl[off:off + 0x20].split(b'\0')[0].decode('ascii', 'replace')
+
+    def cut_data(cut):
+        out, i, seen = {}, struct.unpack('>I', evl[cut_top + cut * 0x50 + 0x38:][:4])[0], set()
+        while 0 <= i < dat_num and i not in seen:
+            seen.add(i)
+            d = dat_top + i * 0x40
+            kind, idx, size, nxt = struct.unpack('>iiii', evl[d + 0x24:d + 0x34])
+            if kind == 3:                                   # TYPE_INT
+                out[name(d)] = struct.unpack('>i', evl[i_top + idx * 4:i_top + idx * 4 + 4])[0]
+            elif kind == 4:                                 # TYPE_STRING
+                out[name(d)] = evl[s_top + idx:s_top + idx + size].split(b'\0')[0].decode('ascii', 'replace')
+            i = nxt
+        return out
+
+    result = []
+    for e in range(ev_num):
+        ev = ev_top + e * 0xB0
+        n_staff = struct.unpack('>i', evl[ev + 0x7C:ev + 0x80])[0]
+        for s in struct.unpack('>20i', evl[ev + 0x2C:ev + 0x7C])[:max(0, min(n_staff, 20))]:
+            if not 0 <= s < st_num:
+                continue
+            cut, seen = struct.unpack('>i', evl[st_top + s * 0x50 + 0x30:][:4])[0], set()
+            while 0 <= cut < cut_num and cut not in seen:
+                seen.add(cut)
+                data = cut_data(cut)
+                if 'Stage' in data and 'StartCode' in data:
+                    change = (name(ev), data['Stage'], data['StartCode'], data.get('RoomNo', 0))
+                    if change not in result:
+                        result.append(change)
+                cut = struct.unpack('>i', evl[cut_top + cut * 0x50 + 0x3C:][:4])[0]
+    return result
+
+
+def evnt_names(dzx):
+    """Event names in the 'EVNT' chunk (dStage_Event_dt_c, 0x18 bytes, name at 0x04)."""
+    num, off = dzx_chunk(dzx, b'EVNT')
+    return [dzx[off + i * 0x18 + 4:off + i * 0x18 + 0x13].split(b'\0')[0].decode('ascii', 'replace')
+            for i in range(num)]
+
+
+# How Link arrives at a spawn point, by start mode (parameters bits 12-15,
+# daPy_lk_c::getStartMode), from the cases in daPy_lk_c::makeBgWait and playerInit.
+# Modes without a case there (0, 3, 8) stand; makeBgWait switches to swimming if the point
+# is in water (changeSwimProc) or falling if it is more than 30.1 above the ground. Points can
+# also start Link in the air: Windfall's point 15 (mode 5), where the rat trapdoors in the jail
+# tunnels send you, is 480 above the alcove, and you drop into the water (owner's play). Ten
+# on-foot sea points are within 50 of sea level (y 0); the others weren't checked.
+START_MODES = {
+    0: ('stand', 'standing'),
+    1: ('walk', 'walking in'),
+    2: ('boat', 'in the boat (standing instead until the King of Red Lions is met: no boat yet)'),
+    3: ('stand', 'standing (mode 3 has no case of its own)'),
+    4: ('event', 'knocked down, Forsaken Fortress jail music (procLargeDamage)'),
+    5: ('walk', 'walking or crawling in, as Link left the last scene'),
+    6: ('event', 'starts event 0xCF'),
+    7: ('event', 'thrown out (procVomitJump)'),
+    8: ('stand', 'standing (mode 8 has no case of its own)'),
+    9: ('boat', 'in the boat, arriving by the Ballad of Gales warp'),
+    0xA: ('event', 'starts event 0xD2'),
+    0xB: ('event', 'starts event 0xD3'),
+    0xC: ('event', 'starts event 0xD0'),
+    0xD: ('jump', 'a small jump (procSmallJump)'),
+    0xE: ('event', 'starts event 0xD4, carried in by a Floormaster (FM actor)'),
+    0xF: ('event', 'starts event 0xD5, falling slowly (procSlowFall)'),
+}
+
+
+def spawn_arrival(params, events=()):
+    """(kind, event, description) for a PLYR entry's parameters. Kinds, from the start mode:
+    'stand', 'walk', 'jump', 'boat', 'event'; event is the start event's name or None.
+
+    The top byte is a start event (getStartEvent): 0xFF is none; below 200 it indexes the
+    stage's EVNT list (events, from Stage.dzs: dEvent_exception_c::setStartDemo reads
+    dComIfGp_getStage(), not the room), and plays only while the event's spawn switch is off,
+    which it then turns on. Not covered: the last scene's mode (dComIfGs_getLastSceneMode),
+    which also changes the arrival and isn't stored on the card; what it is after loading a
+    card is not settled. The water and drop fallbacks above need the room's collision, which
+    is not read here."""
+    kind, text = START_MODES[(params >> 12) & 0xF]
+    event = params >> 24
+    name = None
+    if event != 0xFF:
+        name = events[event] if event < min(200, len(events)) else f'0x{event:02X}'
+        text = f'starts event {name} (the first time); then {text}'
+    if params & 0x80:
+        text += '; waits to land on a ship actor (OBJ_IKADA)'
+    return kind, name, text
 
 
 def spawn_points(iso_path, stage, room, index=None):
     """Spawn points the game can find for stage/room: {'room': [...], 'stage': [...]} as
-    plyr_entries tuples. A restart whose point is in neither list makes the retail game read
-    past the end of the list (the debug build's JUT_ASSERT(i != num)), which froze in testing."""
+    plyr_entries tuples, and 'events': the stage's EVNT names for spawn_arrival. A restart
+    whose point is in neither list makes the retail game read past the end of the list (the
+    debug build's JUT_ASSERT(i != num)), which froze in testing."""
     index = index or disc_index(iso_path)
 
     def read(path):
@@ -464,7 +674,7 @@ def spawn_points(iso_path, stage, room, index=None):
             f.seek(off)
             return f.read(size)
 
-    result = {'room': [], 'stage': []}
+    result = {'room': [], 'stage': [], 'events': []}
     for kind, arc, ext in (('room', f'res/Stage/{stage}/Room{room}.arc', '.dzr'),
                            ('stage', f'res/Stage/{stage}/Stage.arc', '.dzs')):
         data = read(arc)
@@ -472,7 +682,10 @@ def spawn_points(iso_path, stage, room, index=None):
             continue
         for name, blob in rarc_files(data).items():
             if name.lower().endswith(ext):
-                result[kind] = plyr_entries(yaz0_decompress(blob))
+                dzx = yaz0_decompress(blob)
+                result[kind] = plyr_entries(dzx)
+                if kind == 'stage':
+                    result['events'] = evnt_names(dzx)
     return result
 
 

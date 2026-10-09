@@ -31,8 +31,19 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
       `0xA107`, `0xA207` and `0xA307` look like per-dungeon progress (Forbidden Woods, Dragon Roost
       Cavern, Earth Temple), possibly map, compass and boss key. Confirm by comparing saves from
       just before and after picking up a dungeon map.
-- [ ] **Sea room 0.** Disc stage `sea` has 50 rooms for 49 squares. Room 0 spawn 0 loads near
-      Windfall; what it is for is unknown.
+- [ ] **Sea room 0.** Disc stage `sea` has 50 rooms for 49 squares. Room 0 has one spawn point, a
+      boat arrival near Windfall (x 50010, z -217988), only collision and room data, and no exit or
+      cutscene on the disc leads to it; loading it puts Link in his boat on the sea. The Randomizer
+      calls it "Sea Floor"; what it is for is still unknown.
+- [ ] **Spawn points nobody reaches yet.** 703 of 1,159 have a named way in (exits, cutscenes,
+      actor code, falls, game overs). Still to read: the scene changes whose target is computed
+      (the Ghost Ship, its tag, the Tower statues `d_a_obj_doguu`, the pirates `d_a_npc_p1` going
+      to `Ocean`), restarts after a fall in dungeon rooms, and the built-in events 0xCF-0xD5 that
+      start modes 6 and 10-15 play. Exit-list entries that lead nowhere (18, mostly test stages)
+      look unused.
+- [ ] **Message text** (pinned 2026-10-09). A reader for the disc's message file would name
+      conversations by their text, for example the pirates' messages 0xFA4/0xFA5 that decide
+      whether they send Link to `Ocean`.
 - [ ] **Big Octo and the Great Fairy.** Big Octo's defeat is a switch in its sea square's area
       progress (`d_a_daiocta.cpp`). The Great Fairy (`d_a_bigelf.cpp`) is not fully decompiled;
       find what she checks before giving double magic.
@@ -67,8 +78,15 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
 - [ ] **Event register editing**, once their meanings are known.
 - [ ] **Pictographs**, including the Legendary Pictograph. They are photos, stored apart from the
       quest log; work out where and how before offering them.
-- [ ] **More named restart spots.** Add confirmed spots (like Windfall's post-rescue alcove,
-      `sea 11 128`) as they are found, and list a room's spawn points by name where known.
+- [ ] **More named restart spots.** Add confirmed spots (like Windfall's alcove, `sea 11 128`,
+      beside the King of Red Lions moored there) as they are found. The Restart place tab now
+      says how Link arrives at each point and which exits lead there.
+- [ ] **Crafted restarts and the Tower night crash.** Catalog 41 + `set_restart("Siren", 0, 0)` +
+      18 or more hearts crashes BlueWake's default build at night (real clock 19:00 on); the
+      game's own save at the same place doesn't. The saves differ only in the Z item and the
+      in-game time (05:56 in the crafted one). One-change test cards are with the BlueWake
+      session (`CLOCK_CRASH_HANDOFF.md`). Once the field is known, decide what a crafted restart
+      should set (for example a daytime `mTime`) and say so in the tab.
 - [ ] **Better story presets.** The current ones are tests made from save states taken whenever
       it was convenient during play. Replace them with states made at deliberately chosen points
       in the story, or with presets built from the required flags, items and spawn points once

@@ -7,8 +7,9 @@ assets; you need your own copy of the game and BlueWake to use it.
 Wind Waker Randomizer (https://github.com/LagoLunatic/wwrando)
 ---------------------------------------------------------------
 wwedit.py, wwgui.py and tools/wwcat.py include data taken from the Wind Waker Randomizer:
-item names (data/item_names.txt), stage descriptions (data/stage_names.txt), entrance spawn
-points (randomizers/entrances.py), and event flag notes from its patches (asm/patches/*.asm).
+item names (data/item_names.txt), stage descriptions (data/stage_names.txt), sea square names
+(data/island_names.txt), entrance spawn points (randomizers/entrances.py), and event flag notes
+from its patches (asm/patches/*.asm).
 That data is used under the MIT License:
 
 The MIT License (MIT)

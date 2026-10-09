@@ -21,7 +21,8 @@ game's own.
   works on new files), or reset it to a new file's.
 - **Restart place:** where the save starts when loaded. Pick a known spot, or any stage and room on
   your disc; only spawn points that exist in that room are offered, since a missing one freezes the
-  game.
+  game. Each point says how Link arrives (on foot, walking in, in the boat, or with a cutscene),
+  read from the disc the way the game reads it.
 - **Story flags:** all 487, with descriptions, grouped by area, searchable and sortable.
 - **Story presets:** jump to a point in the story. Presets from a full playthrough are included.
 

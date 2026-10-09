@@ -293,6 +293,27 @@ STAGE_NAMES = {
     'Xboss3': 'Molgera Rematch',
 }
 
+# Sea squares (stage 'sea', room = square) from the Wind Waker Randomizer (data/island_names.txt,
+# MIT licence). Room 0 is called 'Sea Floor' there; nothing on the disc backs that: its one spawn
+# point is a boat arrival near Windfall and no exit leads to it, and loading it in BlueWake put
+# Link in his boat on the open sea (owner's test). Left unnamed until it is understood.
+SEA_ROOM_NAMES = {
+    1: 'Forsaken Fortress Sector', 2: 'Star Island', 3: 'Northern Fairy Island', 4: 'Gale Isle',
+    5: 'Crescent Moon Island', 6: 'Seven-Star Isles', 7: 'Overlook Island', 8: 'Four-Eye Reef',
+    9: 'Mother and Child Isles', 10: 'Spectacle Island', 11: 'Windfall Island', 12: 'Pawprint Isle',
+    13: 'Dragon Roost Island', 14: 'Flight Control Platform', 15: 'Western Fairy Island',
+    16: 'Rock Spire Isle', 17: 'Tingle Island', 18: 'Northern Triangle Island',
+    19: 'Eastern Fairy Island', 20: 'Fire Mountain', 21: 'Star Belt Archipelago',
+    22: 'Three-Eye Reef', 23: 'Greatfish Isle', 24: 'Cyclops Reef', 25: 'Six-Eye Reef',
+    26: 'Tower of the Gods Sector', 27: 'Eastern Triangle Island', 28: 'Thorned Fairy Island',
+    29: 'Needle Rock Isle', 30: 'Islet of Steel', 31: 'Stone Watcher Island',
+    32: 'Southern Triangle Island', 33: 'Private Oasis', 34: 'Bomb Island', 35: "Bird's Peak Rock",
+    36: 'Diamond Steppe Island', 37: 'Five-Eye Reef', 38: 'Shark Island',
+    39: 'Southern Fairy Island', 40: 'Ice Ring Isle', 41: 'Forest Haven', 42: 'Cliff Plateau Isles',
+    43: 'Horseshoe Island', 44: 'Outset Island', 45: 'Headstone Island', 46: 'Two-Eye Reef',
+    47: 'Angular Isles', 48: 'Boating Course', 49: 'Five-Star Isles',
+}
+
 # Story flags are grouped into areas by keywords in their descriptions (rough, first match wins).
 FLAG_AREAS = [
     ('Unused', ['unused']),
@@ -375,6 +396,60 @@ def stage_experimental(stage):
 
 def stage_label(stage):
     return f'{stage} \u2014 {STAGE_NAMES[stage]}' if stage in STAGE_NAMES else stage
+
+
+# Short words for wwedit.spawn_arrival kinds, shown after each spawn point.
+ARRIVAL_WORDS = {'stand': 'on foot', 'walk': 'walking in', 'jump': 'jumping in',
+                 'boat': 'in the boat', 'event': 'cutscene'}
+
+
+def arrival_word(kind, event):
+    word = ARRIVAL_WORDS[kind]
+    return f'{word}, after a cutscene' if event and kind != 'event' else word
+
+
+# Savage Labyrinth floors by room file, traced along the exits (SCLS) from Cave09 room 0; floor 50's
+# exit leads to Outset (sea 44, point 10). No exit leads to Cave10 and Cave11 room 0 or to Cave11
+# rooms 6-10 and 16-20. Floors 5, 15, 25 and 35 also have a second exit (to the entrance) but are
+# full of enemies; that exit is probably an unused list entry.
+LABYRINTH_FLOORS = {('Cave09', 0): 'entrance'}
+for _first, (_stage, _rooms) in enumerate([('Cave09', range(1, 6)), ('Cave09', range(11, 16)),
+                                           ('Cave10', range(1, 6)), ('Cave10', range(11, 16)),
+                                           ('Cave09', range(6, 11)), ('Cave09', range(16, 21)),
+                                           ('Cave11', range(1, 6)), ('Cave11', range(11, 16)),
+                                           ('Cave10', range(6, 11)), ('Cave10', range(16, 21))]):
+    for _i, _room in enumerate(_rooms):
+        LABYRINTH_FLOORS[(_stage, _room)] = f'floor {_first * 5 + _i + 1}'
+# Break rooms: pots, lights and Ysdls00 but no enemies (the rooms' actor lists).
+for _key in (('Cave09', 15), ('Cave10', 15), ('Cave09', 20), ('Cave11', 15)):
+    LABYRINTH_FLOORS[_key] += ' (break room)'
+
+
+def room_label(stage, room):
+    """'44 \u2014 Outset Island' for sea squares, 'floor n' in the Savage Labyrinth, else just
+    the room number."""
+    if stage == 'sea' and room in SEA_ROOM_NAMES:
+        return f'{room} \u2014 {SEA_ROOM_NAMES[room]}'
+    if stage in ('Cave09', 'Cave10', 'Cave11'):
+        return f'{room} \u2014 ' + LABYRINTH_FLOORS.get((stage, room), 'no exit leads here')
+    return f'{room} \u2014 no island; nothing leads here' if (stage, room) == ('sea', 0) else str(room)
+
+
+def place_name(stage, room, rooms):
+    """Where an exit is: an island for sea squares, else the stage's name, with the room when
+    the stage has more than one (room -1: the stage's own data, not one room)."""
+    if stage == 'sea':
+        return SEA_ROOM_NAMES.get(room, f'sea room {room}') if room >= 0 else 'The Great Sea'
+    name = STAGE_NAMES.get(stage, stage)
+    if name.lower().startswith('unused') or name == stage:
+        name = f'{stage} (unused or unknown stage)'
+    if (stage, room) in LABYRINTH_FLOORS:
+        return f'{name}, {LABYRINTH_FLOORS[(stage, room)]}'
+    if stage in ('Cave09', 'Cave10', 'Cave11') and room >= 0:
+        return f'{name}, {stage} room {room} (no exit leads there)'
+    return f'{name} room {room}' if room >= 0 and len(rooms.get(stage, ())) > 1 else name
+
+
 SLOT_ITEMS = {}
 for _name, (_slot, _bit, _id, _extra) in wwedit.ITEMS_GIVEN.items():
     SLOT_ITEMS.setdefault(_slot, []).append(_name)
@@ -754,13 +829,18 @@ class App(tk.Tk):
             custom, text='Also show unused, unknown and cutscene-only stages (experimental)',
             variable=self.experimental, command=self.fill_stages)
         self.experimental_box.grid(row=3, column=0, columnspan=2, sticky='w', pady=(6, 0))
-        self.room = ttk.Combobox(custom, width=5, state='readonly')
+        self.room = ttk.Combobox(custom, width=40, state='readonly')
         self.stage.bind('<<ComboboxSelected>>', lambda e: self.fill_rooms())
         self.room.bind('<<ComboboxSelected>>', lambda e: self.check_custom())
-        self.point = ttk.Combobox(custom, width=34)
+        self.point = ttk.Combobox(custom, width=70)
+        self.point.bind('<<ComboboxSelected>>', lambda e: self.show_arrival())
         for i, (t, w) in enumerate([('Stage', self.stage), ('Room', self.room), ('Spawn point', self.point)]):
             ttk.Label(custom, text=t).grid(row=i, column=0, sticky='w', pady=2)
             w.grid(row=i, column=1, sticky='w', padx=6, pady=2)
+        # How Link arrives at the chosen point (wwedit.spawn_arrival).
+        self.arrival = ttk.Label(custom, foreground='gray', wraplength=560, justify='left')
+        self.arrival.grid(row=4, column=0, columnspan=2, sticky='w', pady=(6, 0))
+        self.arrivals = {}
         ttk.Label(f, foreground='gray', wraplength=760, justify='left', text=(
             'Known spots are spawn points the game itself uses (from your saves and the Wind Waker '
             'Randomizer\'s entrance data), so they are safe. A custom place is checked against the disc '
@@ -800,8 +880,8 @@ class App(tk.Tk):
         if not iso:
             return
         rooms = sorted(wwedit.disc_rooms(iso, index).get(self.stage_name(), ()))
-        self.room.config(values=[str(r) for r in rooms])
-        self.room.set(str(rooms[0]) if rooms else '')
+        self.room.config(values=[room_label(self.stage_name(), r) for r in rooms])
+        self.room.set(room_label(self.stage_name(), rooms[0]) if rooms else '')
         self.point.set('')
         if rooms:
             self.check_custom()
@@ -828,7 +908,7 @@ class App(tk.Tk):
                                  (f'\nSimilar names: {near}' if near else ''))
             return False
         try:
-            room = int(self.room.get())
+            room = int(self.room.get().split()[0])
         except ValueError:
             room = None
         if room not in rooms[stage]:
@@ -842,7 +922,22 @@ class App(tk.Tk):
         if not found:
             messagebox.showerror('Restart place', f'{stage} room {room} has no spawn points.')
             return False
-        values = [f'{sid}  (room {r}, x {x:.0f}, z {z:.0f})' for sid, r, x, y, z in found]
+        if getattr(self, 'exits', None) is None:
+            self.say('Reading every exit on the disc to name the spawn points...')
+            self.update_idletasks()
+            self.exits = wwedit.disc_exits(iso, index)
+        self.arrivals, values = {}, []
+        for sid, r, x, y, z, params in found:
+            kind, event, text = wwedit.spawn_arrival(params, spawns['events'])
+            exits = wwedit.exits_to(self.exits, stage, sid, room if where == 'room' else None)
+            sources = list(dict.fromkeys(
+                cond if s == '*' else place_name(s, sr, rooms) + (f' ({cond})' if cond else '')
+                for s, sr, cond in exits))
+            self.arrivals[str(sid)] = (kind, event, text, sources)
+            near = ''
+            if sources:
+                near = f'  from {sources[0]}' + (f' +{len(sources) - 1}' if len(sources) > 1 else '')
+            values.append(f'{sid}  (room {r}, x {x:.0f}, z {z:.0f})  {arrival_word(kind, event)}{near}')
         self.point.config(values=values)
         current = self.point.get().split()[0] if self.point.get().split() else ''
         ids = {str(e[0]) for e in found}
@@ -853,7 +948,17 @@ class App(tk.Tk):
                                      f'{stage} room {room}; the game would freeze. Choose one from the list.')
                 return False
             self.point.set(values[0])
+        else:
+            self.point.set(next(v for v in values if v.split()[0] == current))
+        self.show_arrival()
         return True
+
+    def show_arrival(self):
+        words = self.point.get().split()
+        _, _, text, sources = self.arrivals.get(words[0] if words else '', (None, None, '', []))
+        reached = ('Exits lead here from: ' + '; '.join(sources) + '.' if sources else
+                   'No exit on the disc leads here (it may be used by an event, a warp or a restart).')
+        self.arrival.config(text=f'Link arrives: {text}.\n{reached}' if text else '')
 
     def restart_choice(self):
         mode = self.restart_mode.get()
@@ -861,7 +966,7 @@ class App(tk.Tk):
             _, stage, room, point = ALL_SPOTS[self.spot_box.current()]
             return (stage, room, point)
         if mode == 'custom':
-            return (self.stage_name(), int(self.room.get()), int(self.point.get().split()[0]))
+            return (self.stage_name(), int(self.room.get().split()[0]), int(self.point.get().split()[0]))
         return None
 
     def tab_flags(self, nb):
@@ -1031,12 +1136,13 @@ class App(tk.Tk):
         self.charm.set(bool(s.q[wwedit.HEROS_CHARM] & 1))
         self.set_spin(self.shards, sum(s.bits(wwedit.SHARDS)))
         stage, room, point = s.restart()
-        self.current_restart.config(text=f'({stage_label(stage)}, room {room}, spawn point {point})')
+        self.current_restart.config(text=f'({stage_label(stage)}, room {room_label(stage, room)}, '
+                                         f'spawn point {point})')
         self.restart_mode.set('keep')
         self.spot_box.set('')
         self.restart_widgets()
         self.stage.set(stage_label(stage))
-        self.room.set(str(room))
+        self.room.set(room_label(stage, room))
         self.point.set(str(point))
         self.restart_widgets()
         self.initial = self.read_widgets()
