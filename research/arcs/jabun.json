@@ -1,0 +1,351 @@
+{
+ "id": "jabun",
+ "name": "The Endless Night, the pirates and Jabun",
+ "status": "partial",
+ "summary": "From the Endless Night at Greatfish Isle to Nayru's Pearl: the King's news, Windfall at night, the bomb shop password and the pirate ship, Niko's rope game, the Bombs, sailing home to Outset, the wall of Jabun's cave and Jabun's pearl.",
+ "notes": "Joined from three parts researched in parallel (drafts/jabun_a, jabun_b, jabun_c, with their evidence). Follows the Forest Haven arc (after set_off_farore); the next arc starts with placing the pearls (0x2F20). The Endless Night ends with Nayru's Pearl, not a flag: ENDLESS_NIGHT stays on. Not checked: event register 0xBA0F (the bomb shop password).",
+ "steps": [
+  {
+   "id": "endless_night",
+   "label": "Greatfish Isle destroyed; the Endless Night begins",
+   "sets": {
+    "flags": [
+     "0x0A02"
+    ],
+    "switches": [
+     {
+      "area": 0,
+      "switch": "0x19",
+      "why": "the island tag's switch (TagIsl 0x05FF1903 in sea room 23: swbit 0x19), daTag_Island_c::actionReady (d_a_tag_island.cpp:399-406)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 23,
+    "point": 0,
+    "evidence": "saving on an island after RODE_KORL restarts at the ground's restart number, 0 on the disc (dComIfGs_setGameStartStage, checkIsland)"
+   },
+   "evidence": [
+    "TagIsl type 3 in sea room 23 (Greatfish Isle), parameters 0x05FF1903: event 5 ARRIVAL_BRK, switch 0x19; getArrivalFlag type 3 = ENDLESS_NIGHT (d_a_tag_island.cpp:82-92), set by demoInitProc (:133-135)",
+    "dKy_checkEventNightStop: ENDLESS_NIGHT without Nayru's Pearl (d_kankyo.cpp:3161-3167); while it holds the time stays at night (d_kankyo.cpp:478-479) and Windfall uses layers 2|3 (getLayerNo; the stage select names Windfall's layer 3 'pirates')",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc",
+   "notes": "arrivalTerms has no story condition for type 3 beyond the flag itself (d_a_tag_island.cpp:111-127); in play the King's hint after Farore's Pearl marks this square."
+  },
+  {
+   "id": "quill_sunken_island",
+   "label": "Quill at the sunken island",
+   "sets": {
+    "flags": [
+     "0x1E80"
+    ]
+   },
+   "window": {
+    "after": "endless_night"
+   },
+   "evidence": [
+    "Quill (Bm1) type 4 stands in sea room 23 (ACTR, parameters 0x0001FF04) while 0x1E80 is off, init_PST_4 (d_a_npc_bm1.cpp:586-592); his event 3 is Skn_Islnd (l_evn_tbl, :503-508) and its end sets 0x1E80 and removes him (:2994-2998)",
+    "wait_2 reacts to ENDLESS_NIGHT (:3391-3398)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc",
+   "notes": "Nothing found that requires 0x1E80 later (its readers: the Tingle Tuner d_a_agb.cpp:1213, the post box d_a_obj_toripost.cpp:939, the sea chart d_menu_fmap.cpp:914), so it is a window with no end."
+  },
+  {
+   "id": "korl_endless_night",
+   "label": "The King of Red Lions: Jabun has survived",
+   "sets": {
+    "flags": [
+     "0x0A01"
+    ]
+   },
+   "evidence": [
+    "message 0x607 while ENDLESS_NIGHT is on and 0x0A01 off, daShip_c::setInitMessage (d_a_ship.cpp:353-355); reading 0x607 sets 0x0A01, setNextMessage (:647-648)",
+    "hint ladder rung 6 (research/story-flags.md)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "set_off_endless_night",
+   "label": "Setting off in the Endless Night",
+   "sets": {
+    "flags": [
+     "0x2A01"
+    ]
+   },
+   "evidence": [
+    "daShip_c::procPaddleMove_init sets 0x2A01 when the boat moves with ENDLESS_NIGHT on (d_a_ship.cpp:1580-1581)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "windfall_endless_night",
+   "label": "Windfall in the Endless Night: the pirates in town",
+   "sets": {
+    "flags": [
+     "0x1F04"
+    ],
+    "optional_flags": [
+     "0x1F01"
+    ],
+    "switches": [
+     {
+      "area": 0,
+      "switch": "0x5B",
+      "why": "the island tag's switch (TagIsl 0x1CFF5B04 on Windfall's layers 2 and 3: swbit 0x5B), daTag_Island_c::actionReady"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 11,
+    "point": 0,
+    "evidence": "catalog 16 holds sea 11 0"
+   },
+   "evidence": [
+    "TagIsl type 4 on Windfall's layers 2 and 3 (SCO2, SCO3), parameters 0x1CFF5B04: event 0x1C ARRIVAL_TWN, switch 0x5B; getArrivalFlag type 4 = 0x1F04, and arrivalTerms requires dKy_checkEventNightStop (d_a_tag_island.cpp:116-120)",
+    "the King's hints: with 0x1F04 and without 0x2110 message 0x621 (see what the pirates are doing), d_a_ship.cpp:519-522; message 0x622 sets 0x1F01 (:650-651), never on in the catalog",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "password_cutscene",
+   "label": "The pirates' password, overheard in the bomb shop",
+   "sets": {
+    "flags": [
+     "0x2110",
+     "0x3B20"
+    ]
+   },
+   "evidence": [
+    "TagEv type 9 in the bomb shop (Obombh room 0, SCOB, parameters 0x00FF1009): its start sets 0x3B20 if off and picks the password into event register 0xBA0F (daTag_Event_c, d_a_tag_event.cpp:108-120); its end sets 0x2110 (:145-146); bombshop.stb sets 0x2110 too (the decomp's note in d_save_event_flag.inc; d_a_demo00.cpp:670)",
+    "Tetra and the pirates (Zl1, P1a, P1b, P1c) stand in the bomb shop on both its layers",
+    "catalog: 0x2110 and 0x3B20 off in 15, on in 16; register 0xBA0F 0 -> 1"
+   ],
+   "basis": "code+disc",
+   "notes": "0x3B20 can come earlier, from talking to the password door before the cutscene (daKnob00_c::actionPassward2, d_a_knob00.cpp:609-611), which also picks the password. The register 0xBA0F (0-5, random) is not checked here."
+  },
+  {
+   "id": "password_door",
+   "label": "The password entered at the pirate ship's door",
+   "sets": {
+    "flags": [
+     "0x1910"
+    ]
+   },
+   "evidence": [
+    "the pirate ship on Windfall's layers 2 and 3 (Pirates, parameters 0xFFFF0100, door byte 1) creates its deck door with parameters 0x101004FF, door type 4, the password door (daObj_Pirateship, d_a_obj_pirateship.cpp:214, 238, 253; dDoor_info_c::getType, d_door.cpp:26-28); Outset's pirate ship has door byte 0",
+    "the door stays locked without 0x1910 (d_a_knob00.cpp:710-714); the right password needs 0x2110 (chkPassward, :172) and sets 0x1910 (actionPassward2, :630-633)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "niko_rope_2",
+   "label": "Niko's second rope game",
+   "sets": {
+    "flags": [
+     "0x1A04"
+    ]
+   },
+   "evidence": [
+    "compiled d_a_npc_p2.rel (Zuko, Niko and Mako): 0x1A04 is set in daNpc_P2_c::demo_intro_2 (.text+0x1AC4) and read in intro_action and createInit (research/scratch/relcalls.py)",
+    "Niko (P2b, parameters 0x00030005) stands in the pirate ship's interior (Asoko) on layers 2 and 3, which Asoko uses after 0x0520 (getLayerNo)",
+    "catalog 16 ('niko's trial numero dos pre win'): on"
+   ],
+   "basis": "compiled+disc",
+   "notes": "Winning the game and the Bombs are part B."
+  },
+  {
+   "id": "pirate_bombs",
+   "label": "The Bombs from the pirate ship",
+   "sets": {
+    "flags": [
+     "0x0F02"
+    ],
+    "items": [
+     "Bombs"
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 11,
+    "point": 0,
+    "evidence": "Asoko's save table is 13 (STAG, wwedit.stage_kind), so saving aboard writes point 0 of its sea square, Windfall (dComIfGs_setGameStartStage, the SAVE_SUBDUNGEON_NEW branch; wwedit.disc_restart_places)"
+   },
+   "evidence": [
+    "the Bombs are the chest in the pirate ship's hold: Asoko Stage.dzs TRE2 and TRE3 (layers 2 and 3, the ship's layers once 0x0520 is on), takara3 with parameters 0xFF200280 (tbox 5, no switch: daTbox_c::getTboxNo/getSwNo, d_a_tbox.h:35-36) and item 0x31 in angle z (getItemNo, :37); item_func_bomb_bag gives the bombs (d_item.cpp:792-797). The Randomizer's location 'Windfall Island - Pirate Ship' (Bombs, a minigame) names the same chests",
+    "catalog 16 -> 17: Asoko's save area 13 gains chest bit 5, and the Bombs",
+    "0x0F02: set in daNpc_P2_c::demo_bomb_get (the pirates Zuko, Niko and Mako, d_a_npc_p2), compiled code d_a_npc_p2.rel .text+0x1CBC (onEventBit); the decomp's demo_bomb_get is Nonmatching (d_a_npc_p2.cpp:131). getMsg (.text+0x15C8) and createInit (.text+0x418C, +0x43AC) read it",
+    "the mailbox then stocks the Bombs ad, letter 0x7D03 (daObjTpost_c::createInit, d_a_obj_toripost.cpp:931-933); the letter registers aren't checked"
+   ],
+   "basis": "code+compiled+disc",
+   "notes": "The chest comes after Niko's rope game (part A). The timeline calls 0x0F02 'gossip stone text after bombs'; the only setter found is the pirates' bomb-get scene, which differs from that label's reading. arcs.py can't check the chest bit (area 13, tbox 5), so only the item and the flag are checked."
+  },
+  {
+   "id": "korl_bombs_talk",
+   "label": "The King of Red Lions on the Bombs",
+   "sets": {
+    "flags": [
+     "0x1F02"
+    ]
+   },
+   "evidence": [
+    "with the Bombs and without 0x1F02 the King forces message 0x624 (daShip_c::checkForceMessage, d_a_ship.cpp:356-357); 0x624 sets 0x1F02 (daShip_c::setNextMessage, :653-654)",
+    "while a forced message is pending the King can't be boarded and starts the talk when Link is near or aboard (daShip_c execute, d_a_ship.cpp:4204-4215), so this comes before any sailing, and so before Outset",
+    "after it his hint is 0xD60 (setInitMessage, :516-517)"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "outset_return",
+   "label": "Back on Outset in the Endless Night",
+   "sets": {
+    "flags": [
+     "0x3E10"
+    ],
+    "switches": [
+     {
+      "area": 0,
+      "switch": "0x74",
+      "why": "the arrival tag's switch: TagIsl 0x35FF7407 in sea room 44's base list, swbit 0x74 (daTag_Island_c::getSwbit, d_a_tag_island.cpp:38-40), set when its event starts (actionReady, :401-409)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 44,
+    "point": 0,
+    "evidence": "saving on Outset after RODE_KORL writes the island point under Link, 0 on Outset's collision (dComIfGs_setGameStartStage; wwedit.disc_restart_places); catalog 17 has sea 44 0"
+   },
+   "evidence": [
+    "Outset's island tag (type 7) sets 0x3E10 when its event starts (daTag_Island_c::getArrivalFlag case 7, d_a_tag_island.cpp:90; demoInitProc, :133-136); it plays only during the Endless Night and with the Bombs (arrivalTerms, :112-127). Its event is the sea's EVNT 0x35, PUROLO_RETURN (parameters' top byte, getEventNo :33-35; Purolo is Outset's Japanese name), or PUROLO_RETURN2 when Link isn't aboard (makeEvId, :73)",
+    "catalog 16 -> 17: 0x3E10 and sea switch 0x74 on",
+    "Outset is on layer 4|5 here (0x0520; getLayerNo), night 2 in the Endless Night"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "outset_door",
+   "label": "Through a door on Outset (to Grandma)",
+   "sets": {
+    "flags": [
+     "0x3E01"
+    ]
+   },
+   "evidence": [
+    "with 0x3E10 on, taking any exit that changes scene sets 0x3E01 (daPy_lk_c, after dStage_changeSceneExitId, d_a_player_main.cpp:10800-10804); on the US release, arriving aboard the King with 0x3E10 on sets both 0x3E01 and 0x3F80 (makeBgWait, :12462-12467)",
+    "catalog 17 ('grandma needs help'): 0x3E01 on, 0x3F80 off, restart Outset"
+   ],
+   "basis": "code",
+   "seen": "The catalog's name for this point is 'grandma needs help': going indoors, to Grandma, is the usual first exit."
+  },
+  {
+   "id": "korl_outset_talk",
+   "label": "The King of Red Lions on Outset: look for Jabun's cave",
+   "sets": {
+    "flags": [
+     "0x3F80"
+    ]
+   },
+   "evidence": [
+    "with 0x3E01 on and 0x3F80 off the King forces message 0x1688 (checkForceMessage, d_a_ship.cpp:365-366), which sets 0x3F80 (setNextMessage, :665-666); his hints in this stretch are 0x1687 (before 0x3E01), 0x1688, 0x1689 after (setInitMessage, :503-513)",
+    "while 0x3E10 is on and 0x3F80 off the King can't be boarded (d_a_ship.cpp:4224-4229), so this comes before sailing to Jabun's cave",
+    "catalog 17 -> 18: 0x3F80 on"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "heal_grandma",
+   "label": "Grandma healed with a fairy",
+   "sets": {
+    "flags": [
+     "0x2A20"
+    ]
+   },
+   "window": {},
+   "evidence": [
+    "Grandma lies sick (daNpc_Ba1_c::init_BA1_3, d_a_npc_ba1.cpp:186-204) once 0x0520 is on and until GRANDMA_HEALED 0x2A20; she reacts only to a Fairy in a bottle shown to her (XyCheck_cB, :121-125)",
+    "her healing event sets 0x2A20 and sends her letter 0x9D03 (event_proc case 2, :1324-1327); her soup event fills a bottle with Elixir Soup (case 1, :1310-1318)",
+    "catalog 17 -> 18: 0x2A20 on, Elixir Soup in a bottle, letter 0x9D03 0 -> 1"
+   ],
+   "basis": "code",
+   "notes": "Nothing later needs it, so the window has no end. The code allows it from 0x0520 on, the prologue's last step, whenever Link can reach Outset; a heal before outset_return (an Outset visit after Farore's Pearl) would show as mixed here, since a window can't start in another arc. Bottles (Elixir Soup) aren't checked. The window has no start: Grandma is sick from 0x0520 (the prologue's end) and a Fairy in a bottle heals her on any Outset visit."
+  },
+  {
+   "id": "jabun_slab",
+   "label": "Blowing open the stone wall to Jabun's cave",
+   "sets": {
+    "switches": [
+     {
+      "area": 0,
+      "switch": "0x1C",
+      "why": "The wall's switch (Ajav parameters 0x1C, & 0xFF): on_sw at the end of its last destruction stage, daObjAjav::Act_c::_execute (d_a_obj_ajav.cpp:823; on_sw/check_sw use the home room, d_a_obj_ajav.h:75-76). Outset is sea room 44; the sea saves to area 0 (STAG save table 0)."
+     }
+    ],
+    "optional_flags": [
+     "0x1940"
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 44,
+    "point": 0,
+    "evidence": "saving on Outset after the first sail: the island point under Link (checkIsland, the ground's restart number; Outset's collision names point 0), dComIfGs_setGameStartStage; catalog 17 has sea 44 0"
+   },
+   "evidence": [
+    "The wall: Ajav (daObjAjav, 'Stone wall blocking the entrance to Jabun's cave') at (-205542, 0, 324297) on Outset's layers 5 and 7 (ACT5, ACT7), parameters 0x1C. It exists only while ENDLESS_NIGHT is on and its switch is off (_create, d_a_obj_ajav.cpp:470; check_ev, d_a_obj_ajav.h:74)",
+    "Bomb hits break it in three stages (hit spheres AT_TYPE_BOMB, d_a_obj_ajav.cpp:50, 79, 109; to_broken/damage_part :617-630): events ajav_destroy0, ajav_destroy1 and ajav_uzu (l_daObjAjav_ev_name, :153-157), all in the sea stage's event_list.dat",
+    "After the last stage the wall turns switch 0x1C on (:823)",
+    "The whirlpool in front of it: Auzu (daObjAuzu) at (-205662, 0, 329245) on the same layers, parameters 0x971C = type 0, link point 151, save switch 0x1C, appear 0 (field widths d_a_obj_auzu.h:21-31). Type 0 exists only with ENDLESS_NIGHT (is_exist, d_a_obj_auzu.cpp:114-118); with appear 0 it is full size while switch 0x1C is off and shrinks away once the wall breaks (:84-91, :214-219)",
+    "0x1940 (optional): set when the whirlpool pulls the boat under, daShip_c::procWhirlDown (d_a_ship.cpp:2887-2893), which then changes scene to the whirlpool's link point, sea 44 point 151 (a boat point next to it). It only changes the King of Red Lions' hint to 0xD61 ('break the stone slab', d_a_ship.cpp:500-501). Off in every catalog save",
+    "catalog: switch 0x1C off in 17 (bombs in hand), on in 18 and later"
+   ],
+   "basis": "code+disc",
+   "seen": "Bombing the stone wall behind Outset during the Endless Night; the whirlpool next to it pulls the boat under if you get too close before the wall is open.",
+   "notes": "Needs bombs (part B). The boat's cannon fires real bombs: with the Bomb Bag item on a button while sailing, daShip_c creates a daBomb_c and uses up a bomb (d_a_ship.cpp:1804-1808, 4021-4037).",
+   "warn": "A crafted save with switch 0x1C on but without Nayru's Pearl leaves the wall open with no way to the pearl: Jabun (Jb1) is placed only on Pjavdou's layer 8, which only the ajav_uzu cutscene starts. Entering through Outset's exit (sea 44 exit 7 -> Pjavdou point 0) loads Pjavdou's normal layers, without him. The Endless Night would never end."
+  },
+  {
+   "id": "jabun_pearl",
+   "label": "Jabun gives Nayru's Pearl; morning returns",
+   "sets": {
+    "flags": [
+     "0x3920"
+    ],
+    "pearls": [
+     "Nayru's Pearl"
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 44,
+    "point": 0,
+    "evidence": "saving in Jabun's cave (Pjavdou, save table 11): point 0 of its sea square, sea room 44, from its map info (dComIfGs_setGameStartStage; wwedit.disc_restart_places); on Outset: the island point, 0"
+   },
+   "evidence": [
+    "ajav_uzu (the wall's last stage, sea stage event list) ends with a DIRECTOR NEXT cut: Stage Pjavdou, RoomNo 0, StartCode 200, Layer 8, Mode 1",
+    "Pjavdou point 200 (parameters 0x00FF0000) starts the stage's event 0, getperl_jab. Its EVNT record has no spawn switch (0xFF), so it plays on every arrival at point 200; only ajav_uzu leads there",
+    "Jabun (Jb1) is placed only in Pjavdou room 0's ACT8, so only on that cutscene's layer 8",
+    "getperl_jab: PACKAGE PLAY cut with FileName getperl_jab.stb and EventFlag 14624 = 0x3920 (also the decomp's note, d_save_event_flag.inc:435); DIRECTOR NEXT cut to sea 44 point 9 (mode 5, at the cave mouth, (-205651, -102, 324657))",
+    "Nayru's Pearl: getperl_jab.stb (res/Object/Demo18.arc) carries the demo item payload 5 (block 000c0081 00000004 00000005 31 05 at 0x1634; the same block holds 03 in getperl_komori.stb and 04 in getperl_deku.stb), and payload 5 is dItemNo_PEARL_NAYRU_e in d_a_demo00's l_itemNo table (d_a_demo00.cpp:715-735)",
+    "The developers' stage select lists this scene in its cutscene group: '(18) Get the sacred pearl from Jabun', Pjavdou point 200, layer 8",
+    "The Endless Night ends with the pearl, not a flag: dKy_checkEventNightStop is ENDLESS_NIGHT and not the Nayru symbol (d_kankyo.cpp:3162-3167). ENDLESS_NIGHT stays on (catalog 18-41). Other readers switch the same way: Windfall's people (d_a_npc_people.cpp:5014, 6980 and on), the bomb shop counter (d_a_obj_pbco.cpp:36-48)",
+    "The King of Red Lions then gives hint 0xD5A ('the curse is broken; morning will come', d_a_ship.cpp:359-360, 497-498); reading 0xD5B sets 0x2F20 (:656-657), the next arc's start",
+    "catalog: 0x3920 and Nayru's Pearl off in 17, on in 18 and later"
+   ],
+   "basis": "code+disc",
+   "seen": "The wall's last stage leads into Jabun's cave (the ajav_uzu cutscene moves the boat; what it shows wasn't read); Jabun gives Nayru's Pearl and Link is back outside the cave, and the night ends.",
+   "notes": "0x3920 is read later by the sea chart (d_menu_fmap.cpp:922), the Tingle Tuner (d_a_agb.cpp:1235), Lenzo (d_a_npc_photo.cpp:2202) and the music (JAIZelBasic.cpp:1771)."
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "a: Every flag that first turns on between catalog 15 and 16 outside the Forest Haven arc is placed here. Event registers not placed: 0xBA0F is the password number (0-5); 0x7B03 (LETTER_ORCA) and 0xB503 (LETTER_KOMALIS_FATHER) are letters; 0xAB03 (1 -> 3) and 0xCF03 (1 -> 3) were not identified. b: Every flag the catalog turns on between 16 and 17 is placed, plus 0x3F80 and 0x2A20 from 17 -> 18. Left for others: 0x1F04 (Windfall's Endless Night arrival, island tag type 4 with swbit 0x5B: part A; it turns on between 15 and 16, before the Bombs), and, between 17 and 18, part C's 0x1410, 0x1440, 0x2F20, 0x3920 and Nayru's Pearl. Not this arc's order: 0x3008 (Bomb Bag upgrade at Eastern Fairy Island) and 0x3010 (wallet upgrade on Outset), both first on between 17 and 18. Letter registers (0x7B03 Orca, 0x7D03 Bombs ad, 0x7A03, 0x9D03) are the mailbox's and Grandma's letters, not checked. c: Nothing from this part is unplaced. Other changes between catalog 17 and 18, left to other parts or chains: 0x3F80 (the King's 'look for Jabun's cave' talk, message 0x1688, d_a_ship.cpp:665-666; also set on boarding after 0x3E10, d_a_player_main.cpp:12464-12467: part B, rung 9); 0x2A20 Grandma healed with the Elixir Soup; 0x3010 the wallet upgrade on Outset; 0x3008 the Bomb Bag upgrade at Eastern Fairy Island; the letters 0x7A03 and 0x9D03; 0x1410, 0x1440 and 0x2F20 (the next arc, placing the pearls)."
+ }
+}

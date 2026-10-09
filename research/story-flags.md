@@ -696,7 +696,11 @@ arrival to setting off with Farore's Pearl, researched in three parts (`drafts/f
 Haven, `forest_b.md` the Forbidden Woods, `forest_c.md` Farore's Pearl and after). Every game-written
 catalog save lands on it in order. The Song of Passing went to the previous arc as a window. Unplaced:
 0x1E10 (Gillian's first night talk) and 0x2304 (Loot's first talk), first talks of Windfall chains.
-Next: the Jabun / Windfall pirates arc, from ENDLESS_NIGHT 0x0A02.
+Jabun arc (2026-10-09): `research/arcs/jabun.json`, 16 steps from the Endless Night at Greatfish Isle
+to Nayru's Pearl (`drafts/jabun_a.md` the pirates, `jabun_b.md` the Bombs and Outset, `jabun_c.md`
+Jabun's cave). Every game-written catalog save lands on it in order; nothing unplaced. The Endless
+Night ends with Nayru's Pearl (`dKy_checkEventNightStop`), not by clearing 0x0A02. Next: the pearls
+and the Tower of the Gods, from 0x2F20.
 
 Your knowledge of the game is the check on each chain. Anything the code doesn't settle stays
 marked as unknown.
