@@ -1,0 +1,86 @@
+{
+ "part": "A: Forest Haven, from the arrival to the way into the Forbidden Woods",
+ "steps": [
+  {
+   "id": "fh_arrival",
+   "label": "Arriving at Forest Haven",
+   "sets": {
+    "flags": ["0x0A20"],
+    "optional_flags": ["0x2B80"],
+    "switches": [
+     {"area": 0, "switch": "0x1A", "why": "the island tag's switch: TagIsl in sea room 41, parameters 0x06FF1A02 (type 2, switch 0x1A, event 6 ARRIVAL_FST), set as the arrival starts, daTag_Island_c::actionReady (d_a_tag_island.cpp:408)"}
+    ]
+   },
+   "restart": {"stage": "sea", "room": 41, "point": 0, "evidence": "0x0A20 is Forest Haven's landing event (l_landingEvent, d_com_inf_game.cpp:1277), so from here a save on the island restarts at the point its ground names (room 41's collision names only 0); saves inside Omori, Ocrogh and Otkura restart at sea 41 point 0 too (save table 11: point 0 of the stage's sea square, dComIfGs_setGameStartStage)"},
+   "evidence": [
+    "TagIsl in sea room 41, parameters 0x06FF1A02: type 2, so daTag_Island_c::getArrivalFlag gives 0x0A20 (d_a_tag_island.cpp:85); set when the arrival starts (demoInitProc, :135); event 6 of the sea's EVNT list is ARRIVAL_FST",
+    "the King's hint ladder, rung 4: with 0x0A20 and no Farore's Pearl he says 0x5F4, or 0x5F5 once 0x2B80 is set; with Farore's Pearl 0x5F6 (daShip_c::setInitMessage, d_a_ship.cpp:558-569)",
+    "0x2B80: set by reading hint 0x5F4 (daShip_c::setNextMessage, d_a_ship.cpp:638-639); it only changes his next hint, so it is optional",
+    "catalog: 0x0A20 first on between 10 and 11"
+   ],
+   "basis": "code+disc",
+   "requires": ["korl_dragon_roost:south_wind"],
+   "seen": "The arrival cutscene at Forest Haven (ARRIVAL_FST)."
+  },
+  {
+   "id": "deku_tree",
+   "label": "The Deku Tree freed of its parasites",
+   "sets": {"flags": ["0x1801"]},
+   "evidence": [
+    "set in the Deku Tree's actor, daNpc_De1_c::checkOrder (compiled d_a_npc_de1.rel, .text+0xF00 -> onEventBit; relcalls.py), the Deku Tree (De1) standing in Omori room 0 on layers 0, 1, 10 and 11",
+    "readers: the Deku Leaf on top of the tree (itemDek) only spawns once it is set (daDekuItem_c::_create, d_a_deku_item.cpp:116-118); Baba Buds (d_a_jbo, 'Object - Baba Bud') of type APPEAR_AFTER_DEKU_TREE turn normal with it (daJBO_Execute, d_a_jbo.cpp:124-128); a hint tag of type 9 ends with it (d_a_tag_hint.cpp:178-180); the Deku Tree's createInit and setMtx read it (compiled)",
+    "the Deku Tree's first cutscene is Omori's event meet_deku, which ends at Omori point 213 (event list scene change)",
+    "catalog: first on between 10 and 11 (the timeline note: set on the last parasite's death)"
+   ],
+   "basis": "compiled+code+disc"
+  },
+  {
+   "id": "deku_leaf",
+   "label": "The Deku Leaf from the top of the tree",
+   "sets": {"items": ["Deku Leaf"]},
+   "evidence": [
+    "the leaf is an itemDek actor at the top of the Deku Tree (Omori room 0, layers 0 and 1, parameters 0x00000002: item bit 2, y 5035); it spawns after 0x1801 and not once its item bit is set (daDekuItem_c::_create, d_a_deku_item.cpp:110-118), and gives item 0x34 (fopAcM_createItemForTrBoxDemo, :203)",
+    "item_func_deku_leaf also gives the magic meter: max magic and magic 16 (d_item.cpp:810-815)",
+    "catalog: Deku Leaf and max magic 0 -> 16 between 11 and 12 (both mid-cutscene)"
+   ],
+   "basis": "code+disc",
+   "warn": "The leaf brings the magic meter (16). A crafted save with the leaf and no magic has a leaf it can't use."
+  },
+  {
+   "id": "korok_leaf_scene",
+   "label": "A Korok calls Link after he takes the leaf",
+   "sets": {"flags": ["0x2902"], "optional_flags": ["0x0C02"]},
+   "evidence": [
+    "0x2902: set by the Koroks' actor, daNpc_Bj1_c::event_proc (compiled d_a_npc_bj1.rel, .text+0x48C4 -> onEventBit); read by its wait_4 (.text+0x4E98)",
+    "0x0C02: a Korok's first talk, daNpc_Bj1_c::talk_1 (.text+0x5378 -> onEventBit), read by getMsg_BJ6_0 (.text+0x2040), so it belongs to the Korok placed as Bj6 (Omori room 0, layers 0 and 1, on a ledge at y 3383); the timeline names him Rown. Optional: nothing found that requires it",
+    "the Koroks of types 4, 6, 7 and X read 0x1801 when they set up (init_BJ4_0, init_BJ6_0, init_BJ7_0, init_BJX_0)",
+    "catalog: 0x2902 between 12 and 13, 0x0C02 between 13 and 14"
+   ],
+   "basis": "compiled+disc",
+   "seen": "After putting the leaf away a Korok calls for attention (catalog 12, mid-cutscene); then on to the Forbidden Woods by updraft (catalog 14)."
+  }
+ ],
+ "for_other_arcs": [
+  {
+   "arc": "korl_dragon_roost",
+   "step": {
+    "id": "song_of_passing",
+    "label": "Tott teaches the Song of Passing",
+    "sets": {"flags": ["0x0B08", "0x0C40"], "songs": ["Song of Passing"]},
+    "window": {"after": "dri_arrival"},
+    "evidence": [
+     "0x0B08: Tott's first talk, daNpc_Tt_c::getMsg (d_a_npc_tt.cpp:163-167); with 0x0B08 and without 0x0C40 he orders his dance-along event (:624-626)",
+     "0x0C40: conducting with Tott's dance, daNpc_Tt_c::demoProcTact1, default branch (d_a_npc_tt.cpp:320), so it needs the Wind Waker (the previous arc's dri_arrival); once set he only dances (setAnmStatus, :73)",
+     "Tott stands on Windfall (sea room 11) on layers 0, 1, 4 and 5",
+     "catalog: both first on between 10 and 11"
+    ],
+    "basis": "code+disc",
+    "notes": "Any time after the Wind Waker, with no end: nothing later found that needs the song. Its window starts in the King of Red Lions arc, so it is proposed for that arc rather than this one."
+   }
+  }
+ ],
+ "unplaced": {
+  "flags": ["0x1E10", "0x2304"],
+  "notes": "Both first on between catalog 10 and 11, both Windfall first talks that start their own chains rather than steps of Forest Haven: 0x1E10 is Gillian's (NPC_UW1) first talk at night, d_a_npc_people.cpp:6992-6994 (her later talks branch on the Delivery Bag and the Magic Armor, :6996-6999); 0x2304 is Loot's (NPC_SA1) first talk, :7158-7160 (no night check in that branch; the timeline note places him in the cafe at night). Also between 10 and 11 and not this part: an Empty Bottle in slot 15, max hearts 3.25 -> 4.25 (Gohma's heart container), event registers 0xAB03 and 0xCF03 (0 -> 1), 0x7EFF (12 -> 0)."
+ }
+}
