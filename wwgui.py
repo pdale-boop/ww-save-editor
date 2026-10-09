@@ -842,13 +842,20 @@ class App(tk.Tk):
         self.arrival = ttk.Label(custom, foreground='gray', wraplength=560, justify='left')
         self.arrival.grid(row=4, column=0, columnspan=2, sticky='w', pady=(6, 0))
         self.arrivals = {}
+        self.spot_box.bind('<<ComboboxSelected>>', lambda e: self.update_restart_check())
+        # What the game itself would write when saving (wwedit.story_restart, disc_restart_places),
+        # and whether the place chosen above is one it ever writes. A warning only, never a block.
+        self.game_restart = ttk.Label(f, wraplength=760, justify='left')
+        self.game_restart.grid(row=3, column=0, columnspan=2, sticky='w', pady=(16, 0))
+        self.restart_warning = ttk.Label(f, wraplength=760, justify='left')
+        self.restart_warning.grid(row=4, column=0, columnspan=2, sticky='w', pady=(4, 0))
         ttk.Label(f, foreground='gray', wraplength=760, justify='left', text=(
             'Known spots are spawn points the game itself uses (from your saves and the Wind Waker '
             'Randomizer\'s entrance data), so they are safe. A custom place is checked against the disc '
             'for the stage and room, and its spawn points are read from that room\'s data, so only '
             'points the game can actually find are offered (a missing one freezes the game on load). '
             'Either way only the new copy is affected.')).grid(
-            row=3, column=0, columnspan=2, sticky='w', pady=(16, 0))
+            row=5, column=0, columnspan=2, sticky='w', pady=(16, 0))
         self.restart_widgets()
 
     def restart_widgets(self):
@@ -859,6 +866,59 @@ class App(tk.Tk):
         self.experimental_box.state(['!disabled'] if mode == 'custom' else ['disabled'])
         if mode == 'custom' and not self.stage.cget('values'):
             self.fill_stages()
+        self.update_restart_check()
+
+    def restart_places(self):
+        """(places, rules) from wwedit.disc_restart_places, read once; None without a disc."""
+        if getattr(self, 'game_places', None) is None:
+            iso, index = self.find_disc()
+            if not iso:
+                return None
+            self.say('Reading where the game restarts saves...')
+            self.update_idletasks()
+            self.game_places = wwedit.disc_restart_places(iso, index)
+        return self.game_places
+
+    def show_game_restart(self, s):
+        """The restart place the game would write for save s (its story flags as loaded)."""
+        self.restart_source = s
+        story = wwedit.story_restart(s)
+        if story:
+            (stage, room, point), why = story
+            self.game_restart.config(text=f'The game would restart this save at {stage_label(stage)}, room '
+                                          f'{room_label(stage, room)}, spawn point {point} ({why}).')
+            return
+        stage = s.restart()[0]
+        data = self.restart_places()
+        rule = data[1].get(stage) if data else None
+        self.game_restart.config(text=(
+            'After the first sail the game writes a place that depends on where you save. Saving in '
+            f'{stage_label(stage)} writes {rule}.' if rule else
+            'After the first sail the game writes a place that depends on where you save.') + (
+            ' On an island it is the restart number of the ground under Link, read from the collision; '
+            'that is usually point 0.' if stage == 'sea' else ''))
+
+    def update_restart_check(self):
+        """Say whether the restart place that would be written is one the game ever writes."""
+        s = getattr(self, 'restart_source', None)
+        if s is None or not hasattr(self, 'restart_warning'):
+            return
+        try:
+            place = self.restart_choice() or s.restart()
+        except (ValueError, IndexError):
+            self.restart_warning.config(text='')
+            return
+        data = self.restart_places()
+        if data is None:
+            self.restart_warning.config(text='')
+            return
+        ok, why = wwedit.restart_check(s, place, data[0])
+        if ok:
+            self.restart_warning.config(foreground='gray', text=f'This place: {why}.')
+        else:
+            self.restart_warning.config(foreground='#b35900', text=(
+                f'Note: {why}. It loads if the spawn point exists, but the story and the room may not '
+                'expect Link there.'))
 
     def fill_stages(self):
         iso, index = self.find_disc()
@@ -960,6 +1020,7 @@ class App(tk.Tk):
         reached = ('Exits lead here from: ' + '; '.join(sources) + '.' if sources else
                    'No exit on the disc leads here (it may be used by an event, a warp or a restart).')
         self.arrival.config(text=f'Link arrives: {text}.\n{reached}' if text else '')
+        self.update_restart_check()
 
     def restart_choice(self):
         mode = self.restart_mode.get()
@@ -1145,6 +1206,7 @@ class App(tk.Tk):
         self.stage.set(stage_label(stage))
         self.room.set(room_label(stage, room))
         self.point.set(str(point))
+        self.show_game_restart(s)
         self.restart_widgets()
         self.initial = self.read_widgets()
         self.fill_flags()
