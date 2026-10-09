@@ -1,0 +1,120 @@
+{
+ "part": "Forest Haven arc, part B: the Forbidden Woods (kindan, miniboss kinMB, boss kinBOSS), from entering to beating Kalle Demos. Part A ends on the way in (catalog 14); part C starts at the boss warp's WARP_WIND (Forest Haven, Omori point 214).",
+ "steps": [
+  {
+   "id": "fw_entrance",
+   "label": "Into the Forbidden Woods: the first door flower",
+   "sets": {
+    "flags": ["0x2B20"]
+   },
+   "restart": {
+    "stage": "kindan",
+    "room": 0,
+    "point": 1,
+    "evidence": "dComIfGs_setGameStartStage: dungeon, miniboss and boss stages restart at the stage's exit 0, and kindan, kinMB and kinBOSS all have exit 0 = kindan room 0 point 1 (Stage.dzs SCLS; wwedit.disc_restart_places). Catalog 15 holds it."
+   },
+   "evidence": [
+    "you enter from Forest Haven's square: sea 41's exit leads to kindan room 0 point 0 (SCLS in sea Room41)",
+    "0x2B20 has no setter in the decomp; the one load in the compiled modules is in d_a_ss.rel at 0x14A8 (findli; the module is in the module archive, which relcalls can't read, so the function isn't identified). Ss (fpcNm_SS_e, d_stage.cpp:892) is placed 12 times in kindan (rooms 0, 1, 3, 4, 5, 9, 14) and nowhere else in the game but a test stage: the dungeon's door flowers",
+    "catalog: 0x2B20 off in 14, on in 15"
+   ],
+   "basis": "compiled+disc",
+   "notes": "The entrance warp pot (Warpts1, room 0) lights bit 0x01 of event register 0xA107 (see fw_boomerang's notes for the register); catalog 15 has 0xA107 = 1. arcs.py doesn't check event registers, so it is not in sets."
+  },
+  {
+   "id": "fw_map_compass",
+   "label": "Dungeon map and compass",
+   "window": {"after": "fw_entrance"},
+   "sets": {
+    "dungeon_items": {"area": 4, "items": ["MAP", "COMPASS"]}
+   },
+   "evidence": [
+    "item_func_map / item_func_compass set the stage's map and compass bits (d_item.cpp:953-960; dSv_memBit_c::mDungeonItem bits 0 and 1)",
+    "area 4: kindan, kinMB and kinBOSS all have save table 4 in their STAG chunk (wwedit.stage_kind)",
+    "catalog: area 4's bits 0x00 in 14, 0x03 in 15"
+   ],
+   "basis": "code+disc",
+   "notes": "Nothing later requires them, so they have a window with no end. The catalog's play had both before the miniboss."
+  },
+  {
+   "id": "fw_boomerang",
+   "label": "The miniboss and the Boomerang",
+   "window": {"after": "fw_entrance"},
+   "sets": {
+    "items": ["Boomerang"],
+    "switches": [
+     {"area": 4, "switch": "0x19", "why": "kinMB room 10's Mori1 door (daMdoor_c, parameters 0xFFFF0219) opens on its switch, getSwbit = parameters bits 0-7 (d_a_mdoor.cpp:16-17, checked at :149): the miniboss room unlocks once it is beaten"}
+    ]
+   },
+   "evidence": [
+    "the miniboss is reached from kindan room 9 (exit to kinMB room 10 point 0)",
+    "kinMB's chest (TRES takara3, parameters 0xFF200500) holds item 0x2D, the Boomerang (daTbox_c::getItemNo = Z angle >> 8, d_a_tbox.h:37) and is chest 10 of the area (getTboxNo = parameters bits 7-11, :35)",
+    "catalog: Boomerang, switch 0x19 and area 4 chest bit 10 off in 15, on in 16"
+   ],
+   "basis": "code+disc",
+   "notes": "The dungeon is built so the Boomerang is needed further in, but no code read here makes it required before the boss key or the boss (Kalle Demos's own hitboxes exclude boomerang hits: d_a_bmd.cpp:1875, d_a_bmdfoot.cpp:758), so it has a window with no end. Chest bits (dSv_memBit_c::mTbox) aren't checked by arcs.py. Warp pots: daObj_Warpt_c::m_event_reg[1] is 0xA107 (d_a_obj_warpt.cpp:37-44), chosen by parameters bits 4-7 (:727); Warpts1, Warpts2 and Warpts3 (rooms 0, 5, 16) set bits 0x01, 0x02, 0x04 (:732-747). Catalog: 0xA107 = 1 in 15, 7 in 16. Who sets switch 0x19 (the miniboss's death) wasn't read."
+  },
+  {
+   "id": "fw_boss_key",
+   "label": "The boss key",
+   "sets": {
+    "dungeon_items": {"area": 4, "items": ["BOSS_KEY"]}
+   },
+   "evidence": [
+    "item_func_boss_key sets the stage's boss key bit (d_item.cpp:963-965)",
+    "a boss door (key-lock type 1) won't open without it: daDoor10 (d_a_door10.cpp:360-364), daDoor12 (d_a_door12.cpp:410)",
+    "the boss is reached from kindan room 16 (exit to kinBOSS room 0 point 0)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "kalle_intro",
+   "label": "Kalle Demos appears; Makar is caught",
+   "sets": {
+    "dungeon_items": {"area": 4, "items": ["STAGE_BOSS_DEMO"]}
+   },
+   "evidence": [
+    "the intro plays unless the boss intro bit is set (bmd create, d_a_bmd.cpp:2014-2018) and sets it, onStageBossDemo (:1416)",
+    "the intro creates Makar (fopAcM_create fpcNm_NPC_CB1_e, :1488); while the boss is alive he runs rescueNpcAction (daNpc_Cb1_c create, d_a_npc_cb1.cpp:2937-2938; event cb_rescue, :2909-2919)",
+    "catalog: area 4's bits all on in 16, none of the boss bits in 15"
+   ],
+   "basis": "code",
+   "seen": "Kalle Demos's intro, with Makar."
+  },
+  {
+   "id": "kalle_demos",
+   "label": "Kalle Demos beaten",
+   "sets": {
+    "flags": ["0x3D40"],
+    "dungeon_items": {"area": 4, "items": ["STAGE_BOSS_ENEMY"]}
+   },
+   "evidence": [
+    "end(): onStageBossEnemy, then a warp flower (d_a_bmd.cpp:561-563)",
+    "0x3D40: dMeter_recollect_boss_data, in a boss stage of save table 4 once its boss is beaten (d_meter.cpp:1075-1077); it records the player for the rematch (Xboss1 checks 0x3D40, d_com_inf_game.cpp:1449)",
+    "with the boss beaten, Makar waits in the room (waitNpcAction, d_a_npc_cb1.cpp:2938) until Farore's Pearl (d_a_bmd.cpp:1970-1976)",
+    "the warp flower plays WARP_WIND until Farore's Pearl (daWarpf_c::CreateInit, d_a_warpf.cpp:224-227, 272-276); kinBOSS's event list changes scene to Omori point 214 room 0 (WARP_WIND) or 215 (WARP_WIND_AFTER): part C",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "kalle_heart",
+   "label": "Kalle Demos's heart container",
+   "window": {"after": "kalle_demos"},
+   "sets": {
+    "dungeon_items": {"area": 4, "items": ["STAGE_LIFE"]}
+   },
+   "evidence": [
+    "the boss drops a heart container (fopAcM_createDisappear daDisItem_HEART_CONTAINER_e, d_a_bmd.cpp:747); item_func_utuwa_heart adds a heart and sets the stage's STAGE_LIFE bit (d_item.cpp:588-601)",
+    "catalog: max hearts 4.25 -> 5.5 and the bit on between 15 and 16 (the extra quarter is a Piece of Heart on the way, not placed here)"
+   ],
+   "basis": "code",
+   "notes": "Nothing later requires it, so it has a window with no end."
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "Every flag that turns on between catalog 14 and 16 in this dungeon is placed (0x2B20, 0x3D40; event register 0xA107 in the notes). Not placed: area 4's other saved switches and chest bits (puzzle state), small keys (0 in both 15 and 16), and the Piece of Heart that makes max hearts 5.5. Not this part: 0x1904 is Makar's talk in Forest Haven after the ceremony (message 0x14C4, daNpc_Cb1_c::next_msgStatus, d_a_npc_cb1.cpp:2708-2709; never on in the catalog), part C. Everything else first on between 15 and 16 (Farore's Pearl, 0x0A01-0x0A08, 0x1C40, Endless Night, the password, 0x2A01/0x2A02) is part C or later."
+ }
+}
