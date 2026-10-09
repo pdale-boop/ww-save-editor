@@ -525,6 +525,26 @@
    "basis": "code+disc"
   },
   {
+   "id": "map_fish",
+   "label": "The fishman at Dragon Roost",
+   "sets": {
+    "flags": [
+     "0x0901"
+    ]
+   },
+   "window": {
+    "after": "gohma"
+   },
+   "evidence": [
+    "daNpc_So_c (d_a_npc_so.cpp, 'Fishman (blue fish)'): at sea room 13 with 0x0901 off and Dragon Roost Cavern's boss beaten (isStageBossEnemy(STAGE_DRC)) he starts his first-meeting event (MODE_EVENT_FIRST_WAIT, :1726-1728) and first-meeting messages (0x32CA, 0x32CE: :566-571, :587-590)",
+    "0x0901 is set when a fishman dives away, modeDisappearInit (:1207-1208)",
+    "catalog: on between 10 and 11, with Din's Pearl"
+   ],
+   "basis": "code+play",
+   "seen": "The fishman's scene as you sail away from Dragon Roost after the pearl (owner's play).",
+   "notes": "Any fishman diving away sets the flag, so feeding one elsewhere first also sets it; nothing later reads it as a requirement, so it has a window with no end."
+  },
+  {
    "id": "valoo_pearl",
    "label": "Valoo calms down; Komali gives Din's Pearl",
    "sets": {
@@ -592,9 +612,7 @@
   }
  ],
  "unplaced": {
-  "flags": [
-   "0x0901"
-  ],
-  "notes": "a: Every flag that turns on between catalog 45 and 06 outside the prologue's steps is placed here. 0x0201 (off in 45, on in 03) stays with the prologue's unplaced list. Part B starts with 0x0902 (Dragon Roost arrival), which the catalog turns on together with the Wind Waker, Wind's Requiem and its learned flag 0x2708 (timeline 06 -> 07), so those belong to part B, not here.; b: Every flag that turned on between catalog 06 and 08 is placed here, except 0x7EFF (an event register, 14 -> 12, not a flag) and sea area-0 switches 0x24, 0x41, 0x43, 0x45, 0x6F, 0x73 (turned on between 06 and 07; other squares sailed through, not checked). The Delivery Bag's giver and the max-hearts change (3 -> 3.25, a Piece of Heart, 06 -> 07) are not placed.; c: 0x0901 is set whenever a fishman dives away (daNpc_So_c::modeDisappearInit, d_a_npc_so.cpp:1206-1209); while it's off, a fishman in Dragon Roost's square has a first talk of its own (d_a_npc_so.cpp:566-568, 587-588). It belongs to the fishmen and sea chart chain, not to this arc's order (catalog: set between 10 and 11). Area 3 switch 0x3A (on between catalog 09 and 10) has no actor tied to it yet. Not this arc: 0x0A20, 0x1801, 0x0B08, 0x0C40, 0x1E10, 0x2304 (Forest Haven and Windfall, also first on between 10 and 11)."
+  "flags": [],
+  "notes": "Every flag that turns on in this stretch of the catalog is placed (0x0201 stays with the prologue). Not placed, not flags: event register 0x7EFF (14 -> 12 between catalog 06 and 07) and a Piece of Heart in the same stretch (max hearts 3 -> 3.25). Sea switches 0x24, 0x41, 0x43, 0x45, 0x6F and 0x73 (on between 06 and 07) are probably other squares sailed through, not checked. Area 3 switch 0x3A (on between 09 and 10) has no actor tied to it yet. Not this arc: 0x0A20, 0x1801, 0x0B08, 0x0C40, 0x1E10, 0x2304 (Forest Haven and Windfall, also first on between 10 and 11)."
  }
 }

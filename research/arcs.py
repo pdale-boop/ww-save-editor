@@ -78,8 +78,8 @@ def checked_count(step):
 def position(save, arc):
     """(n, None) when steps 1..n are done and the rest not started; (None, text) when mixed.
     A step with nothing checkable counts as done. Partly done steps count as not done.
-    Steps with a window ({"after", "by"}: step ids) are left out of the order and checked
-    against it instead: started only once "after" is done, done once "by" is."""
+    Steps with a window ({"after", "by"}: step ids, "by" optional) are left out of the order and
+    checked against it instead: started only once "after" is done, done once "by" is."""
     floating = [s for s in arc['steps'] if 'window' in s]
     steps = [s for s in arc['steps'] if 'window' not in s]
     n, mixed = ordered_position(save, steps)
@@ -87,9 +87,10 @@ def position(save, arc):
         return None, mixed
     ids = [s['id'] for s in steps]
     for s in floating:
-        after, by = ids.index(s['window']['after']), ids.index(s['window']['by'])
+        after = ids.index(s['window']['after'])
+        by = ids.index(s['window']['by']) if s['window'].get('by') else None
         missing = step_missing(save, s)
-        if n > by and missing:
+        if by is not None and n > by and missing:
             return None, f"past {s['window']['by']}, but {s['id']} lacks {', '.join(missing)}"
         if n <= after and len(missing) < checked_count(s):
             return None, f"{s['id']} started before {s['window']['after']} is done"
