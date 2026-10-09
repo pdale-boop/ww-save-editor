@@ -29,9 +29,9 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
       add a Charts section.
 - [ ] **Event registers** (the counters stored among the story flags, like `0x7EFF` and `0xA60F`).
       `0xA207` is Dragon Roost Cavern's warp pots, one bit per pot (`daObj_Warpt_c::m_event_reg[0]`;
-      `research/arcs/drafts/korl_c.md`), so `0xA107` and `0xA307` are probably the other dungeons'
-      warp pots; maps, compasses and boss keys are per-area bits instead (`dSv_memBit_c`, area block
-      + 0x21). Check the other two against `d_a_warpt`.
+      `research/arcs/drafts/korl_c.md`), and `0xA107` the Forbidden Woods' (rooms 0, 5, 16:
+      `drafts/forest_b.md`), so `0xA307` is probably the Earth Temple's; maps, compasses and boss keys
+      are per-area bits instead (`dSv_memBit_c`, area block + 0x21). Check `0xA307`.
 - [x] **Sea room 0.** A test room for the open sea: the developers' stage select
       (`/res/Menu/Menu1.dat`) lists it as "experiment" and "offshore" (`research/spawn-points.md`).
       Its one spawn point is a boat arrival near Windfall; nothing in normal play leads there.

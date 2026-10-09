@@ -1,0 +1,342 @@
+{
+ "id": "forest_haven",
+ "name": "Forest Haven and the Forbidden Woods",
+ "status": "partial",
+ "summary": "From the Forest Haven arrival to setting off with Farore's Pearl: the Deku Tree and the Deku Leaf, the Forbidden Woods with the Boomerang and Makar, Kalle Demos, the Korok ceremony and the King of Red Lions' next hints.",
+ "notes": "Joined from three parts researched in parallel (drafts/forest_a, forest_b, forest_c, with their evidence in the matching .md files). Follows the King of Red Lions arc (after south_wind); the next arc starts at ENDLESS_NIGHT 0x0A02. Not checked: event register 0xA107, this dungeon's warp pots (bits 0x01, 0x02, 0x04 for the pots in rooms 0, 5, 16; d_a_obj_warpt.cpp).",
+ "steps": [
+  {
+   "id": "fh_arrival",
+   "label": "Arriving at Forest Haven",
+   "sets": {
+    "flags": [
+     "0x0A20"
+    ],
+    "optional_flags": [
+     "0x2B80"
+    ],
+    "switches": [
+     {
+      "area": 0,
+      "switch": "0x1A",
+      "why": "the island tag's switch: TagIsl in sea room 41, parameters 0x06FF1A02 (type 2, switch 0x1A, event 6 ARRIVAL_FST), set as the arrival starts, daTag_Island_c::actionReady (d_a_tag_island.cpp:408)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 41,
+    "point": 0,
+    "evidence": "0x0A20 is Forest Haven's landing event (l_landingEvent, d_com_inf_game.cpp:1277), so from here a save on the island restarts at the point its ground names (room 41's collision names only 0); saves inside Omori, Ocrogh and Otkura restart at sea 41 point 0 too (save table 11: point 0 of the stage's sea square, dComIfGs_setGameStartStage)"
+   },
+   "evidence": [
+    "TagIsl in sea room 41, parameters 0x06FF1A02: type 2, so daTag_Island_c::getArrivalFlag gives 0x0A20 (d_a_tag_island.cpp:85); set when the arrival starts (demoInitProc, :135); event 6 of the sea's EVNT list is ARRIVAL_FST",
+    "the King's hint ladder, rung 4: with 0x0A20 and no Farore's Pearl he says 0x5F4, or 0x5F5 once 0x2B80 is set; with Farore's Pearl 0x5F6 (daShip_c::setInitMessage, d_a_ship.cpp:558-569)",
+    "0x2B80: set by reading hint 0x5F4 (daShip_c::setNextMessage, d_a_ship.cpp:638-639); it only changes his next hint, so it is optional",
+    "catalog: 0x0A20 first on between 10 and 11"
+   ],
+   "basis": "code+disc",
+   "requires": [
+    "korl_dragon_roost:south_wind"
+   ],
+   "seen": "The arrival cutscene at Forest Haven (ARRIVAL_FST)."
+  },
+  {
+   "id": "deku_tree",
+   "label": "The Deku Tree freed of its parasites",
+   "sets": {
+    "flags": [
+     "0x1801"
+    ]
+   },
+   "evidence": [
+    "set in the Deku Tree's actor, daNpc_De1_c::checkOrder (compiled d_a_npc_de1.rel, .text+0xF00 -> onEventBit; relcalls.py), the Deku Tree (De1) standing in Omori room 0 on layers 0, 1, 10 and 11",
+    "readers: the Deku Leaf on top of the tree (itemDek) only spawns once it is set (daDekuItem_c::_create, d_a_deku_item.cpp:116-118); Baba Buds (d_a_jbo, 'Object - Baba Bud') of type APPEAR_AFTER_DEKU_TREE turn normal with it (daJBO_Execute, d_a_jbo.cpp:124-128); a hint tag of type 9 ends with it (d_a_tag_hint.cpp:178-180); the Deku Tree's createInit and setMtx read it (compiled)",
+    "the Deku Tree's first cutscene is Omori's event meet_deku, which ends at Omori point 213 (event list scene change)",
+    "catalog: first on between 10 and 11 (the timeline note: set on the last parasite's death)"
+   ],
+   "basis": "compiled+code+disc"
+  },
+  {
+   "id": "deku_leaf",
+   "label": "The Deku Leaf from the top of the tree",
+   "sets": {
+    "items": [
+     "Deku Leaf"
+    ]
+   },
+   "evidence": [
+    "the leaf is an itemDek actor at the top of the Deku Tree (Omori room 0, layers 0 and 1, parameters 0x00000002: item bit 2, y 5035); it spawns after 0x1801 and not once its item bit is set (daDekuItem_c::_create, d_a_deku_item.cpp:110-118), and gives item 0x34 (fopAcM_createItemForTrBoxDemo, :203)",
+    "item_func_deku_leaf also gives the magic meter: max magic and magic 16 (d_item.cpp:810-815)",
+    "catalog: Deku Leaf and max magic 0 -> 16 between 11 and 12 (both mid-cutscene)"
+   ],
+   "basis": "code+disc",
+   "warn": "The leaf brings the magic meter (16). A crafted save with the leaf and no magic has a leaf it can't use."
+  },
+  {
+   "id": "korok_leaf_scene",
+   "label": "A Korok calls Link after he takes the leaf",
+   "sets": {
+    "flags": [
+     "0x2902"
+    ],
+    "optional_flags": [
+     "0x0C02"
+    ]
+   },
+   "evidence": [
+    "0x2902: set by the Koroks' actor, daNpc_Bj1_c::event_proc (compiled d_a_npc_bj1.rel, .text+0x48C4 -> onEventBit); read by its wait_4 (.text+0x4E98)",
+    "0x0C02: a Korok's first talk, daNpc_Bj1_c::talk_1 (.text+0x5378 -> onEventBit), read by getMsg_BJ6_0 (.text+0x2040), so it belongs to the Korok placed as Bj6 (Omori room 0, layers 0 and 1, on a ledge at y 3383); the timeline names him Rown. Optional: nothing found that requires it",
+    "the Koroks of types 4, 6, 7 and X read 0x1801 when they set up (init_BJ4_0, init_BJ6_0, init_BJ7_0, init_BJX_0)",
+    "catalog: 0x2902 between 12 and 13, 0x0C02 between 13 and 14"
+   ],
+   "basis": "compiled+disc",
+   "seen": "After putting the leaf away a Korok calls for attention (catalog 12, mid-cutscene); then on to the Forbidden Woods by updraft (catalog 14)."
+  },
+  {
+   "id": "fw_entrance",
+   "label": "Into the Forbidden Woods: the first door flower",
+   "sets": {
+    "flags": [
+     "0x2B20"
+    ]
+   },
+   "restart": {
+    "stage": "kindan",
+    "room": 0,
+    "point": 1,
+    "evidence": "dComIfGs_setGameStartStage: dungeon, miniboss and boss stages restart at the stage's exit 0, and kindan, kinMB and kinBOSS all have exit 0 = kindan room 0 point 1 (Stage.dzs SCLS; wwedit.disc_restart_places). Catalog 15 holds it."
+   },
+   "evidence": [
+    "you enter from Forest Haven's square: sea 41's exit leads to kindan room 0 point 0 (SCLS in sea Room41)",
+    "0x2B20 has no setter in the decomp; the one load in the compiled modules is in d_a_ss.rel at 0x14A8 (findli; the module is in the module archive, which relcalls can't read, so the function isn't identified). Ss (fpcNm_SS_e, d_stage.cpp:892) is placed 12 times in kindan (rooms 0, 1, 3, 4, 5, 9, 14) and nowhere else in the game but a test stage: the dungeon's door flowers",
+    "catalog: 0x2B20 off in 14, on in 15"
+   ],
+   "basis": "compiled+disc",
+   "notes": "The entrance warp pot (Warpts1, room 0) lights bit 0x01 of event register 0xA107 (see fw_boomerang's notes for the register); catalog 15 has 0xA107 = 1. arcs.py doesn't check event registers, so it is not in sets."
+  },
+  {
+   "id": "fw_map_compass",
+   "label": "Dungeon map and compass",
+   "window": {
+    "after": "fw_entrance"
+   },
+   "sets": {
+    "dungeon_items": {
+     "area": 4,
+     "items": [
+      "MAP",
+      "COMPASS"
+     ]
+    }
+   },
+   "evidence": [
+    "item_func_map / item_func_compass set the stage's map and compass bits (d_item.cpp:953-960; dSv_memBit_c::mDungeonItem bits 0 and 1)",
+    "area 4: kindan, kinMB and kinBOSS all have save table 4 in their STAG chunk (wwedit.stage_kind)",
+    "catalog: area 4's bits 0x00 in 14, 0x03 in 15"
+   ],
+   "basis": "code+disc",
+   "notes": "Nothing later requires them, so they have a window with no end. The catalog's play had both before the miniboss."
+  },
+  {
+   "id": "fw_boomerang",
+   "label": "The miniboss and the Boomerang",
+   "window": {
+    "after": "fw_entrance"
+   },
+   "sets": {
+    "items": [
+     "Boomerang"
+    ],
+    "switches": [
+     {
+      "area": 4,
+      "switch": "0x19",
+      "why": "kinMB room 10's Mori1 door (daMdoor_c, parameters 0xFFFF0219) opens on its switch, getSwbit = parameters bits 0-7 (d_a_mdoor.cpp:16-17, checked at :149): the miniboss room unlocks once it is beaten"
+     }
+    ]
+   },
+   "evidence": [
+    "the miniboss is reached from kindan room 9 (exit to kinMB room 10 point 0)",
+    "kinMB's chest (TRES takara3, parameters 0xFF200500) holds item 0x2D, the Boomerang (daTbox_c::getItemNo = Z angle >> 8, d_a_tbox.h:37) and is chest 10 of the area (getTboxNo = parameters bits 7-11, :35)",
+    "catalog: Boomerang, switch 0x19 and area 4 chest bit 10 off in 15, on in 16"
+   ],
+   "basis": "code+disc",
+   "notes": "The dungeon is built so the Boomerang is needed further in, but no code read here makes it required before the boss key or the boss (Kalle Demos's own hitboxes exclude boomerang hits: d_a_bmd.cpp:1875, d_a_bmdfoot.cpp:758), so it has a window with no end. Chest bits (dSv_memBit_c::mTbox) aren't checked by arcs.py. Warp pots: daObj_Warpt_c::m_event_reg[1] is 0xA107 (d_a_obj_warpt.cpp:37-44), chosen by parameters bits 4-7 (:727); Warpts1, Warpts2 and Warpts3 (rooms 0, 5, 16) set bits 0x01, 0x02, 0x04 (:732-747). Catalog: 0xA107 = 1 in 15, 7 in 16. Who sets switch 0x19 (the miniboss's death) wasn't read."
+  },
+  {
+   "id": "fw_boss_key",
+   "label": "The boss key",
+   "sets": {
+    "dungeon_items": {
+     "area": 4,
+     "items": [
+      "BOSS_KEY"
+     ]
+    }
+   },
+   "evidence": [
+    "item_func_boss_key sets the stage's boss key bit (d_item.cpp:963-965)",
+    "a boss door (key-lock type 1) won't open without it: daDoor10 (d_a_door10.cpp:360-364), daDoor12 (d_a_door12.cpp:410)",
+    "the boss is reached from kindan room 16 (exit to kinBOSS room 0 point 0)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "kalle_intro",
+   "label": "Kalle Demos appears; Makar is caught",
+   "sets": {
+    "dungeon_items": {
+     "area": 4,
+     "items": [
+      "STAGE_BOSS_DEMO"
+     ]
+    }
+   },
+   "evidence": [
+    "the intro plays unless the boss intro bit is set (bmd create, d_a_bmd.cpp:2014-2018) and sets it, onStageBossDemo (:1416)",
+    "the intro creates Makar (fopAcM_create fpcNm_NPC_CB1_e, :1488); while the boss is alive he runs rescueNpcAction (daNpc_Cb1_c create, d_a_npc_cb1.cpp:2937-2938; event cb_rescue, :2909-2919)",
+    "catalog: area 4's bits all on in 16, none of the boss bits in 15"
+   ],
+   "basis": "code",
+   "seen": "Kalle Demos's intro, with Makar."
+  },
+  {
+   "id": "kalle_demos",
+   "label": "Kalle Demos beaten",
+   "sets": {
+    "flags": [
+     "0x3D40"
+    ],
+    "dungeon_items": {
+     "area": 4,
+     "items": [
+      "STAGE_BOSS_ENEMY"
+     ]
+    }
+   },
+   "evidence": [
+    "end(): onStageBossEnemy, then a warp flower (d_a_bmd.cpp:561-563)",
+    "0x3D40: dMeter_recollect_boss_data, in a boss stage of save table 4 once its boss is beaten (d_meter.cpp:1075-1077); it records the player for the rematch (Xboss1 checks 0x3D40, d_com_inf_game.cpp:1449)",
+    "with the boss beaten, Makar waits in the room (waitNpcAction, d_a_npc_cb1.cpp:2938) until Farore's Pearl (d_a_bmd.cpp:1970-1976)",
+    "the warp flower plays WARP_WIND until Farore's Pearl (daWarpf_c::CreateInit, d_a_warpf.cpp:224-227, 272-276); kinBOSS's event list changes scene to Omori point 214 room 0 (WARP_WIND) or 215 (WARP_WIND_AFTER): part C",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "kalle_heart",
+   "label": "Kalle Demos's heart container",
+   "window": {
+    "after": "kalle_demos"
+   },
+   "sets": {
+    "dungeon_items": {
+     "area": 4,
+     "items": [
+      "STAGE_LIFE"
+     ]
+    }
+   },
+   "evidence": [
+    "the boss drops a heart container (fopAcM_createDisappear daDisItem_HEART_CONTAINER_e, d_a_bmd.cpp:747); item_func_utuwa_heart adds a heart and sets the stage's STAGE_LIFE bit (d_item.cpp:588-601)",
+    "catalog: max hearts 4.25 -> 5.5 and the bit on between 15 and 16 (the extra quarter is a Piece of Heart on the way, not placed here)"
+   ],
+   "basis": "code",
+   "notes": "Nothing later requires it, so it has a window with no end."
+  },
+  {
+   "id": "farores_pearl",
+   "label": "Back in Forest Haven: the ceremony and Farore's Pearl",
+   "sets": {
+    "pearls": [
+     "Farore's Pearl"
+    ],
+    "switches": [
+     {
+      "area": 11,
+      "switch": "0x0D",
+      "why": "getperl_deku's spawn switch: Omori EVNT entry 1 (getperl_deku), spawn switch byte 0x0D; Omori saves to area 11 (STAG save table 11). setStartDemo turns it on when the event starts, so the cutscene plays once (d_event_manager.cpp:41-48)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 41,
+    "point": 0,
+    "evidence": "Omori is a save-table-11 stage: dComIfGs_setGameStartStage writes point 0 of its sea square (Forest Haven, sea 41), d_com_inf_game.cpp:1376-1385; catalog 11-14 (saved in Forest Haven) hold sea 41 0"
+   },
+   "evidence": [
+    "the warp after Kalle Demos: daWarpf_c::CreateInit (d_a_warpf.cpp:267-279) exists only once the boss is beaten (isStageBossEnemy) and plays WARP_WIND until Farore's Pearl is owned, WARP_WIND_AFTER after (checkEndDemo, STAGE_FW case, :224-227)",
+    "kinBOSS event list: WARP_WIND has Makar (staff Cb1: TO_LINK, WARP) and its DIRECTOR's NEXT goes to Omori room 0 point 214; WARP_WIND_AFTER goes to point 215 (BOSS_WARPOUT) without Makar",
+    "Omori point 214 has parameters 0x01FF0000: start event 1 of the stage's EVNT list, getperl_deku (daPy_lk_c::getStartEvent; setStartDemo)",
+    "getperl_deku: its PACKAGE staff plays getperl_deku.stb (Omori event list), whose item payload is 4, Farore's Pearl (d_a_demo00.cpp:651-730; research/story-flags.md, flags and items given by cutscene data)",
+    "catalog: Farore's Pearl and area 11 switch 0x0D off in 15, on in 16"
+   ],
+   "basis": "code+disc",
+   "seen": "Link warps out of the boss room with Makar and lands before the Deku Tree, who gives Farore's Pearl after the Koroks' ceremony. The ceremony is my reading of the story around getperl_deku, not read from the .stb.",
+   "notes": "The warp itself sets nothing saved (WARP_WIND has no spawn switch: kinBOSS has no EVNT list). Kalle Demos's defeat (0x3D40, dMeter_recollect_boss_data, d_meter.cpp:1075-1077) and the Forbidden Woods' dungeon bits belong to part B."
+  },
+  {
+   "id": "leave_forest_haven",
+   "label": "Leaving Forest Haven with the pearl",
+   "sets": {
+    "flags": [
+     "0x1C40"
+    ]
+   },
+   "evidence": [
+    "dScnRoom_Delete sets 0x1C40 when a room is unloaded with field_0x1dc == 2 (d_s_room.cpp:134-135); the room's create sets field_0x1dc = 2 in stage Omori when Link has Farore's Pearl (:271-272)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code",
+   "notes": "The timeline's note ties it to talking to the Deku Tree after the pearl; the code only needs the pearl and leaving an Omori room, which differs from my reading of that note. The King of Red Lions waits outside (sea 41), so this comes before korl_farore_talk."
+  },
+  {
+   "id": "korl_farore_talk",
+   "label": "The King of Red Lions on Farore's Pearl",
+   "sets": {
+    "flags": [
+     "0x0A08"
+    ],
+    "optional_flags": [
+     "0x0A04"
+    ]
+   },
+   "evidence": [
+    "daShip_c::checkForceMessage forces message 0x5F6 while Farore's Pearl is owned (dComIfGs_isSymbol(dSymbol_FARORE_e)) and 0x0A08 is off (d_a_ship.cpp:350-351); 0x5F6 continues to 0x5F7 (:693-694), and 0x5F7 sets 0x0A08 in setNextMessage (:641-642)",
+    "0x0A04 (optional): with 0x0A08 on and 0x2A02 off, the King's hint is 0x5F8 until 0x0A04, then 0x5F9 (:545-555); reading 0x5F8 sets 0x0A04 (:644-645). It needs a second talk before setting off; the catalog never has it",
+    "catalog: 0x0A08 off in 15, on in 16"
+   ],
+   "basis": "code",
+   "seen": "The King's talk about Farore's Pearl and the next destination (ladder rung 5, research/story-flags.md)."
+  },
+  {
+   "id": "set_off_farore",
+   "label": "Setting off for the next mark",
+   "sets": {
+    "flags": [
+     "0x2A02"
+    ]
+   },
+   "requires": [
+    "korl_farore_talk"
+   ],
+   "evidence": [
+    "daShip_c::procPaddleMove_init sets 0x2A02 when the boat moves with Link aboard and 0x0A08 is on (d_a_ship.cpp:1576-1577), the same place RODE_KORL and 0x1980 are set (:1569-1574)",
+    "the King's hint becomes 0xD5E (hurry to the mark) once 0x2A02 is on (:545-547)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code",
+   "notes": "After this the arc ends; the next arc starts with ENDLESS_NIGHT (0x0A02), set together with 0x0A01, 0x2A01 and the Windfall flags between catalog 15 and 16."
+  }
+ ],
+ "unplaced": {
+  "flags": [
+   "0x1E10",
+   "0x2304"
+  ],
+  "notes": "a: Both first on between catalog 10 and 11, both Windfall first talks that start their own chains rather than steps of Forest Haven: 0x1E10 is Gillian's (NPC_UW1) first talk at night, d_a_npc_people.cpp:6992-6994 (her later talks branch on the Delivery Bag and the Magic Armor, :6996-6999); 0x2304 is Loot's (NPC_SA1) first talk, :7158-7160 (no night check in that branch; the timeline note places him in the cafe at night). Also between 10 and 11 and not this part: an Empty Bottle in slot 15, max hearts 3.25 -> 4.25 (Gohma's heart container), event registers 0xAB03 and 0xCF03 (0 -> 1), 0x7EFF (12 -> 0). b: Every flag that turns on between catalog 14 and 16 in this dungeon is placed (0x2B20, 0x3D40; event register 0xA107 in the notes). Not placed: area 4's other saved switches and chest bits (puzzle state), small keys (0 in both 15 and 16), and the Piece of Heart that makes max hearts 5.5. Not this part: 0x1904 is Makar's talk in Forest Haven after the ceremony (message 0x14C4, daNpc_Cb1_c::next_msgStatus, d_a_npc_cb1.cpp:2708-2709; never on in the catalog), part C. Everything else first on between 15 and 16 (Farore's Pearl, 0x0A01-0x0A08, 0x1C40, Endless Night, the password, 0x2A01/0x2A02) is part C or later. c: Every flag that turns on between catalog 15 and 16 and belongs after Kalle Demos and before the Endless Night is placed here. Not this part: 0x3D40 (Kalle Demos defeated, dMeter_recollect_boss_data) and event register 0xA107 (1 -> 7, probably the Forbidden Woods' warp pots, like 0xA207 in Dragon Roost Cavern), both part B; 0x0A01, 0x0A02, 0x1910, 0x1A04, 0x1E80, 0x1F04, 0x2110, 0x2A01, 0x3B20 (the Endless Night and Windfall: the next arc); the Boomerang and the Forbidden Woods' heart container (part B)."
+ }
+}

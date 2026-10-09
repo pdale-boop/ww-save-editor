@@ -3,7 +3,7 @@
  "name": "The King of Red Lions and Dragon Roost",
  "status": "partial",
  "summary": "From finding your sister gone in the Forsaken Fortress tower to Din's Pearl: meeting the King of Red Lions on Windfall, the sail and the first sail, Dragon Roost Island and Komali, Dragon Roost Cavern and Gohma, Valoo, and the south wind towards Forest Haven.",
- "notes": "Joined from three parts researched in parallel (drafts/korl_a, korl_b, korl_c, with their evidence in the matching .md files). Follows the prologue arc (after gossip_stone); the next arc starts at the Forest Haven arrival (0x0A20). Unchecked here: bottles and the letter leaving the Delivery Bag (delivery_passed). wind_requiem has a window (any time from the Wind Waker to the south wind, owner's play), so it is not part of the order.",
+ "notes": "Joined from three parts researched in parallel (drafts/korl_a, korl_b, korl_c, with their evidence in the matching .md files). Follows the prologue arc (after gossip_stone); the next arc starts at the Forest Haven arrival (0x0A20). Unchecked here: bottles and the letter leaving the Delivery Bag (delivery_passed). wind_requiem has a window (any time from the Wind Waker to the south wind, owner's play), so it is not part of the order. song_of_passing (from the Forest Haven research, drafts/forest_a.md) also has a window: any time after the Wind Waker.",
  "steps": [
   {
    "id": "find_sister",
@@ -185,6 +185,30 @@
     "after": "dri_arrival",
     "by": "south_wind"
    }
+  },
+  {
+   "id": "song_of_passing",
+   "label": "Tott teaches the Song of Passing",
+   "sets": {
+    "flags": [
+     "0x0B08",
+     "0x0C40"
+    ],
+    "songs": [
+     "Song of Passing"
+    ]
+   },
+   "window": {
+    "after": "dri_arrival"
+   },
+   "evidence": [
+    "0x0B08: Tott's first talk, daNpc_Tt_c::getMsg (d_a_npc_tt.cpp:163-167); with 0x0B08 and without 0x0C40 he orders his dance-along event (:624-626)",
+    "0x0C40: conducting with Tott's dance, daNpc_Tt_c::demoProcTact1, default branch (d_a_npc_tt.cpp:320), so it needs the Wind Waker (the previous arc's dri_arrival); once set he only dances (setAnmStatus, :73)",
+    "Tott stands on Windfall (sea room 11) on layers 0, 1, 4 and 5",
+    "catalog: both first on between 10 and 11"
+   ],
+   "basis": "code+disc",
+   "notes": "Any time after the Wind Waker, with no end: nothing later found that needs the song. Its window starts in the King of Red Lions arc, so it is proposed for that arc rather than this one."
   },
   {
    "id": "quill_dri",

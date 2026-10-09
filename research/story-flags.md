@@ -671,7 +671,14 @@ from `FIND_SISTER` in the fortress tower to the south wind after Din's Pearl, re
 parts in parallel. The evidence for each part is in `research/arcs/drafts/korl_a.md` (Windfall to the
 first sail), `korl_b.md` (Dragon Roost Island) and `korl_c.md` (Dragon Roost Cavern to the pearl).
 Every game-written catalog save lands on it in order. Unplaced: 0x0901 (a fishman diving away;
-belongs to the fishmen and sea chart chain). Next: the Forest Haven arc, from 0x0A20.
+belongs to the fishmen and sea chart chain; since placed as `map_fish`, a window after Gohma).
+
+Forest Haven arc (2026-10-09): `research/arcs/forest_haven.json`, 15 steps from the Forest Haven
+arrival to setting off with Farore's Pearl, researched in three parts (`drafts/forest_a.md` Forest
+Haven, `forest_b.md` the Forbidden Woods, `forest_c.md` Farore's Pearl and after). Every game-written
+catalog save lands on it in order. The Song of Passing went to the previous arc as a window. Unplaced:
+0x1E10 (Gillian's first night talk) and 0x2304 (Loot's first talk), first talks of Windfall chains.
+Next: the Jabun / Windfall pirates arc, from ENDLESS_NIGHT 0x0A02.
 
 Your knowledge of the game is the check on each chain. Anything the code doesn't settle stays
 marked as unknown.
