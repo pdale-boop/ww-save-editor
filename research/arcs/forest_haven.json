@@ -141,9 +141,6 @@
   {
    "id": "fw_boomerang",
    "label": "The miniboss and the Boomerang",
-   "window": {
-    "after": "fw_entrance"
-   },
    "sets": {
     "items": [
      "Boomerang"
@@ -161,8 +158,8 @@
     "kinMB's chest (TRES takara3, parameters 0xFF200500) holds item 0x2D, the Boomerang (daTbox_c::getItemNo = Z angle >> 8, d_a_tbox.h:37) and is chest 10 of the area (getTboxNo = parameters bits 7-11, :35)",
     "catalog: Boomerang, switch 0x19 and area 4 chest bit 10 off in 15, on in 16"
    ],
-   "basis": "code+disc",
-   "notes": "The dungeon is built so the Boomerang is needed further in, but no code read here makes it required before the boss key or the boss (Kalle Demos's own hitboxes exclude boomerang hits: d_a_bmd.cpp:1875, d_a_bmdfoot.cpp:758), so it has a window with no end. Chest bits (dSv_memBit_c::mTbox) aren't checked by arcs.py. Warp pots: daObj_Warpt_c::m_event_reg[1] is 0xA107 (d_a_obj_warpt.cpp:37-44), chosen by parameters bits 4-7 (:727); Warpts1, Warpts2 and Warpts3 (rooms 0, 5, 16) set bits 0x01, 0x02, 0x04 (:732-747). Catalog: 0xA107 = 1 in 15, 7 in 16. Who sets switch 0x19 (the miniboss's death) wasn't read."
+   "basis": "code+disc+play",
+   "notes": "Ordered before the boss key: the boss door itself only checks the key (d_a_door10.cpp:360-364), but the way to the key needs the Boomerang (owner's play: each dungeon's new item is needed to reach its boss key)."
   },
   {
    "id": "fw_boss_key",

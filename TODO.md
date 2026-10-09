@@ -85,6 +85,14 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
       story), and every one of those is a value a player can have. Changing any one avoids it.
       The bug is BlueWake's (a jump into empty memory); the cards and notes are with its session
       (`CLOCK_CRASH_HANDOFF.md`). Nothing for the editor to change.
+- [ ] **Use the developers' stage select list** (`/res/Menu/Menu1.dat`, `wwedit.menu_entries`; it opens
+      in BlueWake with `BLUEWAKE_STAGE_SELECT=1`, see the bench folder's `STAGE_SELECT_RESULT_HANDOFF.md`).
+      Three uses: its 468 places as named custom restarts (every dungeon room, boss and sea square;
+      the game never writes them as a restart, which the tab already says); its layer labels to check
+      the layer research in `research/story-flags.md` (Windfall day 0, night 0, pirates, day 2, night
+      2; Outset day 1, day 2, night 2); and its 48 cutscene starts (group 32: stage, point, layer) for
+      the developer saves before cutscenes (BlueWake section). A card can't carry a layer, so a save
+      needs the story flags that give the menu's layer.
 - [ ] **Better story presets.** The current ones are tests made from save states taken whenever
       it was convenient during play. Replace them with states made at deliberately chosen points
       in the story, or with presets built from the required flags, items and spawn points once
