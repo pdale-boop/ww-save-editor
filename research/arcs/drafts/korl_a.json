@@ -1,0 +1,102 @@
+{
+  "part": "King of Red Lions / Dragon Roost, part A: from the Forsaken Fortress tower to the first sail (ends before 0x0902, Dragon Roost arrival)",
+  "steps": [
+    {
+      "id": "find_sister",
+      "label": "Thrown from the Forsaken Fortress tower to Windfall",
+      "sets": {
+        "flags": ["0x2580"]
+      },
+      "requires": ["prologue:gossip_stone"],
+      "evidence": [
+        "0x2580: set by FIND_SISTER.stb (stage Mjtower), d_save_event_flag.inc:280",
+        "the Mjtower event list's FIND_SISTER ends with a scene change to sea room 11 point 200 (event_list.dat, dEvDt_Next_Stage; wwedit.event_scene_changes)",
+        "catalog: off in 45, on in 03"
+      ],
+      "basis": "code+disc",
+      "seen": "Aryll is in the tower; the Helmaroc King throws Link out to sea."
+    },
+    {
+      "id": "meet_korl",
+      "label": "Meeting the King of Red Lions on Windfall",
+      "sets": {
+        "flags": ["0x0F80", "0x2E01"]
+      },
+      "restart": {
+        "stage": "sea",
+        "room": 11,
+        "point": 128,
+        "evidence": "l_checkData row MET_KORL, d_com_inf_game.cpp:1306 (dComIfGs_setGameStartStage), while RODE_KORL is off"
+      },
+      "requires": ["korl_a:find_sister"],
+      "evidence": [
+        "Windfall point 200 (sea 11), where FIND_SISTER leaves Link, starts the stage's event 2, MEETSHISHIOH, the first time (spawn switch 0x0A): sea Stage.dzs EVNT entry 2, name read from offset 0x01",
+        "0x0F80 MET_KORL: dEvent_manager_c turns it on when the event named MEETSHISHIOH starts, d_event_manager.cpp:598-599",
+        "0x2E01: set by MEETSHISHIOH.stb (stage sea), d_save_event_flag.inc:354",
+        "the sea event list's MEETSHISHIOH ends with a scene change to sea 11 point 128, the alcove beside the moored King (event_list.dat; wwedit.event_scene_changes)",
+        "the King's actor isn't created without MET_KORL: daShip_c create, d_a_ship.cpp:4548",
+        "before RODE_KORL the King is moored in Windfall's alcove (ship position 0x80): dStage_shipInfoInit, d_stage.cpp:1933",
+        "his hint while you have no sail is 0x5DE: daShip_c::setInitMessage, d_a_ship.cpp:382-383",
+        "MET_KORL also switches A_mori to layer 2: dComIfG_play_c::getLayerNo, d_com_inf_game.cpp:211-212",
+        "catalog: both off in 45, on in 03 and 46"
+      ],
+      "basis": "code+disc",
+      "seen": "Link wakes in the alcove; the King of Red Lions speaks and tells him to find a sail."
+    },
+    {
+      "id": "sail",
+      "label": "Buying the sail from Zunari",
+      "sets": {
+        "flags": ["0x2420"],
+        "items": ["Boat's Sail"]
+      },
+      "requires": ["korl_a:meet_korl"],
+      "evidence": [
+        "0x2420: Zunari's first talk while you have no sail, daNpc_Rsh1_c::getMsg, d_a_npc_rsh1.cpp:711-716 (message 0x2886; later talks 0x288C)",
+        "the sail: Zunari's sale (message 0x288E sets item dItemNo_SAIL_e, d_a_npc_rsh1.cpp:1329-1331, then RSH_GET_DEMO, :1370-1377); item_func_normal_sail puts it in slot 1 and marks it obtained, d_item.cpp:1119-1122",
+        "catalog: both off in 03 and 46, on in 05"
+      ],
+      "basis": "code",
+      "notes": "0x2420 is set on the first talk, which buying needs, so it is checked with the step."
+    },
+    {
+      "id": "sail_lesson",
+      "label": "The King explains the sail",
+      "sets": {
+        "flags": ["0x0908"]
+      },
+      "requires": ["korl_a:sail"],
+      "evidence": [
+        "with the sail and 0x0908 off, talking to the King forces message 0x5E0: daShip_c::checkForceMessage, d_a_ship.cpp:344-345",
+        "0x5E0 -> 0x5E1 -> 0x5E2; the first answer leads to 0x5E4, the other back through 0x5E3 to 0x5E1: daShip_c::setNextMessage, d_a_ship.cpp:673-688",
+        "message 0x5E4 sets 0x0908: daShip_c::setNextMessage, d_a_ship.cpp:629-630",
+        "0x0908 lets Link board: the King's ACTION_SHIP attention needs it, d_a_ship.cpp:4152-4154",
+        "0x0908 opens the sea chart page and the Up-button map: d_menu_collect.cpp:540, d_menu_window.cpp:913",
+        "catalog: off in 03 and 46, on in 05"
+      ],
+      "basis": "code",
+      "seen": "The King explains how to set sail; the sea chart becomes available."
+    },
+    {
+      "id": "first_sail",
+      "label": "Setting off in the King of Red Lions",
+      "sets": {
+        "flags": ["0x2A08"]
+      },
+      "requires": ["korl_a:sail_lesson"],
+      "evidence": [
+        "0x2A08 RODE_KORL: set when the boat first moves with Link aboard, daShip_c::procPaddleMove_init, d_a_ship.cpp:1554-1570",
+        "after it the King's hint is 0xD5C (follow the sea chart): daShip_c::setInitMessage, d_a_ship.cpp:599-600",
+        "saving no longer uses the fixed story places: l_checkData row RODE_KORL, d_com_inf_game.cpp:1305; on Windfall a save restarts at the island's point (catalog 05, 47, 06: sea 11 0)",
+        "the fall at Windfall or Outset no longer goes to point 128 (d_a_player_main.cpp:10853), and the King is no longer forced into the alcove (d_stage.cpp:1933)",
+        "catalog: off in 03 and 46, on in 05, 47, 06"
+      ],
+      "basis": "code",
+      "notes": "From here the restart follows the place (dComIfGs_setGameStartStage), so there is no fixed restart for this step. The Randomizer's new file sets 0x2E01, 0x0F80, 0x0908 and 0x2A08 together (custom_funcs.asm:78-84), which skips exactly this stretch."
+    }
+  ],
+  "unplaced": {
+    "flags": [],
+    "notes": "Every flag that turns on between catalog 45 and 06 outside the prologue's steps is placed here. 0x0201 (off in 45, on in 03) stays with the prologue's unplaced list. Part B starts with 0x0902 (Dragon Roost arrival), which the catalog turns on together with the Wind Waker, Wind's Requiem and its learned flag 0x2708 (timeline 06 -> 07), so those belong to part B, not here."
+  }
+}
