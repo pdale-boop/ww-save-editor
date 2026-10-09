@@ -31,16 +31,13 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
       `0xA107`, `0xA207` and `0xA307` look like per-dungeon progress (Forbidden Woods, Dragon Roost
       Cavern, Earth Temple), possibly map, compass and boss key. Confirm by comparing saves from
       just before and after picking up a dungeon map.
-- [ ] **Sea room 0.** Disc stage `sea` has 50 rooms for 49 squares. Room 0 has one spawn point, a
-      boat arrival near Windfall (x 50010, z -217988), only collision and room data, and no exit or
-      cutscene on the disc leads to it; loading it puts Link in his boat on the sea. The Randomizer
-      calls it "Sea Floor"; what it is for is still unknown.
-- [ ] **Spawn points nobody reaches yet.** 703 of 1,159 have a named way in (exits, cutscenes,
-      actor code, falls, game overs). Still to read: the scene changes whose target is computed
-      (the Ghost Ship, its tag, the Tower statues `d_a_obj_doguu`, the pirates `d_a_npc_p1` going
-      to `Ocean`), restarts after a fall in dungeon rooms, and the built-in events 0xCF-0xD5 that
-      start modes 6 and 10-15 play. Exit-list entries that lead nowhere (18, mostly test stages)
-      look unused.
+- [x] **Sea room 0.** A test room for the open sea: the developers' stage select
+      (`/res/Menu/Menu1.dat`) lists it as "experiment" and "offshore" (`research/spawn-points.md`).
+      Its one spawn point is a boat arrival near Windfall; nothing in normal play leads there.
+- [ ] **Spawn points nobody reaches yet.** 755 of 1,159 are reached in play and 176 only from
+      the developers' stage select; 228 are unexplained, 82 of them in unused stages and 72 in the
+      Forsaken Fortress stages (guess: searchlight or Moblin captures). Details and the table in
+      `research/spawn-points.md`.
 - [ ] **Message text** (pinned 2026-10-09). A reader for the disc's message file would name
       conversations by their text, for example the pirates' messages 0xFA4/0xFA5 that decide
       whether they send Link to `Ocean`.
