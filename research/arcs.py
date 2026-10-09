@@ -45,8 +45,12 @@ def has_pearl(save, name):
 
 
 def owns(save, item):
+    """Ever obtained: the slot's obtained bit (wwedit.GOT_ITEMS), not the item in the slot now,
+    which an upgrade replaces (the Hero's Bow slot later holds Fire and Ice or Light Arrows; the
+    upgrades keep the earlier bits on, wwedit.Save.give_upgrade_bits)."""
     if item in wwedit.ITEMS_GIVEN:
-        return save.has(item)
+        slot, bit, _, _ = wwedit.ITEMS_GIVEN[item]
+        return bool(save.q[wwedit.GOT_ITEMS + slot] & (1 << bit))
     for index, (_, table) in enumerate(wwedit.EQUIPMENT):
         for name, _, bit in table:
             if name == item and bit is not None:

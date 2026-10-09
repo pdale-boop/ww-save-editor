@@ -702,5 +702,12 @@ Jabun's cave). Every game-written catalog save lands on it in order; nothing unp
 Night ends with Nayru's Pearl (`dKy_checkEventNightStop`), not by clearing 0x0A02. Next: the pearls
 and the Tower of the Gods, from 0x2F20.
 
+Tower arc (2026-10-09): `research/arcs/tower.json`, 27 steps from the King's talk after Nayru's Pearl
+to the castle battle after the Master Sword (`drafts/tower_a.md` the pearls and the tower rising,
+`tower_b.md` the Tower of the Gods, `tower_c.md` Hyrule and the Master Sword). Every game-written
+catalog save lands on it in order; nothing unplaced. The arc checker now tests an item's obtained bit
+(`GOT_ITEMS`), since upgrades replace the item in its slot. Next: from leaving Hyrule (0x3810,
+`daWarphr_c`) to the Forsaken Fortress.
+
 Your knowledge of the game is the check on each chain. Anything the code doesn't settle stays
 marked as unknown.

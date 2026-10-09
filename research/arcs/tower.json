@@ -1,0 +1,625 @@
+{
+ "id": "tower",
+ "name": "The Tower of the Gods and the Master Sword",
+ "status": "partial",
+ "summary": "From Nayru's Pearl to the Master Sword: the King's talk, the three pearls placed on the Triangle Islands' statues, the tower rising, the Tower of the Gods with the Command Melody, the Hero's Bow and Gohdan, the bell and the warp down to Hyrule, the Triforce statue, the Master Sword, the colours returning and the battle in the castle.",
+ "notes": "Joined from three parts researched in parallel (drafts/tower_a, tower_b, tower_c, with their evidence). Follows the Jabun arc (after jabun_pearl); the next arc starts with leaving Hyrule (0x3810, daWarphr_c). Not checked: event register 0xA60F (0 to 1 between catalog 19 and 20, unidentified).",
+ "steps": [
+  {
+   "id": "korl_nayru_talk",
+   "label": "The King of Red Lions on Nayru's Pearl",
+   "sets": {
+    "flags": [
+     "0x2F20"
+    ]
+   },
+   "evidence": [
+    "forced message 0xD5A while Nayru's Pearl is owned and 0x2F20 is off (daShip_c::checkForceMessage, d_a_ship.cpp:359-360); 0xD5A leads to 0xD5B (:696-697), which sets 0x2F20 (:656-657)",
+    "while a forced message is pending the King can't be boarded (the ship action is taken off, d_a_ship.cpp:4204-4205), so this comes before any sailing to the statues",
+    "his hint after it is 0xD62, place one pearl at each marked spot (setInitMessage, :494-495)",
+    "catalog: off in 17, on in 18"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "place_din",
+   "label": "Din's Pearl placed",
+   "sets": {
+    "flags": [
+     "0x1480"
+    ]
+   },
+   "window": {
+    "by": "tower_raised"
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 18,
+    "point": 0,
+    "evidence": "saving on the island: checkIsland's point; the room's collision names only 0 (wwedit.disc_restart_places)"
+   },
+   "evidence": [
+    "the statue (Doguu) on sea room 18 has parameters 0x0000FF00: statue 0, Din's Pearl (field_0x894 = param & 0xFF, d_a_obj_doguu.cpp:530-532; item by statue, daObjDoguu_c::CreateInit, :199-205)",
+    "it reacts only while that pearl is owned and Link touches it (checkItemGet(mItemNo, TRUE), d_a_obj_doguu.cpp:673), plays DOGUU_DEMO1, DOGUU_DEMO2 for the first pearl placed only (:699), DOGUU_DEMO3, then sets the flag (state 9, :734-735; setFinishMyEvent, :511-518)",
+    "the pearl stays in the inventory: the statue code clears no pearl bit, and the catalog keeps all three pearls from 18 on",
+    "catalog: off in 18, on in 19 (the third pearl placed in the playthrough)"
+   ],
+   "basis": "code+disc",
+   "seen": "Din's Pearl set into the statue on Northern Triangle Island.",
+   "notes": "No window start: Din's Pearl comes from an earlier arc and the statue checks only the pearl."
+  },
+  {
+   "id": "place_farore",
+   "label": "Farore's Pearl placed",
+   "sets": {
+    "flags": [
+     "0x1440"
+    ]
+   },
+   "window": {
+    "by": "tower_raised"
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 27,
+    "point": 0,
+    "evidence": "saving on the island: checkIsland's point; the room's collision names only 0 (wwedit.disc_restart_places)"
+   },
+   "evidence": [
+    "the statue on sea room 27 has parameters 0x0000FF01: statue 1, Farore's Pearl (d_a_obj_doguu.cpp:199-205, 530-532)",
+    "same placing sequence as place_din (d_a_obj_doguu.cpp:673, 699, 734-735, 511-518)",
+    "catalog: off in 17, on in 18"
+   ],
+   "basis": "code+disc",
+   "seen": "Farore's Pearl set into the statue on Eastern Triangle Island.",
+   "notes": "No window start: Farore's Pearl comes from an earlier arc and the statue checks only the pearl."
+  },
+  {
+   "id": "place_nayru",
+   "label": "Nayru's Pearl placed",
+   "sets": {
+    "flags": [
+     "0x1410"
+    ]
+   },
+   "window": {
+    "after": "korl_nayru_talk",
+    "by": "tower_raised"
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 32,
+    "point": 0,
+    "evidence": "saving on the island: checkIsland's point; the room's collision names only 0 (wwedit.disc_restart_places)"
+   },
+   "evidence": [
+    "the statue on sea room 32 has parameters 0x0000FF02: statue 2, Nayru's Pearl (d_a_obj_doguu.cpp:199-205, 530-532)",
+    "same placing sequence as place_din (d_a_obj_doguu.cpp:673, 699, 734-735, 511-518)",
+    "reaching Southern Triangle Island needs the boat, which can't be boarded before korl_nayru_talk",
+    "catalog: off in 17, on in 18"
+   ],
+   "basis": "code+disc",
+   "seen": "Nayru's Pearl set into the statue on Southern Triangle Island."
+  },
+  {
+   "id": "tower_raised",
+   "label": "The Tower of the Gods rises",
+   "sets": {
+    "flags": [
+     "0x1E40",
+     "0x2E80"
+    ]
+   },
+   "evidence": [
+    "the statue that gets the third pearl sets 0x1E40 and orders MEGAMI_DEMO (getFinishEventCount() >= 3, d_a_obj_doguu.cpp:737-739)",
+    "the cutscene jumps to ADMumi room 0, layer 8, at the point of that statue's number (setJDemo, d_a_obj_doguu.cpp:355); the developers' stage select names these Tower rises D, F and N (group 32, entries 18-20: ADMumi points 0, 1, 2, layer 8)",
+    "towerd.stb, towerf.stb and towern.stb set 0x2E80 (d_save_event_flag.inc:347); their events (towerd, towerf, towern in ADMumi's event list) end with a scene change to sea room 26 point 0, in the boat",
+    "catalog: both off in 18, on in 19"
+   ],
+   "basis": "code+disc",
+   "seen": "The tower rises out of the sea; Link is put in the boat in front of it.",
+   "warn": "Turning on all three PLACED flags without 0x1E40 leaves the tower down for good: with all three set, every statue loads in its finished state (d_a_obj_doguu.cpp:223-234, state 14) and never reaches the code that sets 0x1E40. Set 0x1E40 together with the third flag."
+  },
+  {
+   "id": "korl_tower_talk",
+   "label": "The King of Red Lions after the tower rises",
+   "sets": {
+    "flags": [
+     "0x3840"
+    ]
+   },
+   "evidence": [
+    "with Link aboard, 0x1E40 on and 0x3840 off, the King's message is 0x168C (d_a_ship.cpp:4234-4235), which sets 0x3840 (:669-670)",
+    "his hint after it is 0xD64, climb the Tower of the Gods (0xD63 inside a dungeon), setInitMessage :486-492",
+    "catalog: off in 18, on in 19"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "tower_enter",
+   "label": "Into the Tower of the Gods",
+   "sets": {
+    "switches": [
+     {
+      "area": 5,
+      "switch": "0x63",
+      "why": "spawn switch of the Siren event moro_scam (Siren Stage.dzs EVNT entry 0, byte 0x13), which room 0's entrance point 0 starts the first time; dEvent_exception_c::setStartDemo turns it on (d_event_manager.cpp:41-48)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "Siren",
+    "room": 0,
+    "point": 0,
+    "evidence": "dComIfGs_setGameStartStage: dungeon, miniboss and boss stages restart at the stage's exit 0; Siren, SirenMB and SirenB all save to table 5 and their exit 0 is Siren room 0 point 0 (wwedit.disc_restart_places)"
+   },
+   "evidence": [
+    "Siren room 0 point 0 (params 0x00FF2000): start mode 2, a boat arrival, and start event 0 = moro_scam (wwedit.spawn_arrival)",
+    "the sea's Tower of the Gods sector (26) leads to it: wwedit.disc_exits",
+    "area 5 switch 0x63 off in catalog 19, on in 20"
+   ],
+   "basis": "disc+code"
+  },
+  {
+   "id": "light_bridge",
+   "label": "The light bridges appear and fade the first time",
+   "window": {
+    "after": "tower_enter"
+   },
+   "sets": {
+    "flags": [
+     "0x0E01",
+     "0x0F40"
+    ]
+   },
+   "evidence": [
+    "daLbridge (d_a_lbridge.cpp, 'Tower of the Gods - Glowing light bridge'): the end of its EFFAPPEAR event sets 0x0E01 and the end of BRIDGE_DISAPPEAR sets 0x0F40 (:200-210); each event plays only while its flag is off (:212-217)",
+    "both off in catalog 19, on in 20"
+   ],
+   "basis": "code",
+   "notes": "First-time camera scenes for any light bridge; nothing found that requires them later, so a window with no end."
+  },
+  {
+   "id": "tower_map_compass",
+   "label": "Dungeon map and compass",
+   "window": {
+    "after": "tower_enter"
+   },
+   "sets": {
+    "dungeon_items": {
+     "area": 5,
+     "items": [
+      "MAP",
+      "COMPASS"
+     ]
+    }
+   },
+   "evidence": [
+    "Siren Stage.dzs TRES: chest 1 (room 3, behind the bombable walls) holds item 0x4C, the Dungeon Map; chest 2 (room 1, the skulls room) holds 0x4D, the Compass (item in home.angle.z's high byte, room in home.angle.x & 0x3F, daTbox_c::searchRoomNo d_a_tbox.cpp:276-279)",
+    "item_func_map / item_func_compass set the area's dungeon-item bits (d_item.cpp:953-960)",
+    "off in catalog 19, on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "first_servant",
+   "label": "The first Servant of the Tower brought to the main room",
+   "sets": {
+    "flags": [
+     "0x1780",
+     "0x2602",
+     "0x1710"
+    ]
+   },
+   "evidence": [
+    "daNpc_Os_c (d_a_npc_os.cpp, the Companion Statues Os, Os1, Os2 in Siren's stage actor list; argument 0 is Os): setWakeup sets 0x1780 for argument 0 (:408-410), setFinish sets 0x1710 when it is placed (:442-444, called at the end of the placing event :1333 and at :1534)",
+    "0x2602: the first time a Tower door of kind 1 lights up (dDoor_hkyo_c::onFirst, d_door.cpp:835-838; chkFirst :821-831)",
+    "the main room's door of kind 4 stops blinking once 0x1710 is on (d_door.cpp:790-795)",
+    "all off in catalog 19, on in 20"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "command_melody",
+   "label": "The stone tablet and the Command Melody",
+   "requires": [
+    "tower:first_servant"
+   ],
+   "sets": {
+    "flags": [
+     "0x2B10",
+     "0x2510"
+    ],
+    "songs": [
+     "Command Melody"
+    ]
+   },
+   "evidence": [
+    "daNpc_Os_c::eventOrderCheck: the first statue (argument 0) in room 7 with its switch on and 0x2510 off orders event 7 (d_a_npc_os.cpp:549-551)",
+    "the stone tablet (Hsh, daObj_hsh_c, Siren room 7) appearing sets 0x2B10, initialAppearEvent (d_a_obj_hsehi1.cpp:650-652)",
+    "message 0xEF4 sets 0x2510 (d_a_npc_os.cpp:1929-1932); the tablet checks it (d_a_obj_hsehi1.cpp:221)",
+    "Randomizer logic: the stone tablet needs the Wind Waker (logic/macros.txt, 'Can Reach Tower of the Gods Third Floor' note)",
+    "all off in catalog 19, on in 20"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "tower_bow",
+   "label": "The Darknut miniboss and the Hero's Bow",
+   "sets": {
+    "items": [
+     "Hero's Bow"
+    ]
+   },
+   "evidence": [
+    "the miniboss room is SirenMB room 23 (a Darknut, Tn); its chest is Siren Stage.dzs TRES chest 3 (takara8, room 23, item 0x27 = Hero's Bow)",
+    "Randomizer logic: the miniboss entrance needs the second floor and the Command Melody or the Bow (logic/macros.txt 'Can Access Miniboss Entrance in Tower of the Gods')",
+    "Bow off in catalog 19, on in 20"
+   ],
+   "basis": "disc+play",
+   "notes": "Ordered before the second statue and the boss key: the west statue needs the Bow (Randomizer logic), and each dungeon's new item is needed to reach its boss key (owner's play)."
+  },
+  {
+   "id": "second_servant",
+   "label": "The second Servant of the Tower",
+   "sets": {
+    "flags": [
+     "0x1740",
+     "0x1704",
+     "0x2608"
+    ]
+   },
+   "evidence": [
+    "daNpc_Os_c argument 1 (Os1): setWakeup 0x1740 (d_a_npc_os.cpp:413), setFinish 0x1704 (:447); in room 7 with its switch on and 0x2608 off it orders event 8 (:553-556), whose end sets 0x2608 (:1335-1336)",
+    "the door of kind 3 blinks once the Command Melody is known and until 0x1704 (d_door.cpp:796-800), so it follows command_melody",
+    "Randomizer logic: the west statue needs the Command Melody and the Hero's Bow (logic/macros.txt 'Can Bring West Servant of the Tower')",
+    "all off in catalog 19, on in 20"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "third_servant",
+   "label": "The lasers and the third Servant of the Tower",
+   "sets": {
+    "flags": [
+     "0x1010",
+     "0x1720",
+     "0x1B01",
+     "0x2604"
+    ]
+   },
+   "evidence": [
+    "0x1010: a wall Beamos (Hmos3, type 2) whose switch turns on sets it the first time and plays hmos3cam, daBemos_c::event_move (d_a_obj_bemos.cpp:1329-1336); two Hmos3 are in Siren room 17",
+    "daNpc_Os_c argument 2 (Os2): setWakeup 0x1720 (d_a_npc_os.cpp:416), setFinish 0x1B01 (:450); in room 7 with its switch on and 0x2604 off it orders event 9 (:558-561), whose end sets 0x2604 (:1338-1339), the portal to the last floor appearing",
+    "the door of kind 2 blinks from 0x1704 until 0x1B01 (d_door.cpp:802-806), so it follows second_servant",
+    "all off in catalog 19, on in 20"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "tower_boss_key",
+   "label": "The boss key",
+   "sets": {
+    "dungeon_items": {
+     "area": 5,
+     "items": [
+      "BOSS_KEY"
+     ]
+    }
+   },
+   "evidence": [
+    "Siren Stage.dzs TRES chest 11 (takara4, room 17, item 0x4E = Big Key); Randomizer: 'Tower of the Gods - Big Key Chest' needs the third floor (logic/item_locations.txt, macros 'Can Reach Tower of the Gods Third Floor': all three statues)",
+    "item_func_boss_key; the boss door (to SirenB from rooms 18 and 19) needs it (d_a_door10.cpp:360-364; Randomizer 'Can Access Boss Entrance in Tower of the Gods')",
+    "off in catalog 19, on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "gohdan_intro",
+   "label": "Gohdan's introduction",
+   "sets": {
+    "dungeon_items": {
+     "area": 5,
+     "items": [
+      "STAGE_BOSS_DEMO"
+     ]
+    }
+   },
+   "evidence": [
+    "daBst (d_a_bst.cpp, Gohdan) turns on the boss intro bit (dComIfGs_onStageBossDemo, :2298) and skips the intro once it is on (:1778)"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "gohdan",
+   "label": "Gohdan defeated",
+   "sets": {
+    "dungeon_items": {
+     "area": 5,
+     "items": [
+      "STAGE_BOSS_ENEMY"
+     ]
+    }
+   },
+   "evidence": [
+    "d_a_bst.cpp:2432: dComIfGs_onStageBossEnemy, then a warp flower (fopAcM_createWarpFlower, :2436)",
+    "Randomizer logic: Gohdan needs the Hero's Bow (or the Hookshot) and Bombs (logic/macros.txt 'Can Defeat Gohdan')",
+    "no recollection snapshot for this boss: dMeter_recollect_boss_data handles only Dragon Roost Cavern, the Forbidden Woods, the Earth and Wind Temples (d_meter.cpp:1070-1086)"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "gohdan_heart",
+   "label": "Gohdan's heart container",
+   "window": {
+    "after": "gohdan"
+   },
+   "sets": {
+    "dungeon_items": {
+     "area": 5,
+     "items": [
+      "STAGE_LIFE"
+     ]
+    }
+   },
+   "evidence": [
+    "item_func_utuwa_heart sets the area's heart-container bit (d_item.cpp:588-601); catalog 20 has it and max hearts 5.5 -> 6.5"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "ring_bell",
+   "label": "Up to the top of the Tower and the bell",
+   "sets": {
+    "switches": [
+     {
+      "area": 0,
+      "switch": "0x37",
+      "why": "the bell's grapple post: Kui (d_a_kui.cpp, 'Hookable posts for the Grappling Hook') in ADMumi room 0 at the top (y 31899), parameters 0x37FF0403, switch = parameters >> 24 (:485), turned on when swung on (:189, :305, :381); ADMumi saves to table 0"
+     },
+     {
+      "area": 0,
+      "switch": "0x39",
+      "why": "spawn switch of ADMumi's event JMP_DEMO (Stage.dzs EVNT entry 1, byte 0x13): three TagEv (parameters 0x013739FF: type 0xFF, wait switch 0x37, event 1) start it once 0x37 is on (daTag_Event_c::arrivalTerms default case, d_a_tag_event.cpp:51-70)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "ADMumi",
+    "room": 0,
+    "point": 100,
+    "evidence": "ADMumi is a dungeon-type stage (STAG type 1); its exit 0 is ADMumi room 0 point 100, the top of the tower (wwedit.disc_restart_places)"
+   },
+   "evidence": [
+    "Gohdan's warp flower plays WARP_WIND while 0x2D10 is off (daWarpf, d_a_warpf.cpp:230-233); SirenB's WARP_WIND ends at ADMumi point 200, the top of the tower, falling in (FALL_START)",
+    "the developers' stage select names ADMumi layer 9 'Tower, by the bell' (bench folder stage-select-names-en.tsv)",
+    "both switches off in catalog 19, on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "warp_to_hyrule",
+   "label": "Down to Hyrule",
+   "sets": {
+    "flags": [
+     "0x2D10"
+    ]
+   },
+   "evidence": [
+    "JMP_DEMO ends at ADMumi point 201, which starts event warp_in (ADMumi EVNT entry 0; start event 0 in its parameters)",
+    "warp_in sets 0x2D10 (warp_in.stb, decomp note in d_save_event_flag.inc) and ends at Hyrule point 200, which starts warp_out the first time (wwedit.event_scene_changes, spawn points)",
+    "ladder rung 14: with 0x2D10 and no Master Sword the King says the power is in the castle (d_a_ship.cpp:362); from then on Gohdan's warp plays WARP_WIND_AFTER to sea 26 point 1 instead (d_a_warpf.cpp:230-233)",
+    "off in catalog 19, on in 20"
+   ],
+   "basis": "code+disc",
+   "notes": "Part C starts at the Hyrule arrival."
+  },
+  {
+   "id": "hyrule_arrival",
+   "label": "The warp down to Hyrule",
+   "sets": {
+    "flags": [],
+    "switches": [
+     {
+      "area": 9,
+      "switch": "0x02",
+      "why": "spawn switch of Hyrule's event warp_out (EVNT entry 0), which Hyrule point 200 starts the first time (dEvent_exception_c::setStartDemo, d_event_manager.cpp:41-48)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "Hyrule",
+    "room": 0,
+    "point": 0,
+    "evidence": "Hyrule's save table is 9 (SAVE_HYRULE), so saving writes the stage's exit 0: Hyrule room 0 point 0 (dComIfGs_setGameStartStage; wwedit.disc_restart_places)"
+   },
+   "evidence": [
+    "ADMumi's event warp_in: its PACKAGE/PLAY cut has EventFlag 11536 (0x2D10) and changes scene to Hyrule point 200, layer 8 (ADMumi Stage.arc event_list.dat; the decomp's note: 'Set by warp_in.stb (stage: ADMumi)')",
+    "Hyrule point 200 (parameters 0x00FF0000) starts warp_out (EVNT 0, spawn switch 0x02); warp_out's PLAY goes to Hyrule point 201, layer 0; daWarphr_c watches for it (dComIfGp_evmng_startCheck(\"warp_out\"), d_a_warphr.cpp:171)",
+    "the developers' stage select lists ADMumi point 201 layer 9 and Hyrule point 200 layer 8 as cutscene starts (group 32 entries 21 and 41)",
+    "with 0x2D10 on and the Master Sword not equipped the King of Red Lions says 0xD65 and can't be boarded (daShip_c, d_a_ship.cpp:362-363, 483-484, 4224-4229): ladder rung 14",
+    "catalog: off in 19, on in 20"
+   ],
+   "basis": "code+disc",
+   "notes": "0x2D10 is set when warp_in starts, i.e. by the bell's warp at the top of the Tower of the Gods, which part B ends with. If part B also lists it, keep it in one place when joining. daWarpf_c (the Tower's boss warp) also appears once 0x2D10 is on (d_a_warpf.cpp:230-233). 0x2D10 is set by the warp itself (warp_in), so it is checked on warp_to_hyrule."
+  },
+  {
+   "id": "castle_intro",
+   "label": "Into Hyrule Castle",
+   "sets": {
+    "switches": [
+     {
+      "area": 9,
+      "switch": "0x12",
+      "why": "spawn switch of Hyroom's event hy_intro (EVNT entry 2), started by Hyroom point 0 (parameters 0x02FF0000) the first time; Hyrule's exit leads to that point"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "Hyroom",
+    "room": 0,
+    "point": 10,
+    "evidence": "Hyroom's exit 0 (save table 9)"
+   },
+   "evidence": [
+    "Hyroom point 0 starts event 2, hy_intro (stage EVNT list), reached from Hyrule's exit (wwedit.disc_exits)",
+    "catalog: switch 0x12 on in 20"
+   ],
+   "basis": "disc"
+  },
+  {
+   "id": "triforce_statue",
+   "label": "The Triforce puzzle opens the way under the statue",
+   "sets": {
+    "switches": [
+     {
+      "area": 9,
+      "switch": "0x06",
+      "why": "the Link statue YLzou (parameters 0x00000006: param_get_swSave = 6, d_a_obj_YLzou.h:23-29) waits to slide aside while switch 6 is off and stays moved once it is on (daObjYLzou_c::set_start_type, d_a_obj_YLzou.cpp:99-105)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "Hyroom",
+    "room": 0,
+    "point": 10,
+    "evidence": "Hyroom's exit 0"
+   },
+   "evidence": [
+    "the pushable triangle blocks MtryB / MtryBCr (d_a_obj_tribox: 'Hyrule Castle - Pushable triangle blocks') in Hyroom room 0 carry 6 in parameter bits 8-15 (0x00000600, 0x00010600); the decomp's tribox is Nonmatching, so that they set switch 6 is read from the parameters, not from code",
+    "catalog: switch 6 on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "master_sword",
+   "label": "Pulling the Master Sword",
+   "sets": {
+    "flags": [
+     "0x2D04"
+    ],
+    "switches": [
+     {
+      "area": 9,
+      "switch": "0x0E",
+      "why": "the hint tag TagHt2 in kenroom (parameters 0xFFFF0E4A: type 0x0A, switch 0x0E, message 0x045A) turns its switch on when it starts (daTag_Hint_c::startProc, d_a_tag_hint.cpp:443-460)"
+     },
+     {
+      "area": 9,
+      "switch": "0x0B",
+      "why": "the event tag TagEv 0x000E0BFF (event 0 master_sword, waits for switch 0x0E, switch 0x0B) turns 0x0B on when its event starts (daTag_Event_c::arrivalTerms / actionReady, d_a_tag_event.cpp:51-72, 218-229); 0x0B is also master_sword's spawn switch (kenroom EVNT entry 0)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "kenroom",
+    "room": 0,
+    "point": 10,
+    "evidence": "kenroom's exit 0 (save table 9)"
+   },
+   "evidence": [
+    "kenroom's event master_sword: EventFlag 11524 (0x2D04), then Hyroom point 248, layer 8 (kenroom event_list.dat; the decomp's note: 'Set by master_sword.stb (stage: kenroom)')",
+    "the sword in its pedestal (VmsMS, daObjVmsms_c) deletes itself when master_sword starts (d_a_obj_vmsms.cpp:74-80)",
+    "the developers' stage select: kenroom point 200 layer 8 'Before Master Sword' (group 32 entry 22)",
+    "catalog: off in 19, on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "colors_return",
+   "label": "Colour returns to Hyrule",
+   "sets": {
+    "flags": [
+     "0x3802"
+    ],
+    "switches": [
+     {
+      "area": 9,
+      "switch": "0x0C",
+      "why": "spawn switch of Hyroom's event rebirth_hyral (EVNT entry 0)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "Hyroom",
+    "room": 0,
+    "point": 10,
+    "evidence": "Hyroom's exit 0"
+   },
+   "evidence": [
+    "Hyroom point 248 (parameters 0x00FF0000) starts rebirth_hyral; its .stb carries flag payload 0x31, which d_a_demo00's table maps to COLORS_IN_HYRULE (d_a_demo00.cpp:651-703; payload read from rebirth_hyral.stb, Demo49.arc); the event then goes to kenroom point 249, layer 10",
+    "COLORS_IN_HYRULE wakes the Darknut and Moblin statues in the castle (d_dozou, d_a_tn.cpp:2321-2326; d_a_mo2.cpp:2712) and moves kenroom to layer 6|7 until 0x3280 (dComIfG_play_c::getLayerNo, d_com_inf_game.cpp:242)",
+    "the developers' stage select: Hyroom point 248 layer 8 'Taking Master Sword' (group 32 entry 45)",
+    "catalog: off in 19, on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "swing_sword",
+   "label": "Link raises the Master Sword",
+   "sets": {
+    "flags": [
+     "0x3A04"
+    ],
+    "items": [
+     "Master Sword (Powerless)"
+    ],
+    "switches": [
+     {
+      "area": 9,
+      "switch": "0x0D",
+      "why": "spawn switch of kenroom's event swing_sword (EVNT entry 2)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "kenroom",
+    "room": 0,
+    "point": 10,
+    "evidence": "kenroom's exit 0"
+   },
+   "evidence": [
+    "kenroom point 249 (parameters 0x02FF0000) starts swing_sword: EventFlag 14852 (0x3A04), then kenroom point 249, layer 6 (kenroom event_list.dat; the decomp's note: 'Set by swing_sword.stb')",
+    "swing_sword.stb carries item payload 0, which d_a_demo00's item table maps to dItemNo_MASTER_SWORD_1_e (d_a_demo00.cpp:715-735; payload read from Demo50.arc)",
+    "once the Master Sword is equipped the King's hint is 0xD66, 'preparations complete' (d_a_ship.cpp:480-481), and he can be boarded again (:4224-4229): ladder rung 15, no flag of its own",
+    "the developers' stage select: kenroom point 249 layer 10 'After Master Sword' (group 32 entry 46)",
+    "catalog: off in 19, on in 20 (Hero's Sword -> Master Sword (Powerless))"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "castle_battle",
+   "label": "The castle's statues come alive and are beaten",
+   "sets": {
+    "flags": [
+     "0x3B40"
+    ],
+    "switches": [
+     {
+      "area": 9,
+      "switch": "0x04",
+      "why": "ALLdie in Hyroom (parameters 0xFFFF04FF) turns switch 4 on once no enemy is left in the room (daAlldie_c::actionTimer, d_a_alldie.cpp:36-47)"
+     }
+    ]
+   },
+   "restart": {
+    "stage": "Hyroom",
+    "room": 0,
+    "point": 10,
+    "evidence": "Hyroom's exit 0"
+   },
+   "evidence": [
+    "the Darknut trap TnTrap in Hyroom (parameters 0x00000904, 0x00010804) appears once 0x3A04 is on (daObjTnTrap_c::chk_appear, compiled d_a_obj_tntrap.rel .text+0x118) and sets 0x3B40 (chk_event_flg, .text+0x938); the decomp's tntrap is Nonmatching; Hyroom's events break_tntrap / break_tntrap2 are its scenes",
+    "the statues on Hyroom's layers 0|1 (Tn, mo2 with spawn switch 0xFF) only move once COLORS_IN_HYRULE is on (d_a_tn.cpp:2321-2326)",
+    "with 0x3B40 Hyroom loads layer 6|7, which has none of them (getLayerNo, d_com_inf_game.cpp:234)",
+    "catalog: off in 19, on in 20"
+   ],
+   "basis": "compiled+disc",
+   "notes": "What the trap needs before it sets 0x3B40 (switch 4, or its own check of the enemies) isn't read: chk_event_flg is only in compiled form."
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "a: Every flag that turns on between catalog 17 and 19 and belongs to this stretch is placed. Also on from 17 to 18, not this part: 0x2A20 (Grandma healed, the Jabun arc's heal_grandma window), 0x3920 and 0x3F80 (the Jabun arc), 0x3008 (Bomb Bag upgrade, Eastern Fairy Island) and 0x3010 (wallet upgrade, Outset), which are chains of their own, and the letter registers 0x7A03 and 0x9D03. b: Every flag the timeline turns on between catalog 19 and 20 that belongs to the Tower is placed. Left to part C (Hyrule): 0x2D04, 0x3A04, 0x3802, 0x3810, 0x3B40 and the Master Sword. Not identified: event register 0xA60F (0 -> 1 in the same stretch). The Tower's many area-5 puzzle switches (about 40 on in catalog 20) and its small keys are not steps. Not checked here: whether the first statue's door (kind 1) is the only way 0x2602 is set. c: Area 9 switch 0x10 is on in catalog 20 and not tied to an actor yet. Not this part: 0x3810 (daWarphr_c on leaving Hyrule, d_a_warphr.cpp:203-207: the next arc's first step), the Hero's Bow, the heart container and the Command Melody and Tower flags (part B), Cyclos and the Ballad of Gales (between 20 and 21, the next arc). Later visits to these stages (to_awake_zl, awake_zelda, btl_of_swroom, seal) belong to later arcs."
+ }
+}
