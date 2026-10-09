@@ -293,6 +293,24 @@ STAGE_NAMES = {
     'Xboss3': 'Molgera Rematch',
 }
 
+# What the developers' stage select (/res/Menu/Menu1.dat, wwedit.menu_entries) calls stages the
+# Randomizer only marks unused. Its names are Japanese; these are short descriptions of them. The
+# "Unused" prefix stays so the Restart place tab keeps hiding these stages by default.
+STAGE_SELECT_ABOUT = {
+    'I_TestM': 'Link test map', 'I_TestR': 'effects test', 'K_Test2': 'objects test 1',
+    'K_Test5': 'objects test 2', 'K_Test9': 'objects test 3', 'K_Testa': 'objects test 4',
+    'K_Testc': 'objects test 5', 'K_Testd': 'objects test 6', 'K_Teste': 'objects test 7',
+    'K_Test3': 'NPC test', 'K_Test6': 'NPC test 2', 'K_Test4': 'enemy test', 'K_Test8': 'enemy test 2',
+    'K_Testb': 'townsfolk test', 'E3ROOP': 'sea minigame test', 'H_test': 'event camera test',
+    'KATA_HB': 'enemy plaza test', 'KATA_RM': 'one room per enemy (Moblin to Ganondorf)',
+    'Msmoke': 'smoke test', 'Amos_T': 'Small Armos in water test', 'VrTest': 'sky box test',
+    'A_nami': 'wave test island', 'TEST': 'private test room', 'A_R00': 'room 0 test',
+    'Cave08': 'early Wind Temple (its menu entry: Makar kidnap test)', 'sea_E': 'the sea for the epilogue',
+}
+for _stage, _about in STAGE_SELECT_ABOUT.items():
+    if STAGE_NAMES.get(_stage, 'Unused').startswith('Unused'):
+        STAGE_NAMES[_stage] = f"Unused: {_about} (developers' stage select)"
+
 # Sea squares (stage 'sea', room = square) from the Wind Waker Randomizer (data/island_names.txt,
 # MIT licence). Room 0 is called 'Sea Floor' there; nothing on the disc backs that: its one spawn
 # point is a boat arrival near Windfall and no exit leads to it, and loading it in BlueWake put

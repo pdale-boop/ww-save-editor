@@ -112,6 +112,10 @@ Still unexplained on the sea (8):
 
 ## 3. What is left, by stage
 
+Update (2026-10-09): the stage select's names say what two of the unused stages are: `sea_E` is the
+sea for the epilogue (24 of the unexplained points) and `Cave08` an early Wind Temple (its entry is
+"Makar kidnap test"; 21 points). `KATA_RM`'s rooms are one per enemy.
+
 228 points (the table below was made before the collision scan, which took only `sea` 9/1 out of it).
 Stages described as "Unused" in the Randomizer's stage names: 82 points (`sea_E` 24, `Cave08` 21,
 `I_SubAN` 17, `DmSpot0` 5, `Amos_T` 2, `SubD45` 2, and one each in `E3ROOP`, `Ebesso`, `ITest61`, `kazan`,

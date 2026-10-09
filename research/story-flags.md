@@ -291,6 +291,24 @@ What this means for presets:
 - Two layers depend on things that aren't flags: the time of day (0\|1, 2\|3 …) and the Triforce
   count.
 
+Checked against the developers' stage select (2026-10-09; `/res/Menu/Menu1.dat`, read with
+`wwedit.menu_entries`; English names from the BlueWake session's `stage-select-names-en.tsv` in the
+bench folder). The menu labels layers by "day": day *n* is layer 2*n* by day and 2*n*+1 by night,
+and layers 8 and up are cutscene set-ups. Every rule above agrees with its labels:
+
+| Stage | Rules above | The menu's entries |
+|---|---|---|
+| Outset (`sea` 44) | none 0\|1, 0x0E20 2\|3, 0x0520 4\|5, 0x0101 9 | L0 Outset, L2 day 1, L4/L5 day 2/night 2; L9 is the cutscene entry "Aryll kidnapped" (point 203) |
+| Windfall (`sea` 11) | none 0\|1, Endless Night 2\|3, 0x2D01 4\|5 | L0/L1 day 0/night 0, L3 pirates (the Endless Night is always night), L4/L5 day 2/night 2 |
+| Master Sword Chamber (`kenroom`) | 0\|1, 2\|3, 4\|5, 6\|7 | day 0 to night 3, all eight |
+| Hyrule (`Hyrule`, `Hyroom`) | 0\|1, 0x3280 2\|3, 8 shards 4\|5 | day 0, day 1, day 2 |
+| Forsaken Fortress (`sea` 1) | 1, 0x1820 3 | L1 Fortress 2nd, L2 Fortress 3rd |
+| `A_mori`, `Asoko`, `M2tower` | 0\|1, then 2\|3 | L0 and L3 / L2; `M2tower` L1 "cutscene", L3 "no cutscene" |
+
+Stages without a rule (Forest Haven inside, Dragon Roost, the café bar, Mila's school) appear with
+day and night layers only, as `getLayerNo`'s time-of-day default says. Outset's L6 and L7 are named
+as load and room tests.
+
 ### The sages: Medli (Earth Temple) and Makar (Wind Temple)
 
 Spine steps 19–25. Each sage follows the same pattern: learn the song, show the Wind Waker, play
