@@ -1,0 +1,186 @@
+{
+  "part": "B: Dragon Roost Island, from the arrival to the cavern's entrance",
+  "steps": [
+    {
+      "id": "dri_arrival",
+      "label": "Arriving at Dragon Roost Island; the King of Red Lions gives the Wind Waker",
+      "sets": {
+        "flags": ["0x0902"],
+        "optional_flags": ["0x0A10"],
+        "items": ["Wind Waker"],
+        "switches": [
+          {"area": 0, "switch": "0x0B", "why": "TagIsl's switch (params 0x03FF0B01), set as its event starts; stops the arrival replaying"}
+        ]
+      },
+      "restart": {
+        "stage": "sea",
+        "room": 13,
+        "point": 0,
+        "evidence": "dComIfGs_setGameStartStage: on the sea, the island point under Link once the square's landing event (0x0902 for Dragon Roost, dComIfGs_checkSeaLandingEvent, d_com_inf_game.cpp:1275) is done; Dragon Roost's collision names point 0 (wwedit.disc_restart_places). Catalog 07 and 08 hold sea 13 0."
+      },
+      "evidence": [
+        "daTag_Island_c type 1 (Dragon Roost): getArrivalFlag returns 0x0902 (d_a_tag_island.cpp:84), set by demoInitProc as the arrival starts (:135); its switch is set in actionReady (:408)",
+        "disc: sea room 13 SCOB TagIsl params 0x03FF0B01 at (200000, 0, -205000): type 1, switch 0x0B, event 3 of the sea's EVNT list, ARRIVAL_DRG (ARRIVAL_DRG2 when Link isn't on the boat, makeEvId :67)",
+        "ARRIVAL_DRG (sea Stage.arc event_list.dat): messages 1509-1513 and 1580; the King's last cut has tact 1",
+        "then the conducting lesson: actionEvent starts TACT_TEARCH0 (:386); demoProcTact_Af repeats with TACT_TEARCH1, 2 or 4 until TACT_TEARCH3 (:230-245), whose Link cut 011get_item has prm0 34 = dItemNo_WIND_WAKER_e",
+        "0x0902 also lifts the first sailing limit: the ship skips range path 0 once it is on (d_a_ship.cpp:1020)",
+        "0x0A10: reading the King's hint 0x5EA (daShip_c::setNextMessage, d_a_ship.cpp:632); his hint is 0x5EA, then 0x5EB with 0x0A10, then 0x5EC with Din's Pearl (:585-594). Never on in the catalog, so optional"
+      ],
+      "basis": "code+disc",
+      "notes": "0x0902, the Wind Waker and the lesson are one sequence driven by one tag. Part A ends where this starts."
+    },
+    {
+      "id": "wind_requiem",
+      "label": "Zephos teaches the Wind's Requiem",
+      "sets": {
+        "flags": ["0x2708"]
+      },
+      "requires": ["korl:dri_arrival"],
+      "evidence": [
+        "daNpc_Hr_c::demoProcTact1 sets 0x2708 when the lesson's message closes (d_a_npc_hr.cpp:485); the actor is 'Zephos & Cyclos' (file header), Hr = type 0",
+        "disc: sea room 13 ACTR Hr params 0x00FF3000 at (201600, 210, -196800)",
+        "his lesson checks the Wind Waker on a button (d_a_npc_hr.cpp:250), so it follows dri_arrival",
+        "0x2708 is the Wind's Requiem learned flag in wwedit.SONG_FLAGS (song bit 0); the song itself isn't checkable by arcs.py (songs aren't items there)"
+      ],
+      "basis": "code+disc",
+      "notes": "The song (collection bit 0) goes with 0x2708; arcs.py can't check songs yet."
+    },
+    {
+      "id": "quill_dri",
+      "label": "Quill meets Link on Dragon Roost Island",
+      "sets": {
+        "flags": ["0x1F40"]
+      },
+      "evidence": [
+        "daNpc_Bm1_c type 2 appears only while 0x1F40 is off (init_PST_2, d_a_npc_bm1.cpp:566); its event 1, Met_Ryu_Islnd (l_evn_tbl :503-508), sets 0x1F40 when it ends and removes Quill (event_proc :2989)",
+        "disc: sea room 13 ACTR Bm1 params 0x0000FF02 at (199523, 1130, -196747)"
+      ],
+      "basis": "code+disc",
+      "notes": "Order against wind_requiem isn't fixed by the code; both are on the island. The catalog has no save between them."
+    },
+    {
+      "id": "rito_aerie",
+      "label": "In the Rito Aerie: the dragon's tale, and the Delivery Bag",
+      "sets": {
+        "flags": ["0x2502"],
+        "items": ["Delivery Bag"],
+        "switches": [
+          {"area": 11, "switch": "0x09", "why": "TagEv's switch (Atorizk room 0, params 0x00FF0908), set as its event starts"}
+        ]
+      },
+      "evidence": [
+        "daTag_Event_c type 8 sets 0x2502 when its event ends (demoEndProc, d_a_tag_event.cpp:140); its switch is set in actionReady (:228) and stops a replay",
+        "disc: Atorizk room 0 SCOB TagEv params 0x00FF0908 at (-41, -53, 671): type 8, switch 0x09, event 0 of Atorizk's EVNT list, demo10, which plays dragontale.stb (Atorizk event_list.dat)",
+        "the Delivery Bag (dItemNo_DELIVERY_BAG_e, 0x30): on in catalog 07. No event list on the disc gives item 0x30; the giver wasn't found (possibly in dragontale.stb)"
+      ],
+      "basis": "code+disc",
+      "notes": "Which actor gives the Delivery Bag is unsettled; the step records it because the letter needs a bag slot."
+    },
+    {
+      "id": "fathers_letter",
+      "label": "Medli gives Link the Father's Letter for Komali",
+      "sets": {
+        "flags": ["0x0E02"]
+      },
+      "evidence": [
+        "daNpc_Md_c in Atorizk (isTypeAtorizk): first talk is message 0x17D5 (getMsg, d_a_npc_md.cpp:5322-5332); message 0x17D8 sets event mode 4 (:5082), event 0 Md_ItemGet (event_name_tbl :214), where initialLetterEvent gives item 0x98, dItemNo_FATHER_LETTER_e (:3535, :3543); message 0x17DB sets 0x0E02 (:5095)",
+        "Medli stays in the aerie only until the letter is passed (create, d_a_npc_md.cpp:577-580)",
+        "disc: Atorizk room 0 ACTR Md1 params 0x00FF0001 at (1211, 700, -1146)"
+      ],
+      "basis": "code+disc",
+      "notes": "The letter goes into the Delivery Bag (delivery item 0x98, bag bit 12)."
+    },
+    {
+      "id": "letter_to_komali",
+      "label": "Delivering the letter to Komali",
+      "sets": {
+        "flags": ["0x0F04", "0x1810"],
+        "optional_flags": ["0x0F08"],
+        "delivery_passed": ["Father's Letter"]
+      },
+      "requires": ["korl:fathers_letter"],
+      "evidence": [
+        "compiled (d_a_npc_co1.rel; Komali, Co1, Comori room 0, not decompiled; findli/relcalls/niko): talk_1 checks dNpc_chkLetterPassed (+0x2190) and 0x0F04 (+0x21B8), sets 0x0F08 (+0x2270) and 0x0F04 (+0x2288), and takes the letter (CancelPresent +0x22B8, setReserveItemEmpty +0x22C8); event_proc sets 0x0F04 (+0x1E44) and 0x1810 (+0x1E68) when its event ends; wait_action1 checks dNpc_chkLetterPassed (+0x2498) and 0x1810 (+0x24C4); getMsg_CO1_0 reads dNpc_chkLetterPassed, 0x0F04 and 0x0F08",
+        "dNpc_chkLetterPassed: the Delivery Bag's ever-held bit 0xC is on and the bag no longer holds the Father's Letter (d_npc.cpp:647-653)",
+        "catalog 07 and 08: reserve ever-held word 0x00001000 (bit 12 = 0x98 - 0x8C), letter not in the bag"
+      ],
+      "basis": "compiled+code",
+      "notes": "0x0F08 is set in talk_1 too, but which branch sets it wasn't read; the timeline's description puts it before the letter. 0x1810 is set by the event that wait_action1 starts after the letter (a guess from the call order: chkLetterPassed, then 0x1810). The passed letter is not a flag: arcs.py has no key for it yet ('delivery_passed' is proposed in korl_b.md)."
+    },
+    {
+      "id": "medli_cliff",
+      "label": "At the cavern's entrance, Medli asks to be thrown onto the ledge",
+      "sets": {
+        "flags": ["0x1104"]
+      },
+      "requires": ["korl:letter_to_komali"],
+      "evidence": [
+        "Medli appears at Adanmae only once the letter is passed (create, d_a_npc_md.cpp:581-583)",
+        "her first talk there is 0x17E6 (getMsg :5351); 0x17E6-0x17F1 end in event mode 7, event 3 md_cliff (:5163); message 0x17F4 sets 0x1104 (:5170); with 0x1104 her talk starts at 0x17F7",
+        "disc: Adanmae room 0 ACTR Md1 params 0x00FF0101 at (-667, 0, 119)"
+      ],
+      "basis": "code+disc"
+    },
+    {
+      "id": "medli_bottle",
+      "label": "Thrown onto the ledge, Medli gives Link a bottle",
+      "sets": {
+        "flags": ["0x1102"]
+      },
+      "requires": ["korl:medli_cliff"],
+      "evidence": [
+        "chkAdanmaeDemoOrder: Medli in her camera tag at ground height 600-700 sets event mode 6 (d_a_npc_md.cpp:1484), event 2 MD_FLY, where initialLetterEvent gives item 0x50, dItemNo_EMPTY_BOTTLE_e (:3539, :3543); messages 0x17FA-0x1801 follow, and 0x1801 sets 0x1102 (:5198)",
+        "disc: Adanmae room 0 SCOB TagMd params 0x00000001 at (-540, 600, -1200)",
+        "catalog 08: bottle slot 14 holds 0x56 (Water Bottle), so the bottle has been filled"
+      ],
+      "basis": "code+disc",
+      "notes": "The bottle isn't checkable by arcs.py (bottles aren't in ITEMS_GIVEN). Quill's type 3 in the aerie appears once 0x1102 is on, until Din's Pearl (init_PST_3, d_a_npc_bm1.cpp:574-580)."
+    },
+    {
+      "id": "water_flowers",
+      "label": "Breaking the rock over the springs and watering the dried bomb flowers",
+      "sets": {
+        "switches": [
+          {"area": 11, "switch": "0x08", "why": "Eskban, the bombable rock over the springs (Adanmae room 0, params 0x0000FF08)"},
+          {"area": 11, "switch": "0x1A", "why": "dried bomb flower VbakH params 0x00001A1F"},
+          {"area": 11, "switch": "0x1B", "why": "dried bomb flower VbakH params 0x00001B1F"},
+          {"area": 11, "switch": "0x1C", "why": "dried bomb flower VbakH params 0x00001C1F"},
+          {"area": 11, "switch": "0x1D", "why": "dried bomb flower VbakH params 0x00001D1F"},
+          {"area": 11, "switch": "0x1F", "why": "dried bomb flower VbakH params 0x00001F1F"}
+        ]
+      },
+      "requires": ["korl:medli_bottle"],
+      "evidence": [
+        "daObjEskban::Act_c sets its saved switch when it breaks (d_a_obj_eskban.cpp:353-354; PRM_SWSAVE bits 0-7); it sits at (74, -50, 409), over the Ygush01 geysers at y -2",
+        "daBFlower_c: a dead flower (kind = params bits 4-7 = 1, STATE_DEAD_e) hit by water comes alive and sets its switch (params bits 8-15) (d_a_bflower.cpp:112-116, 421-425; daBFlower_prm getKind/getSwitchNo)",
+        "disc: Adanmae room 0 VbakH (bomb flowers) x5, kind 1, switches 0x1A-0x1D, 0x1F at y 599 near (760, 1130)",
+        "catalog: switch 0x08 and the five flower switches are off in 07, on in 08"
+      ],
+      "basis": "code+disc",
+      "notes": "Order inside the step (rock first, then the springs fill the bottle, then the flowers) is a reading of where things are, not checked in code."
+    },
+    {
+      "id": "cavern_statues",
+      "label": "Blowing up the statues at the cavern's mouth",
+      "sets": {
+        "switches": [
+          {"area": 11, "switch": "0x0E", "why": "bombable statue Ebomzo params 0x0000000E"},
+          {"area": 11, "switch": "0x0F", "why": "bombable statue Ebomzo params 0x0000000F"},
+          {"area": 11, "switch": "0x18", "why": "TagEv params 0x020F18FF: waits for 0x0F, plays RiddleSound0, sets 0x18"}
+        ]
+      },
+      "requires": ["korl:water_flowers"],
+      "evidence": [
+        "daObj_Ebomzo ('Bombable statues (outside Dragon Roost Cavern entrance)', file header) sets its saved switch when blown up (d_a_obj_ebomzo.cpp:136; PRM_SWSAVE bits 0-7)",
+        "daTag_Event_c: with switch2 0x0F set (arrivalTerms, d_a_tag_event.cpp:54-73) it plays its event, Adanmae's EVNT 2 RiddleSound0, and sets switch 0x18 (actionReady :228)",
+        "catalog: 0x0E, 0x0F and 0x18 off in 08, on in 09 (09 is inside the cavern, restart M_NewD2 0 0)"
+      ],
+      "basis": "code+disc",
+      "notes": "Last step of part B; part C starts in Dragon Roost Cavern."
+    }
+  ],
+  "unplaced": {
+    "flags": [],
+    "notes": "Every flag that turned on between catalog 06 and 08 is placed here, except 0x7EFF (an event register, 14 -> 12, not a flag) and sea area-0 switches 0x24, 0x41, 0x43, 0x45, 0x6F, 0x73 (turned on between 06 and 07; other squares sailed through, not checked). The Delivery Bag's giver and the max-hearts change (3 -> 3.25, a Piece of Heart, 06 -> 07) are not placed."
+  }
+}
