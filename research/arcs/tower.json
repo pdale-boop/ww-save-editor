@@ -612,10 +612,12 @@
     "the Darknut trap TnTrap in Hyroom (parameters 0x00000904, 0x00010804) appears once 0x3A04 is on (daObjTnTrap_c::chk_appear, compiled d_a_obj_tntrap.rel .text+0x118) and sets 0x3B40 (chk_event_flg, .text+0x938); the decomp's tntrap is Nonmatching; Hyroom's events break_tntrap / break_tntrap2 are its scenes",
     "the statues on Hyroom's layers 0|1 (Tn, mo2 with spawn switch 0xFF) only move once COLORS_IN_HYRULE is on (d_a_tn.cpp:2321-2326)",
     "with 0x3B40 Hyroom loads layer 6|7, which has none of them (getLayerNo, d_com_inf_game.cpp:234)",
-    "catalog: off in 19, on in 20"
+    "catalog: off in 19, on in 20",
+    "TnTrap is that fire wall: two in Hyroom room 0's base actor list at the hall's two ends (z 3950, parameters 0x00000904; z -4100, 0x00010804), with seven Tn and ALLdie (switch 0x04) in the same room. The actor's functions (particle_set, set_tri, trap_on/off_wait) fit a damaging wall of fire. Its parameters' low byte 04 matches ALLdie's switch: my reading is that the walls drop once the Darknuts are dead (compiled code, not traced)."
    ],
-   "basis": "compiled+disc",
-   "notes": "What the trap needs before it sets 0x3B40 (switch 4, or its own check of the enemies) isn't read: chk_event_flg is only in compiled form."
+   "basis": "compiled+disc+play",
+   "notes": "What the trap needs before it sets 0x3B40 (switch 4, or its own check of the enemies) isn't read: chk_event_flg is only in compiled form.",
+   "seen": "Fire walls close the castle hall's two doors and the Darknut statues come alive; the walls drop when they're all beaten (owner's play: the fire-wall Darknut trap)."
   }
  ],
  "unplaced": {
