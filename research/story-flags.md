@@ -651,5 +651,20 @@ order: the main story's remaining gaps (which `.stb` sets 0x2A80, what starts `P
 the spawns into `kugutu_ganon` and `g2before`), then the chains that feed it (pearls, sages,
 Triforce), then quest chains, working from `research/actor-events.md`.
 
+Prologue arc (2026-10-09): 11 of its 12 unplaced flags are placed (`research/arcs/prologue.json`).
+The forest's Bokoblins are a step (0x0004 drop; 0x0301, 0x0480 the first two defeated, any
+Bokoblin, `d_a_bk` `fail`). On the ship, P1c's walk-up talk sets 0x0820. In the fortress,
+0x0401 is a barrel picked up or a type-0 hint tag, and 0x0402 a rope (`d_a_himo3`, parameter 1;
+no placed rope has that parameter, so how the game sets it differs from my reading). Quill's
+first talk on Outset after the kidnapping is 0x1401. The Outset villagers' first talks
+(0x0104 Joel & Zill, 0x0180 Sue-Belle, 0x0302 Rose, 0x0510 Sturgeon) are set in compiled code.
+`relcalls.py` can't tell saved flags from temporary ones (both go through
+`dSv_event_c::onEventBit`), so check `r3` before the call: game info + 0x624 is the saved flags,
++ 0x1158 the temporary ones. Still unplaced: 0x0201, set between the departure and waking on the
+King of Red Lions, setter not found (see the arc). The prologue's order inside the ship ride and
+the fortress isn't fixed by the code. Next for the arcs: the King of Red Lions / Windfall arc
+(0x2580, 0x2E01, 0x0F80), using the restart table in `dComIfGs_setGameStartStage` and the
+cutscene scene changes (`wwedit.disc_exits`).
+
 Your knowledge of the game is the check on each chain. Anything the code doesn't settle stays
 marked as unknown.
