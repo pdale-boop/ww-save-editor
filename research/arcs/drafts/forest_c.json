@@ -1,0 +1,66 @@
+{
+ "part": "Forest Haven arc, part C: after Kalle Demos to setting off with Farore's Pearl (parts A and B are Forest Haven before the dungeon and the Forbidden Woods)",
+ "steps": [
+  {
+   "id": "farores_pearl",
+   "label": "Back in Forest Haven: the ceremony and Farore's Pearl",
+   "sets": {
+    "pearls": ["Farore's Pearl"],
+    "switches": [
+     {"area": 11, "switch": "0x0D", "why": "getperl_deku's spawn switch: Omori EVNT entry 1 (getperl_deku), spawn switch byte 0x0D; Omori saves to area 11 (STAG save table 11). setStartDemo turns it on when the event starts, so the cutscene plays once (d_event_manager.cpp:41-48)"}
+    ]
+   },
+   "restart": {"stage": "sea", "room": 41, "point": 0, "evidence": "Omori is a save-table-11 stage: dComIfGs_setGameStartStage writes point 0 of its sea square (Forest Haven, sea 41), d_com_inf_game.cpp:1376-1385; catalog 11-14 (saved in Forest Haven) hold sea 41 0"},
+   "evidence": [
+    "the warp after Kalle Demos: daWarpf_c::CreateInit (d_a_warpf.cpp:267-279) exists only once the boss is beaten (isStageBossEnemy) and plays WARP_WIND until Farore's Pearl is owned, WARP_WIND_AFTER after (checkEndDemo, STAGE_FW case, :224-227)",
+    "kinBOSS event list: WARP_WIND has Makar (staff Cb1: TO_LINK, WARP) and its DIRECTOR's NEXT goes to Omori room 0 point 214; WARP_WIND_AFTER goes to point 215 (BOSS_WARPOUT) without Makar",
+    "Omori point 214 has parameters 0x01FF0000: start event 1 of the stage's EVNT list, getperl_deku (daPy_lk_c::getStartEvent; setStartDemo)",
+    "getperl_deku: its PACKAGE staff plays getperl_deku.stb (Omori event list), whose item payload is 4, Farore's Pearl (d_a_demo00.cpp:651-730; research/story-flags.md, flags and items given by cutscene data)",
+    "catalog: Farore's Pearl and area 11 switch 0x0D off in 15, on in 16"
+   ],
+   "basis": "code+disc",
+   "seen": "Link warps out of the boss room with Makar and lands before the Deku Tree, who gives Farore's Pearl after the Koroks' ceremony. The ceremony is my reading of the story around getperl_deku, not read from the .stb.",
+   "notes": "The warp itself sets nothing saved (WARP_WIND has no spawn switch: kinBOSS has no EVNT list). Kalle Demos's defeat (0x3D40, dMeter_recollect_boss_data, d_meter.cpp:1075-1077) and the Forbidden Woods' dungeon bits belong to part B."
+  },
+  {
+   "id": "leave_forest_haven",
+   "label": "Leaving Forest Haven with the pearl",
+   "sets": {"flags": ["0x1C40"]},
+   "evidence": [
+    "dScnRoom_Delete sets 0x1C40 when a room is unloaded with field_0x1dc == 2 (d_s_room.cpp:134-135); the room's create sets field_0x1dc = 2 in stage Omori when Link has Farore's Pearl (:271-272)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code",
+   "notes": "The timeline's note ties it to talking to the Deku Tree after the pearl; the code only needs the pearl and leaving an Omori room, which differs from my reading of that note. The King of Red Lions waits outside (sea 41), so this comes before korl_farore_talk."
+  },
+  {
+   "id": "korl_farore_talk",
+   "label": "The King of Red Lions on Farore's Pearl",
+   "sets": {"flags": ["0x0A08"], "optional_flags": ["0x0A04"]},
+   "evidence": [
+    "daShip_c::checkForceMessage forces message 0x5F6 while Farore's Pearl is owned (dComIfGs_isSymbol(dSymbol_FARORE_e)) and 0x0A08 is off (d_a_ship.cpp:350-351); 0x5F6 continues to 0x5F7 (:693-694), and 0x5F7 sets 0x0A08 in setNextMessage (:641-642)",
+    "0x0A04 (optional): with 0x0A08 on and 0x2A02 off, the King's hint is 0x5F8 until 0x0A04, then 0x5F9 (:545-555); reading 0x5F8 sets 0x0A04 (:644-645). It needs a second talk before setting off; the catalog never has it",
+    "catalog: 0x0A08 off in 15, on in 16"
+   ],
+   "basis": "code",
+   "seen": "The King's talk about Farore's Pearl and the next destination (ladder rung 5, research/story-flags.md)."
+  },
+  {
+   "id": "set_off_farore",
+   "label": "Setting off for the next mark",
+   "sets": {"flags": ["0x2A02"]},
+   "requires": ["korl_farore_talk"],
+   "evidence": [
+    "daShip_c::procPaddleMove_init sets 0x2A02 when the boat moves with Link aboard and 0x0A08 is on (d_a_ship.cpp:1576-1577), the same place RODE_KORL and 0x1980 are set (:1569-1574)",
+    "the King's hint becomes 0xD5E (hurry to the mark) once 0x2A02 is on (:545-547)",
+    "catalog: off in 15, on in 16"
+   ],
+   "basis": "code",
+   "notes": "After this the arc ends; the next arc starts with ENDLESS_NIGHT (0x0A02), set together with 0x0A01, 0x2A01 and the Windfall flags between catalog 15 and 16."
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "Every flag that turns on between catalog 15 and 16 and belongs after Kalle Demos and before the Endless Night is placed here. Not this part: 0x3D40 (Kalle Demos defeated, dMeter_recollect_boss_data) and event register 0xA107 (1 -> 7, probably the Forbidden Woods' warp pots, like 0xA207 in Dragon Roost Cavern), both part B; 0x0A01, 0x0A02, 0x1910, 0x1A04, 0x1E80, 0x1F04, 0x2110, 0x2A01, 0x3B20 (the Endless Night and Windfall: the next arc); the Boomerang and the Forbidden Woods' heart container (part B)."
+ }
+}
