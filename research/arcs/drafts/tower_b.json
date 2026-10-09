@@ -1,0 +1,178 @@
+{
+ "part": "Tower of the Gods arc, part B: the Tower of the Gods dungeon, from entering to the warp down to Hyrule",
+ "steps": [
+  {
+   "id": "tower_enter",
+   "label": "Into the Tower of the Gods",
+   "sets": {
+    "switches": [
+     {"area": 5, "switch": "0x63", "why": "spawn switch of the Siren event moro_scam (Siren Stage.dzs EVNT entry 0, byte 0x13), which room 0's entrance point 0 starts the first time; dEvent_exception_c::setStartDemo turns it on (d_event_manager.cpp:41-48)"}
+    ]
+   },
+   "restart": {"stage": "Siren", "room": 0, "point": 0, "evidence": "dComIfGs_setGameStartStage: dungeon, miniboss and boss stages restart at the stage's exit 0; Siren, SirenMB and SirenB all save to table 5 and their exit 0 is Siren room 0 point 0 (wwedit.disc_restart_places)"},
+   "evidence": [
+    "Siren room 0 point 0 (params 0x00FF2000): start mode 2, a boat arrival, and start event 0 = moro_scam (wwedit.spawn_arrival)",
+    "the sea's Tower of the Gods sector (26) leads to it: wwedit.disc_exits",
+    "area 5 switch 0x63 off in catalog 19, on in 20"
+   ],
+   "basis": "disc+code"
+  },
+  {
+   "id": "light_bridge",
+   "label": "The light bridges appear and fade the first time",
+   "window": {"after": "tower_enter"},
+   "sets": {"flags": ["0x0E01", "0x0F40"]},
+   "evidence": [
+    "daLbridge (d_a_lbridge.cpp, 'Tower of the Gods - Glowing light bridge'): the end of its EFFAPPEAR event sets 0x0E01 and the end of BRIDGE_DISAPPEAR sets 0x0F40 (:200-210); each event plays only while its flag is off (:212-217)",
+    "both off in catalog 19, on in 20"
+   ],
+   "basis": "code",
+   "notes": "First-time camera scenes for any light bridge; nothing found that requires them later, so a window with no end."
+  },
+  {
+   "id": "tower_map_compass",
+   "label": "Dungeon map and compass",
+   "window": {"after": "tower_enter"},
+   "sets": {"dungeon_items": {"area": 5, "items": ["MAP", "COMPASS"]}},
+   "evidence": [
+    "Siren Stage.dzs TRES: chest 1 (room 3, behind the bombable walls) holds item 0x4C, the Dungeon Map; chest 2 (room 1, the skulls room) holds 0x4D, the Compass (item in home.angle.z's high byte, room in home.angle.x & 0x3F, daTbox_c::searchRoomNo d_a_tbox.cpp:276-279)",
+    "item_func_map / item_func_compass set the area's dungeon-item bits (d_item.cpp:953-960)",
+    "off in catalog 19, on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "first_servant",
+   "label": "The first Servant of the Tower brought to the main room",
+   "sets": {"flags": ["0x1780", "0x2602", "0x1710"]},
+   "evidence": [
+    "daNpc_Os_c (d_a_npc_os.cpp, the Companion Statues Os, Os1, Os2 in Siren's stage actor list; argument 0 is Os): setWakeup sets 0x1780 for argument 0 (:408-410), setFinish sets 0x1710 when it is placed (:442-444, called at the end of the placing event :1333 and at :1534)",
+    "0x2602: the first time a Tower door of kind 1 lights up (dDoor_hkyo_c::onFirst, d_door.cpp:835-838; chkFirst :821-831)",
+    "the main room's door of kind 4 stops blinking once 0x1710 is on (d_door.cpp:790-795)",
+    "all off in catalog 19, on in 20"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "command_melody",
+   "label": "The stone tablet and the Command Melody",
+   "requires": ["tower:first_servant"],
+   "sets": {"flags": ["0x2B10", "0x2510"], "songs": ["Command Melody"]},
+   "evidence": [
+    "daNpc_Os_c::eventOrderCheck: the first statue (argument 0) in room 7 with its switch on and 0x2510 off orders event 7 (d_a_npc_os.cpp:549-551)",
+    "the stone tablet (Hsh, daObj_hsh_c, Siren room 7) appearing sets 0x2B10, initialAppearEvent (d_a_obj_hsehi1.cpp:650-652)",
+    "message 0xEF4 sets 0x2510 (d_a_npc_os.cpp:1929-1932); the tablet checks it (d_a_obj_hsehi1.cpp:221)",
+    "Randomizer logic: the stone tablet needs the Wind Waker (logic/macros.txt, 'Can Reach Tower of the Gods Third Floor' note)",
+    "all off in catalog 19, on in 20"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "tower_bow",
+   "label": "The Darknut miniboss and the Hero's Bow",
+   "sets": {"items": ["Hero's Bow"]},
+   "evidence": [
+    "the miniboss room is SirenMB room 23 (a Darknut, Tn); its chest is Siren Stage.dzs TRES chest 3 (takara8, room 23, item 0x27 = Hero's Bow)",
+    "Randomizer logic: the miniboss entrance needs the second floor and the Command Melody or the Bow (logic/macros.txt 'Can Access Miniboss Entrance in Tower of the Gods')",
+    "Bow off in catalog 19, on in 20"
+   ],
+   "basis": "disc+play",
+   "notes": "Ordered before the second statue and the boss key: the west statue needs the Bow (Randomizer logic), and each dungeon's new item is needed to reach its boss key (owner's play)."
+  },
+  {
+   "id": "second_servant",
+   "label": "The second Servant of the Tower",
+   "sets": {"flags": ["0x1740", "0x1704", "0x2608"]},
+   "evidence": [
+    "daNpc_Os_c argument 1 (Os1): setWakeup 0x1740 (d_a_npc_os.cpp:413), setFinish 0x1704 (:447); in room 7 with its switch on and 0x2608 off it orders event 8 (:553-556), whose end sets 0x2608 (:1335-1336)",
+    "the door of kind 3 blinks once the Command Melody is known and until 0x1704 (d_door.cpp:796-800), so it follows command_melody",
+    "Randomizer logic: the west statue needs the Command Melody and the Hero's Bow (logic/macros.txt 'Can Bring West Servant of the Tower')",
+    "all off in catalog 19, on in 20"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "third_servant",
+   "label": "The lasers and the third Servant of the Tower",
+   "sets": {"flags": ["0x1010", "0x1720", "0x1B01", "0x2604"]},
+   "evidence": [
+    "0x1010: a wall Beamos (Hmos3, type 2) whose switch turns on sets it the first time and plays hmos3cam, daBemos_c::event_move (d_a_obj_bemos.cpp:1329-1336); two Hmos3 are in Siren room 17",
+    "daNpc_Os_c argument 2 (Os2): setWakeup 0x1720 (d_a_npc_os.cpp:416), setFinish 0x1B01 (:450); in room 7 with its switch on and 0x2604 off it orders event 9 (:558-561), whose end sets 0x2604 (:1338-1339), the portal to the last floor appearing",
+    "the door of kind 2 blinks from 0x1704 until 0x1B01 (d_door.cpp:802-806), so it follows second_servant",
+    "all off in catalog 19, on in 20"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "tower_boss_key",
+   "label": "The boss key",
+   "sets": {"dungeon_items": {"area": 5, "items": ["BOSS_KEY"]}},
+   "evidence": [
+    "Siren Stage.dzs TRES chest 11 (takara4, room 17, item 0x4E = Big Key); Randomizer: 'Tower of the Gods - Big Key Chest' needs the third floor (logic/item_locations.txt, macros 'Can Reach Tower of the Gods Third Floor': all three statues)",
+    "item_func_boss_key; the boss door (to SirenB from rooms 18 and 19) needs it (d_a_door10.cpp:360-364; Randomizer 'Can Access Boss Entrance in Tower of the Gods')",
+    "off in catalog 19, on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "gohdan_intro",
+   "label": "Gohdan's introduction",
+   "sets": {"dungeon_items": {"area": 5, "items": ["STAGE_BOSS_DEMO"]}},
+   "evidence": ["daBst (d_a_bst.cpp, Gohdan) turns on the boss intro bit (dComIfGs_onStageBossDemo, :2298) and skips the intro once it is on (:1778)"],
+   "basis": "code"
+  },
+  {
+   "id": "gohdan",
+   "label": "Gohdan defeated",
+   "sets": {"dungeon_items": {"area": 5, "items": ["STAGE_BOSS_ENEMY"]}},
+   "evidence": [
+    "d_a_bst.cpp:2432: dComIfGs_onStageBossEnemy, then a warp flower (fopAcM_createWarpFlower, :2436)",
+    "Randomizer logic: Gohdan needs the Hero's Bow (or the Hookshot) and Bombs (logic/macros.txt 'Can Defeat Gohdan')",
+    "no recollection snapshot for this boss: dMeter_recollect_boss_data handles only Dragon Roost Cavern, the Forbidden Woods, the Earth and Wind Temples (d_meter.cpp:1070-1086)"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "gohdan_heart",
+   "label": "Gohdan's heart container",
+   "window": {"after": "gohdan"},
+   "sets": {"dungeon_items": {"area": 5, "items": ["STAGE_LIFE"]}},
+   "evidence": ["item_func_utuwa_heart sets the area's heart-container bit (d_item.cpp:588-601); catalog 20 has it and max hearts 5.5 -> 6.5"],
+   "basis": "code"
+  },
+  {
+   "id": "ring_bell",
+   "label": "Up to the top of the Tower and the bell",
+   "sets": {
+    "switches": [
+     {"area": 0, "switch": "0x37", "why": "the bell's grapple post: Kui (d_a_kui.cpp, 'Hookable posts for the Grappling Hook') in ADMumi room 0 at the top (y 31899), parameters 0x37FF0403, switch = parameters >> 24 (:485), turned on when swung on (:189, :305, :381); ADMumi saves to table 0"},
+     {"area": 0, "switch": "0x39", "why": "spawn switch of ADMumi's event JMP_DEMO (Stage.dzs EVNT entry 1, byte 0x13): three TagEv (parameters 0x013739FF: type 0xFF, wait switch 0x37, event 1) start it once 0x37 is on (daTag_Event_c::arrivalTerms default case, d_a_tag_event.cpp:51-70)"}
+    ]
+   },
+   "restart": {"stage": "ADMumi", "room": 0, "point": 100, "evidence": "ADMumi is a dungeon-type stage (STAG type 1); its exit 0 is ADMumi room 0 point 100, the top of the tower (wwedit.disc_restart_places)"},
+   "evidence": [
+    "Gohdan's warp flower plays WARP_WIND while 0x2D10 is off (daWarpf, d_a_warpf.cpp:230-233); SirenB's WARP_WIND ends at ADMumi point 200, the top of the tower, falling in (FALL_START)",
+    "the developers' stage select names ADMumi layer 9 'Tower, by the bell' (bench folder stage-select-names-en.tsv)",
+    "both switches off in catalog 19, on in 20"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "warp_to_hyrule",
+   "label": "Down to Hyrule",
+   "sets": {"flags": ["0x2D10"]},
+   "evidence": [
+    "JMP_DEMO ends at ADMumi point 201, which starts event warp_in (ADMumi EVNT entry 0; start event 0 in its parameters)",
+    "warp_in sets 0x2D10 (warp_in.stb, decomp note in d_save_event_flag.inc) and ends at Hyrule point 200, which starts warp_out the first time (wwedit.event_scene_changes, spawn points)",
+    "ladder rung 14: with 0x2D10 and no Master Sword the King says the power is in the castle (d_a_ship.cpp:362); from then on Gohdan's warp plays WARP_WIND_AFTER to sea 26 point 1 instead (d_a_warpf.cpp:230-233)",
+    "off in catalog 19, on in 20"
+   ],
+   "basis": "code+disc",
+   "notes": "Part C starts at the Hyrule arrival."
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "Every flag the timeline turns on between catalog 19 and 20 that belongs to the Tower is placed. Left to part C (Hyrule): 0x2D04, 0x3A04, 0x3802, 0x3810, 0x3B40 and the Master Sword. Not identified: event register 0xA60F (0 -> 1 in the same stretch). The Tower's many area-5 puzzle switches (about 40 on in catalog 20) and its small keys are not steps. Not checked here: whether the first statue's door (kind 1) is the only way 0x2602 is set."
+ }
+}
