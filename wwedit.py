@@ -689,6 +689,167 @@ def spawn_points(iso_path, stage, room, index=None):
     return result
 
 
+# ---- where the game restarts a save: dComIfGs_setGameStartStage, run when the game saves
+# Flag values from d_save_event_flag.inc. tools/wwcat.py has the same rule for save states (RAM).
+RODE_KORL = 0x2A08
+# Before RODE_KORL the first of these flags that is set decides the place (l_checkData); with
+# none of them the save restarts on Outset.
+STORY_RESTARTS = [(0x0F80, ('sea', 11, 128), 'MET_KORL'), (0x0801, ('MajyuE', 0, 0), '0x0801'),
+                  (0x0808, ('MajyuE', 0, 18), '0x0808'), (0x2401, ('A_umikz', 0, 204), '0x2401')]
+NO_STORY_RESTART = ('sea', 44, 128)
+# Sea squares whose island point is used only after their landing event
+# (dComIfGs_checkSeaLandingEvent); before it the save restarts at the sea's nearest exit.
+LANDING_EVENTS = {1: 0x3040, 4: 0x2E02, 13: 0x0902, 23: 0x0A02, 41: 0x0A20, 45: 0x2E04}
+GHOST_SHIP_ROOM, GHOST_SHIP_POINT = 0xC3FF, 0x85FF    # event registers: the way out of PShip
+# Stage types (dStage_stagInfo_GetSTType) and save tables (dStage_stagInfo_GetSaveTbl).
+ST_DUNGEON, ST_BOSS, ST_MINIBOSS, ST_SEA = 1, 3, 6, 7
+SAVE_HYRULE, SAVE_SHIP, SAVE_MISC, SAVE_SUBDUNGEON, SAVE_SUBDUNGEON_NEW = 9, 10, 11, 12, 13
+
+
+def event_reg(save, reg):
+    """An event register's value (the flag byte masked, as dComIfGs_getEventReg)."""
+    return save.q[FLAGS + (reg >> 8)] & (reg & 0xFF)
+
+
+def story_restart(save):
+    """(place, reason) the game writes when saving before RODE_KORL, or None after it."""
+    if save.flag(RODE_KORL):
+        return None
+    for flag, place, name in STORY_RESTARTS:
+        if save.flag(flag):
+            return place, f'before riding the King of Red Lions, with {name}'
+    return NO_STORY_RESTART, 'before riding the King of Red Lions, with none of its story flags'
+
+
+def stage_kind(dzs):
+    """(stage type, save table) from a Stage.dzs 'STAG' chunk (stage_stag_info_class: mProp at
+    0x09, save table = (mProp >> 1) & 0x7F; mStageTypeAndSchbit at 0x0C, type = (>> 16) & 7)."""
+    num, off = dzx_chunk(dzs, b'STAG')
+    if not num:
+        return None, None
+    return (struct.unpack('>I', dzs[off + 0x0C:off + 0x10])[0] >> 16) & 7, (dzs[off + 9] >> 1) & 0x7F
+
+
+def ocean_square(dzs):
+    """The sea square a small stage belongs to, from its map info ('2DMA' or '2Dma',
+    stage_map_info_class.mOceanXZ at 0x36, two signed 4-bit values; room = 4 + x + (z + 3) * 7),
+    or None without map info."""
+    for tag in (b'2DMA', b'2Dma'):
+        num, off = dzx_chunk(dzs, tag)
+        if num:
+            xz = dzs[off + 0x36]
+            x, z = xz & 0xF, (xz >> 4) & 0xF
+            x, z = (x - 16 if x & 8 else x), (z - 16 if z & 8 else z)
+            return 4 + x + (z + 3) * 7
+    return None
+
+
+def restart_numbers(dzb):
+    """The restart numbers in a room's collision (room.dzb): dBgS::GetLinkNo is the low byte of
+    the second info word of a polygon's info entry (cBgD_t: counts and offsets at 0x00-0x2C,
+    triangles of 10 bytes with the info id at 6, info entries of 16 bytes). 0xFF is none."""
+    t_num, t_off = struct.unpack('>II', dzb[0x08:0x10])
+    ti_num, ti_off = struct.unpack('>II', dzb[0x28:0x30])
+    ids = {struct.unpack('>H', dzb[t_off + t * 10 + 6:t_off + t * 10 + 8])[0] for t in range(t_num)}
+    return {struct.unpack('>I', dzb[ti_off + i * 16 + 4:ti_off + i * 16 + 8])[0] & 0xFF
+            for i in ids if i < ti_num} - {0xFF}
+
+
+def disc_restart_places(iso_path, index=None):
+    """Every place the game can write after RODE_KORL: {(stage, room, point): [reason]}, and
+    {stage: rule} saying what saving in each stage writes. From dComIfGs_setGameStartStage:
+    - Ghost Ship (PShip): the sea place saved in event registers 0xC3FF and 0x85FF when entering,
+      which is one of the sea's exits (dComIfGd_getMeshSceneList).
+    - sea-type stages: the island point under Link (checkIsland: the ground's restart number,
+      0 on the boat or another moving platform), once that square's landing event is done;
+      otherwise the sea's exit for where Link or the boat is (the sea's own list, by quarter).
+    - dungeons, minibosses, bosses, and Hyrule's save table: the stage's exit 0.
+    - ship stages (save table 10): the sea's exit for where the ship was.
+    - other small stages (save tables 11-13): point 0 of their sea square (map info).
+    - anything else: Windfall point 0.
+    Which island point is under Link is the collision's restart number; on the disc it is
+    usually 0, so most island saves restart at point 0."""
+    index = index or disc_index(iso_path)
+    places, rules = {}, {}
+
+    def add(place, why):
+        places.setdefault(place, [])
+        if why not in places[place]:
+            places[place].append(why)
+
+    def read(path):
+        off, size = index[path]
+        with open(iso_path, 'rb') as f:
+            f.seek(off)
+            return rarc_files(f.read(size))
+
+    rooms = disc_rooms(iso_path, index)
+    sea_exits = []
+    if 'res/Stage/sea/Stage.arc' in index:
+        dzs = yaz0_decompress(next(b for n, b in read('res/Stage/sea/Stage.arc').items() if n.endswith('.dzs')))
+        sea_exits = scls_entries(dzs)[:196]
+    for stage, point, room in sea_exits:
+        add((stage, room, point), "the sea's nearest exit (saving at sea, in a ship stage or the Ghost Ship)")
+    for stage in sorted(rooms):
+        arc = f'res/Stage/{stage}/Stage.arc'
+        if arc not in index:
+            continue
+        files = read(arc)
+        dzs = next((yaz0_decompress(b) for n, b in files.items() if n.endswith('.dzs')), None)
+        if dzs is None:
+            continue
+        st_type, table = stage_kind(dzs)
+        if stage == 'PShip':
+            rules[stage] = 'the way out saved when entering (event registers 0xC3FF, 0x85FF)'
+        elif st_type == ST_SEA:
+            rules[stage] = ("the island point under Link once the square's landing event is done, "
+                            "else the sea's nearest exit")
+            for room in sorted(rooms[stage]):
+                rarc = f'res/Stage/{stage}/Room{room}.arc'
+                if rarc in index:
+                    dzb = read(rarc).get('room.dzb')
+                    for n in (restart_numbers(yaz0_decompress(dzb)) if dzb else set()) | {0}:
+                        add((stage, room, n), 'saving on that island (the restart number under Link)')
+        elif st_type in (ST_DUNGEON, ST_BOSS, ST_MINIBOSS) or table == SAVE_HYRULE:
+            exits = scls_entries(dzs)
+            if exits:
+                dest, point, room = exits[0]
+                room = room - 256 if room > 127 else room
+                rules[stage] = f'its exit 0: {dest} room {room} point {point}'
+                add((dest, room, point), f'saving in {stage} (its exit 0)')
+            else:
+                rules[stage] = 'its exit 0, but the stage has no exit list'
+        elif table == SAVE_SHIP:
+            rules[stage] = "the sea's nearest exit to where the ship was"
+        elif table in (SAVE_MISC, SAVE_SUBDUNGEON, SAVE_SUBDUNGEON_NEW):
+            square = ocean_square(dzs)
+            if square is None:
+                rules[stage] = 'point 0 of its sea square, but the stage has no map info'
+            else:
+                rules[stage] = f'point 0 of its sea square: sea room {square}'
+                add(('sea', square, 0), f'saving in {stage} (its sea square)')
+        else:
+            rules[stage] = 'Windfall point 0 (sea room 11)'
+    add(('sea', 11, 0), 'saving in a stage the rule has no case for')
+    return places, rules
+
+
+def restart_check(save, place, places):
+    """(writable, explanation) for a restart place, given disc_restart_places' places: whether the
+    game could have written it for this save. Before RODE_KORL only the story place is."""
+    story = story_restart(save)
+    if story:
+        expected, why = story
+        if tuple(place) == expected:
+            return True, f'the place the game writes {why}'
+        return False, (f'the game writes {expected[0]} room {expected[1]} point {expected[2]} {why}; '
+                       'it never writes this place for this save')
+    reasons = places.get(tuple(place))
+    if reasons:
+        return True, 'the game writes this after ' + reasons[0]
+    return False, 'the game never writes this place when saving'
+
+
 # ---- story presets: quest logs from real saves at known points in the story
 NAME, OPTIONS = (0x157, 0x168), (0x19F, 0x1A4)     # player name; options (dSv_player_config_c)
 
