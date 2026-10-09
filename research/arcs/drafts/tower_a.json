@@ -1,0 +1,92 @@
+{
+ "part": "A: placing the pearls and the tower rising (after jabun_pearl, up to the Tower of the Gods dungeon)",
+ "steps": [
+  {
+   "id": "korl_nayru_talk",
+   "label": "The King of Red Lions on Nayru's Pearl",
+   "sets": {"flags": ["0x2F20"]},
+   "evidence": [
+    "forced message 0xD5A while Nayru's Pearl is owned and 0x2F20 is off (daShip_c::checkForceMessage, d_a_ship.cpp:359-360); 0xD5A leads to 0xD5B (:696-697), which sets 0x2F20 (:656-657)",
+    "while a forced message is pending the King can't be boarded (the ship action is taken off, d_a_ship.cpp:4204-4205), so this comes before any sailing to the statues",
+    "his hint after it is 0xD62, place one pearl at each marked spot (setInitMessage, :494-495)",
+    "catalog: off in 17, on in 18"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "place_din",
+   "label": "Din's Pearl placed",
+   "sets": {"flags": ["0x1480"]},
+   "window": {"by": "tower_raised"},
+   "restart": {"stage": "sea", "room": 18, "point": 0, "evidence": "saving on the island: checkIsland's point; the room's collision names only 0 (wwedit.disc_restart_places)"},
+   "evidence": [
+    "the statue (Doguu) on sea room 18 has parameters 0x0000FF00: statue 0, Din's Pearl (field_0x894 = param & 0xFF, d_a_obj_doguu.cpp:530-532; item by statue, daObjDoguu_c::CreateInit, :199-205)",
+    "it reacts only while that pearl is owned and Link touches it (checkItemGet(mItemNo, TRUE), d_a_obj_doguu.cpp:673), plays DOGUU_DEMO1, DOGUU_DEMO2 for the first pearl placed only (:699), DOGUU_DEMO3, then sets the flag (state 9, :734-735; setFinishMyEvent, :511-518)",
+    "the pearl stays in the inventory: the statue code clears no pearl bit, and the catalog keeps all three pearls from 18 on",
+    "catalog: off in 18, on in 19 (the third pearl placed in the playthrough)"
+   ],
+   "basis": "code+disc",
+   "seen": "Din's Pearl set into the statue on Northern Triangle Island.",
+   "notes": "No window start: Din's Pearl comes from an earlier arc and the statue checks only the pearl."
+  },
+  {
+   "id": "place_farore",
+   "label": "Farore's Pearl placed",
+   "sets": {"flags": ["0x1440"]},
+   "window": {"by": "tower_raised"},
+   "restart": {"stage": "sea", "room": 27, "point": 0, "evidence": "saving on the island: checkIsland's point; the room's collision names only 0 (wwedit.disc_restart_places)"},
+   "evidence": [
+    "the statue on sea room 27 has parameters 0x0000FF01: statue 1, Farore's Pearl (d_a_obj_doguu.cpp:199-205, 530-532)",
+    "same placing sequence as place_din (d_a_obj_doguu.cpp:673, 699, 734-735, 511-518)",
+    "catalog: off in 17, on in 18"
+   ],
+   "basis": "code+disc",
+   "seen": "Farore's Pearl set into the statue on Eastern Triangle Island.",
+   "notes": "No window start: Farore's Pearl comes from an earlier arc and the statue checks only the pearl."
+  },
+  {
+   "id": "place_nayru",
+   "label": "Nayru's Pearl placed",
+   "sets": {"flags": ["0x1410"]},
+   "window": {"after": "korl_nayru_talk", "by": "tower_raised"},
+   "restart": {"stage": "sea", "room": 32, "point": 0, "evidence": "saving on the island: checkIsland's point; the room's collision names only 0 (wwedit.disc_restart_places)"},
+   "evidence": [
+    "the statue on sea room 32 has parameters 0x0000FF02: statue 2, Nayru's Pearl (d_a_obj_doguu.cpp:199-205, 530-532)",
+    "same placing sequence as place_din (d_a_obj_doguu.cpp:673, 699, 734-735, 511-518)",
+    "reaching Southern Triangle Island needs the boat, which can't be boarded before korl_nayru_talk",
+    "catalog: off in 17, on in 18"
+   ],
+   "basis": "code+disc",
+   "seen": "Nayru's Pearl set into the statue on Southern Triangle Island."
+  },
+  {
+   "id": "tower_raised",
+   "label": "The Tower of the Gods rises",
+   "sets": {"flags": ["0x1E40", "0x2E80"]},
+   "evidence": [
+    "the statue that gets the third pearl sets 0x1E40 and orders MEGAMI_DEMO (getFinishEventCount() >= 3, d_a_obj_doguu.cpp:737-739)",
+    "the cutscene jumps to ADMumi room 0, layer 8, at the point of that statue's number (setJDemo, d_a_obj_doguu.cpp:355); the developers' stage select names these Tower rises D, F and N (group 32, entries 18-20: ADMumi points 0, 1, 2, layer 8)",
+    "towerd.stb, towerf.stb and towern.stb set 0x2E80 (d_save_event_flag.inc:347); their events (towerd, towerf, towern in ADMumi's event list) end with a scene change to sea room 26 point 0, in the boat",
+    "catalog: both off in 18, on in 19"
+   ],
+   "basis": "code+disc",
+   "seen": "The tower rises out of the sea; Link is put in the boat in front of it.",
+   "warn": "Turning on all three PLACED flags without 0x1E40 leaves the tower down for good: with all three set, every statue loads in its finished state (d_a_obj_doguu.cpp:223-234, state 14) and never reaches the code that sets 0x1E40. Set 0x1E40 together with the third flag."
+  },
+  {
+   "id": "korl_tower_talk",
+   "label": "The King of Red Lions after the tower rises",
+   "sets": {"flags": ["0x3840"]},
+   "evidence": [
+    "with Link aboard, 0x1E40 on and 0x3840 off, the King's message is 0x168C (d_a_ship.cpp:4234-4235), which sets 0x3840 (:669-670)",
+    "his hint after it is 0xD64, climb the Tower of the Gods (0xD63 inside a dungeon), setInitMessage :486-492",
+    "catalog: off in 18, on in 19"
+   ],
+   "basis": "code"
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "Every flag that turns on between catalog 17 and 19 and belongs to this stretch is placed. Also on from 17 to 18, not this part: 0x2A20 (Grandma healed, the Jabun arc's heal_grandma window), 0x3920 and 0x3F80 (the Jabun arc), 0x3008 (Bomb Bag upgrade, Eastern Fairy Island) and 0x3010 (wallet upgrade, Outset), which are chains of their own, and the letter registers 0x7A03 and 0x9D03."
+ }
+}
