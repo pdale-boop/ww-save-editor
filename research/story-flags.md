@@ -666,5 +666,12 @@ the fortress isn't fixed by the code. Next for the arcs: the King of Red Lions /
 (0x2580, 0x2E01, 0x0F80), using the restart table in `dComIfGs_setGameStartStage` and the
 cutscene scene changes (`wwedit.disc_exits`).
 
+King of Red Lions and Dragon Roost arc (2026-10-09): `research/arcs/korl_dragon_roost.json`, 22 steps
+from `FIND_SISTER` in the fortress tower to the south wind after Din's Pearl, researched in three
+parts in parallel. The evidence for each part is in `research/arcs/drafts/korl_a.md` (Windfall to the
+first sail), `korl_b.md` (Dragon Roost Island) and `korl_c.md` (Dragon Roost Cavern to the pearl).
+Every game-written catalog save lands on it in order. Unplaced: 0x0901 (a fishman diving away;
+belongs to the fishmen and sea chart chain). Next: the Forest Haven arc, from 0x0A20.
+
 Your knowledge of the game is the check on each chain. Anything the code doesn't settle stays
 marked as unknown.

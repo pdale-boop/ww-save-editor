@@ -28,6 +28,22 @@ def switch_on(save, area, no):
     return bool(struct.unpack('>I', bytes(save.q[off:off + 4]))[0] & (1 << (no & 31)))
 
 
+# dSv_memBit_c::mDungeonItem (area block + 0x21) bits, d_save.h: onDungeonItem(i_no) sets 1 << i_no.
+DUNGEON_ITEMS = ('MAP', 'COMPASS', 'BOSS_KEY', 'STAGE_BOSS_ENEMY', 'STAGE_LIFE', 'STAGE_BOSS_DEMO')
+
+
+def dungeon_item(save, area, name):
+    return bool(save.q[wwedit.MEMORY + area * 0x24 + 0x21] & (1 << DUNGEON_ITEMS.index(name)))
+
+
+def has_song(save, name):
+    return bool(save.q[wwedit.SONGS] & (1 << wwedit.SONG_NAMES.index(name)))
+
+
+def has_pearl(save, name):
+    return bool(save.q[wwedit.PEARLS] & (1 << wwedit.PEARL_NAMES.index(name)))
+
+
 def owns(save, item):
     if item in wwedit.ITEMS_GIVEN:
         return save.has(item)
@@ -45,7 +61,18 @@ def step_missing(save, step):
     missing += [i for i in sets.get('items', []) if not owns(save, i)]
     missing += [f"area {s['area']} switch {s['switch']}" for s in sets.get('switches', [])
                 if not switch_on(save, s['area'], int(s['switch'], 16))]
+    missing += [p for p in sets.get('pearls', []) if not has_pearl(save, p)]
+    missing += [n for n in sets.get('songs', []) if not has_song(save, n)]
+    d = sets.get('dungeon_items')
+    if d:
+        missing += [f"area {d['area']} {i}" for i in d['items'] if not dungeon_item(save, d['area'], i)]
     return missing
+
+
+def checked_count(step):
+    sets = step.get('sets', {})
+    return (sum(len(sets.get(k, [])) for k in ('flags', 'items', 'switches', 'pearls', 'songs'))
+            + len(sets.get('dungeon_items', {}).get('items', [])))
 
 
 def position(save, arc):
@@ -53,7 +80,7 @@ def position(save, arc):
     A step with nothing checkable counts as done. Partly done steps count as not done."""
     steps = arc['steps']
     done = [not step_missing(save, s) for s in steps]
-    checked = [sum(len(s.get('sets', {}).get(k, [])) for k in ('flags', 'items', 'switches')) for s in steps]
+    checked = [checked_count(s) for s in steps]
     started = [c > 0 and len(step_missing(save, s)) < c for s, c in zip(steps, checked)]
     n = 0
     while n < len(steps) and done[n]:
