@@ -1,0 +1,107 @@
+{
+ "part": "Jabun arc, part B: from the Bombs on the pirate ship to talking to the King of Red Lions on Outset during the Endless Night (before Jabun's cave)",
+ "steps": [
+  {
+   "id": "pirate_bombs",
+   "label": "The Bombs from the pirate ship",
+   "sets": {
+    "flags": ["0x0F02"],
+    "items": ["Bombs"]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 11,
+    "point": 0,
+    "evidence": "Asoko's save table is 13 (STAG, wwedit.stage_kind), so saving aboard writes point 0 of its sea square, Windfall (dComIfGs_setGameStartStage, the SAVE_SUBDUNGEON_NEW branch; wwedit.disc_restart_places)"
+   },
+   "evidence": [
+    "the Bombs are the chest in the pirate ship's hold: Asoko Stage.dzs TRE2 and TRE3 (layers 2 and 3, the ship's layers once 0x0520 is on), takara3 with parameters 0xFF200280 (tbox 5, no switch: daTbox_c::getTboxNo/getSwNo, d_a_tbox.h:35-36) and item 0x31 in angle z (getItemNo, :37); item_func_bomb_bag gives the bombs (d_item.cpp:792-797). The Randomizer's location 'Windfall Island - Pirate Ship' (Bombs, a minigame) names the same chests",
+    "catalog 16 -> 17: Asoko's save area 13 gains chest bit 5, and the Bombs",
+    "0x0F02: set in daNpc_P2_c::demo_bomb_get (the pirates Zuko, Niko and Mako, d_a_npc_p2), compiled code d_a_npc_p2.rel .text+0x1CBC (onEventBit); the decomp's demo_bomb_get is Nonmatching (d_a_npc_p2.cpp:131). getMsg (.text+0x15C8) and createInit (.text+0x418C, +0x43AC) read it",
+    "the mailbox then stocks the Bombs ad, letter 0x7D03 (daObjTpost_c::createInit, d_a_obj_toripost.cpp:931-933); the letter registers aren't checked"
+   ],
+   "basis": "code+compiled+disc",
+   "notes": "The chest comes after Niko's rope game (part A). The timeline calls 0x0F02 'gossip stone text after bombs'; the only setter found is the pirates' bomb-get scene, which differs from that label's reading. arcs.py can't check the chest bit (area 13, tbox 5), so only the item and the flag are checked."
+  },
+  {
+   "id": "korl_bombs_talk",
+   "label": "The King of Red Lions on the Bombs",
+   "sets": {
+    "flags": ["0x1F02"]
+   },
+   "evidence": [
+    "with the Bombs and without 0x1F02 the King forces message 0x624 (daShip_c::checkForceMessage, d_a_ship.cpp:356-357); 0x624 sets 0x1F02 (daShip_c::setNextMessage, :653-654)",
+    "while a forced message is pending the King can't be boarded and starts the talk when Link is near or aboard (daShip_c execute, d_a_ship.cpp:4204-4215), so this comes before any sailing, and so before Outset",
+    "after it his hint is 0xD60 (setInitMessage, :516-517)"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "outset_return",
+   "label": "Back on Outset in the Endless Night",
+   "sets": {
+    "flags": ["0x3E10"],
+    "switches": [
+     {"area": 0, "switch": "0x74", "why": "the arrival tag's switch: TagIsl 0x35FF7407 in sea room 44's base list, swbit 0x74 (daTag_Island_c::getSwbit, d_a_tag_island.cpp:38-40), set when its event starts (actionReady, :401-409)"}
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 44,
+    "point": 0,
+    "evidence": "saving on Outset after RODE_KORL writes the island point under Link, 0 on Outset's collision (dComIfGs_setGameStartStage; wwedit.disc_restart_places); catalog 17 has sea 44 0"
+   },
+   "evidence": [
+    "Outset's island tag (type 7) sets 0x3E10 when its event starts (daTag_Island_c::getArrivalFlag case 7, d_a_tag_island.cpp:90; demoInitProc, :133-136); it plays only during the Endless Night and with the Bombs (arrivalTerms, :112-127). Its event is the sea's EVNT 0x35, PUROLO_RETURN (parameters' top byte, getEventNo :33-35; Purolo is Outset's Japanese name), or PUROLO_RETURN2 when Link isn't aboard (makeEvId, :73)",
+    "catalog 16 -> 17: 0x3E10 and sea switch 0x74 on",
+    "Outset is on layer 4|5 here (0x0520; getLayerNo), night 2 in the Endless Night"
+   ],
+   "basis": "code+disc"
+  },
+  {
+   "id": "outset_door",
+   "label": "Through a door on Outset (to Grandma)",
+   "sets": {
+    "flags": ["0x3E01"]
+   },
+   "evidence": [
+    "with 0x3E10 on, taking any exit that changes scene sets 0x3E01 (daPy_lk_c, after dStage_changeSceneExitId, d_a_player_main.cpp:10800-10804); on the US release, arriving aboard the King with 0x3E10 on sets both 0x3E01 and 0x3F80 (makeBgWait, :12462-12467)",
+    "catalog 17 ('grandma needs help'): 0x3E01 on, 0x3F80 off, restart Outset"
+   ],
+   "basis": "code",
+   "seen": "The catalog's name for this point is 'grandma needs help': going indoors, to Grandma, is the usual first exit."
+  },
+  {
+   "id": "korl_outset_talk",
+   "label": "The King of Red Lions on Outset: look for Jabun's cave",
+   "sets": {
+    "flags": ["0x3F80"]
+   },
+   "evidence": [
+    "with 0x3E01 on and 0x3F80 off the King forces message 0x1688 (checkForceMessage, d_a_ship.cpp:365-366), which sets 0x3F80 (setNextMessage, :665-666); his hints in this stretch are 0x1687 (before 0x3E01), 0x1688, 0x1689 after (setInitMessage, :503-513)",
+    "while 0x3E10 is on and 0x3F80 off the King can't be boarded (d_a_ship.cpp:4224-4229), so this comes before sailing to Jabun's cave",
+    "catalog 17 -> 18: 0x3F80 on"
+   ],
+   "basis": "code"
+  },
+  {
+   "id": "heal_grandma",
+   "label": "Grandma healed with a fairy",
+   "sets": {
+    "flags": ["0x2A20"]
+   },
+   "window": {"after": "outset_return"},
+   "evidence": [
+    "Grandma lies sick (daNpc_Ba1_c::init_BA1_3, d_a_npc_ba1.cpp:186-204) once 0x0520 is on and until GRANDMA_HEALED 0x2A20; she reacts only to a Fairy in a bottle shown to her (XyCheck_cB, :121-125)",
+    "her healing event sets 0x2A20 and sends her letter 0x9D03 (event_proc case 2, :1324-1327); her soup event fills a bottle with Elixir Soup (case 1, :1310-1318)",
+    "catalog 17 -> 18: 0x2A20 on, Elixir Soup in a bottle, letter 0x9D03 0 -> 1"
+   ],
+   "basis": "code",
+   "notes": "Nothing later needs it, so the window has no end. The code allows it from 0x0520 on, the prologue's last step, whenever Link can reach Outset; a heal before outset_return (an Outset visit after Farore's Pearl) would show as mixed here, since a window can't start in another arc. Bottles (Elixir Soup) aren't checked."
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "Every flag the catalog turns on between 16 and 17 is placed, plus 0x3F80 and 0x2A20 from 17 -> 18. Left for others: 0x1F04 (Windfall's Endless Night arrival, island tag type 4 with swbit 0x5B: part A; it turns on between 15 and 16, before the Bombs), and, between 17 and 18, part C's 0x1410, 0x1440, 0x2F20, 0x3920 and Nayru's Pearl. Not this arc's order: 0x3008 (Bomb Bag upgrade at Eastern Fairy Island) and 0x3010 (wallet upgrade on Outset), both first on between 17 and 18. Letter registers (0x7B03 Orca, 0x7D03 Bombs ad, 0x7A03, 0x9D03) are the mailbox's and Grandma's letters, not checked."
+ }
+}
