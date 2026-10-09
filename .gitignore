@@ -17,3 +17,5 @@ catalog/
 CLAUDE.local.md
 # Local research scripts (see research/scratch/README.md)
 research/scratch/
+# Claude Code agent worktrees
+.claude/worktrees/

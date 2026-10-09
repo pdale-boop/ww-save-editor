@@ -81,12 +81,12 @@ What's left for the Wind Waker save editor, roughly in order of value. Things ma
 - [ ] **More named restart spots.** Add confirmed spots (like Windfall's alcove, `sea 11 128`,
       beside the King of Red Lions moored there) as they are found. The Restart place tab now
       says how Link arrives at each point and which exits lead there.
-- [ ] **Crafted restarts and the Tower night crash.** Catalog 41 + `set_restart("Siren", 0, 0)` +
-      18 or more hearts crashes BlueWake's default build at night (real clock 19:00 on); the
-      game's own save at the same place doesn't. The saves differ only in the Z item and the
-      in-game time (05:56 in the crafted one). One-change test cards are with the BlueWake
-      session (`CLOCK_CRASH_HANDOFF.md`). Once the field is known, decide what a crafted restart
-      should set (for example a daytime `mTime`) and say so in the tab.
+- [x] **Crafted restarts and the Tower night crash** (settled 2026-10-09). Not an editor bug: the
+      crash in BlueWake's default build needs the Skull Hammer on Z, an in-game time before dawn,
+      18+ hearts and a real clock from 19:00 together (tested in Tower room 0 with catalog 41's
+      story), and every one of those is a value a player can have. Changing any one avoids it.
+      The bug is BlueWake's (a jump into empty memory); the cards and notes are with its session
+      (`CLOCK_CRASH_HANDOFF.md`). Nothing for the editor to change.
 - [ ] **Better story presets.** The current ones are tests made from save states taken whenever
       it was convenient during play. Replace them with states made at deliberately chosen points
       in the story, or with presets built from the required flags, items and spawn points once

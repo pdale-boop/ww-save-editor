@@ -501,6 +501,13 @@ CODE_EXITS = {
     ('Hyrule', 0, 233): [('*', -1, 'breaking the barrier (d_a_obj_barrier, BARRIER_BREAK), layer 9')],
     ('GanonK', 0, 4): [('*', -1, 'd_a_bgn, layer 9')],
     ('majroom', 0, 0): [('*', -1, 'd_a_mo2')],
+    # Outset's whirlpool (Auzu, d_a_obj_auzu, layers 5 and 7): the boat is pulled under and arrives
+    # at the whirlpool's link point (daShip_c sets flag 0x1940 and changes scene in its room).
+    ('sea', 44, 151): [('sea', 44, 'the whirlpool (Auzu, layers 5 and 7) pulling the boat under')],
+    # Floormasters and holes without an exit of their own go to point 0 of their room (d_a_fm,
+    # d_a_obj_hole); on the disc only two test rooms rely on that.
+    ('KATA_RM', 21, 0): [('KATA_RM', 21, 'a Floormaster or a hole with no exit (point 0 of the room)')],
+    ('KATA_RM', 23, 0): [('KATA_RM', 23, 'a Floormaster or a hole with no exit (point 0 of the room)')],
     ('PShip', 2, 0): [('*', -1, 'entering the Ghost Ship (d_a_ghostship); the way back out is saved '
                                 'in event registers 0xC3FF and 0x85FF')],
     # The Triangle Islands' statues (d_a_obj_doguu::setJDemo): ADMumi room 0, layer 8, at the point
@@ -520,6 +527,12 @@ for _key, _flag in ((('sea', 11, 128), 'MET_KORL'), (('MajyuE', 0, 0), '0x0801')
                     (('sea', 44, 128), 'none of MET_KORL, 0x0801, 0x0808, 0x2401')):
     CODE_EXITS.setdefault(_key, []).append(
         ('*', -1, f'continuing a save made before riding the King of Red Lions, with {_flag}'))
+# The Deku Leaf: a return tag (ReTag0, d_a_tag_ret) sets daPy_lk_c's Deku Leaf restart point (its
+# parameters' low byte); a fall then restarts at that point in room 41, Forest Haven. Tags on the
+# disc: points 1-4 and 6-8.
+for _p in (1, 2, 3, 4, 6, 7, 8):
+    CODE_EXITS.setdefault(('sea', 41, _p), []).append(
+        ('sea', 41, 'a fall with the Deku Leaf after passing a return tag (ReTag0)'))
 SEA_QUARTERS = ('north-west', 'north-east', 'south-west', 'south-east')
 
 
@@ -551,9 +564,22 @@ def disc_exits(iso_path, index=None):
                             if room == -1 and stage == 'sea' and i < 196:
                                 src = ('sea', i // 4 + 1, f'a fall into the sea in the {SEA_QUARTERS[i % 4]} '
                                                           'quarter of the square')
+                            elif room == -1 and stage == 'sea':
+                                # d_a_ship: the Ballad of Gales warps to entry 0xC5 + its warp area,
+                                # a cyclone to a random one of 0xC6-0xCD.
+                                src = ('*', -1, 'the Ballad of Gales warp' + (' or a cyclone' if 198 <= i <= 205 else '')
+                                       if 197 <= i <= 205 else 'an entry of the sea exit list no code was found to use')
                             elif room == -1 and i == 0:
                                 src = (stage, -1, 'continuing after a game over there, or exit 0 of the stage')
                             sources = out.setdefault((dest, dest_room, point), [])
+                            if src not in sources:
+                                sources.append(src)
+                    elif name.lower() == 'room.dzb':
+                        # The ground's restart number (dBgS::GetLinkNo): where a fall in this room,
+                        # or a save on the sea (checkIsland), puts you.
+                        for n in restart_numbers(yaz0_decompress(blob)):
+                            src = (stage, room, 'a fall or a save here (the ground names this point)')
+                            sources = out.setdefault((stage, room, n), [])
                             if src not in sources:
                                 sources.append(src)
                     elif name.lower() == 'event_list.dat':
@@ -561,6 +587,37 @@ def disc_exits(iso_path, index=None):
                             sources = out.setdefault((dest, dest_room & 0xFF, point), [])
                             if (stage, room, f'the cutscene {event}') not in sources:
                                 sources.append((stage, room, f'the cutscene {event}'))
+        if 'res/Menu/Menu1.dat' in index:
+            off, size = index['res/Menu/Menu1.dat']
+            f.seek(off)
+            for _group, _name, dest, dest_room, point, _layer in menu_entries(yaz0_decompress(f.read(size))):
+                sources = out.setdefault((dest, dest_room & 0xFF, point), [])
+                if ('*', -1, STAGE_SELECT) not in sources:
+                    sources.append(('*', -1, STAGE_SELECT))
+    return out
+
+
+STAGE_SELECT = "the developers' stage select only (d_s_menu; normal play never opens it)"
+
+
+def menu_entries(dat):
+    """The developers' stage select list (/res/Menu/Menu1.dat, read by d_s_menu.cpp's phase_1;
+    layout from d_s_menu.h): [(group, name, stage, room, point, layer)], names in Shift-JIS.
+    menu_inf: group count (u8) at 0, offset of the groups at 4. stage_inf (0x28): name, room count
+    at 0x21, offset of its rooms at 0x24. room_inf (0x2C): name, stage at 0x21, room (s8) at 0x29,
+    start code at 0x2A, layer (s8) at 0x2B."""
+    def text(off, size):
+        return dat[off:off + size].split(b'\0')[0].decode('shift_jis', 'replace')
+    out = []
+    groups, top = dat[0], struct.unpack('>I', dat[4:8])[0]
+    for g in range(groups):
+        gi = top + g * 0x28
+        count, rooms = dat[gi + 0x21], struct.unpack('>I', dat[gi + 0x24:gi + 0x28])[0]
+        for r in range(count):
+            ri = rooms + r * 0x2C
+            out.append((text(gi, 0x20), text(ri, 0x20), text(ri + 0x21, 8),
+                        struct.unpack('b', dat[ri + 0x29:ri + 0x2A])[0], dat[ri + 0x2A],
+                        struct.unpack('b', dat[ri + 0x2B:ri + 0x2C])[0]))
     return out
 
 
