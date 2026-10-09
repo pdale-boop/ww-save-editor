@@ -1,0 +1,75 @@
+{
+ "part": "Jabun arc, part C: from the stone wall at Jabun's cave on Outset to Nayru's Pearl and the end of the Endless Night. Starts once the bombs are in hand (part B); ends before the King of Red Lions' talk that sets 0x2F20 (rung 12, the pearl-placing arc).",
+ "steps": [
+  {
+   "id": "jabun_slab",
+   "label": "Blowing open the stone wall to Jabun's cave",
+   "sets": {
+    "switches": [
+     {
+      "area": 0,
+      "switch": "0x1C",
+      "why": "The wall's switch (Ajav parameters 0x1C, & 0xFF): on_sw at the end of its last destruction stage, daObjAjav::Act_c::_execute (d_a_obj_ajav.cpp:823; on_sw/check_sw use the home room, d_a_obj_ajav.h:75-76). Outset is sea room 44; the sea saves to area 0 (STAG save table 0)."
+     }
+    ],
+    "optional_flags": [
+     "0x1940"
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 44,
+    "point": 0,
+    "evidence": "saving on Outset after the first sail: the island point under Link (checkIsland, the ground's restart number; Outset's collision names point 0), dComIfGs_setGameStartStage; catalog 17 has sea 44 0"
+   },
+   "evidence": [
+    "The wall: Ajav (daObjAjav, 'Stone wall blocking the entrance to Jabun's cave') at (-205542, 0, 324297) on Outset's layers 5 and 7 (ACT5, ACT7), parameters 0x1C. It exists only while ENDLESS_NIGHT is on and its switch is off (_create, d_a_obj_ajav.cpp:470; check_ev, d_a_obj_ajav.h:74)",
+    "Bomb hits break it in three stages (hit spheres AT_TYPE_BOMB, d_a_obj_ajav.cpp:50, 79, 109; to_broken/damage_part :617-630): events ajav_destroy0, ajav_destroy1 and ajav_uzu (l_daObjAjav_ev_name, :153-157), all in the sea stage's event_list.dat",
+    "After the last stage the wall turns switch 0x1C on (:823)",
+    "The whirlpool in front of it: Auzu (daObjAuzu) at (-205662, 0, 329245) on the same layers, parameters 0x971C = type 0, link point 151, save switch 0x1C, appear 0 (field widths d_a_obj_auzu.h:21-31). Type 0 exists only with ENDLESS_NIGHT (is_exist, d_a_obj_auzu.cpp:114-118); with appear 0 it is full size while switch 0x1C is off and shrinks away once the wall breaks (:84-91, :214-219)",
+    "0x1940 (optional): set when the whirlpool pulls the boat under, daShip_c::procWhirlDown (d_a_ship.cpp:2887-2893), which then changes scene to the whirlpool's link point, sea 44 point 151 (a boat point next to it). It only changes the King of Red Lions' hint to 0xD61 ('break the stone slab', d_a_ship.cpp:500-501). Off in every catalog save",
+    "catalog: switch 0x1C off in 17 (bombs in hand), on in 18 and later"
+   ],
+   "basis": "code+disc",
+   "seen": "Bombing the stone wall behind Outset during the Endless Night; the whirlpool next to it pulls the boat under if you get too close before the wall is open.",
+   "notes": "Needs bombs (part B). The boat's cannon fires real bombs: with the Bomb Bag item on a button while sailing, daShip_c creates a daBomb_c and uses up a bomb (d_a_ship.cpp:1804-1808, 4021-4037).",
+   "warn": "A crafted save with switch 0x1C on but without Nayru's Pearl leaves the wall open with no way to the pearl: Jabun (Jb1) is placed only on Pjavdou's layer 8, which only the ajav_uzu cutscene starts. Entering through Outset's exit (sea 44 exit 7 -> Pjavdou point 0) loads Pjavdou's normal layers, without him. The Endless Night would never end."
+  },
+  {
+   "id": "jabun_pearl",
+   "label": "Jabun gives Nayru's Pearl; morning returns",
+   "sets": {
+    "flags": [
+     "0x3920"
+    ],
+    "pearls": [
+     "Nayru's Pearl"
+    ]
+   },
+   "restart": {
+    "stage": "sea",
+    "room": 44,
+    "point": 0,
+    "evidence": "saving in Jabun's cave (Pjavdou, save table 11): point 0 of its sea square, sea room 44, from its map info (dComIfGs_setGameStartStage; wwedit.disc_restart_places); on Outset: the island point, 0"
+   },
+   "evidence": [
+    "ajav_uzu (the wall's last stage, sea stage event list) ends with a DIRECTOR NEXT cut: Stage Pjavdou, RoomNo 0, StartCode 200, Layer 8, Mode 1",
+    "Pjavdou point 200 (parameters 0x00FF0000) starts the stage's event 0, getperl_jab. Its EVNT record has no spawn switch (0xFF), so it plays on every arrival at point 200; only ajav_uzu leads there",
+    "Jabun (Jb1) is placed only in Pjavdou room 0's ACT8, so only on that cutscene's layer 8",
+    "getperl_jab: PACKAGE PLAY cut with FileName getperl_jab.stb and EventFlag 14624 = 0x3920 (also the decomp's note, d_save_event_flag.inc:435); DIRECTOR NEXT cut to sea 44 point 9 (mode 5, at the cave mouth, (-205651, -102, 324657))",
+    "Nayru's Pearl: getperl_jab.stb (res/Object/Demo18.arc) carries the demo item payload 5 (block 000c0081 00000004 00000005 31 05 at 0x1634; the same block holds 03 in getperl_komori.stb and 04 in getperl_deku.stb), and payload 5 is dItemNo_PEARL_NAYRU_e in d_a_demo00's l_itemNo table (d_a_demo00.cpp:715-735)",
+    "The developers' stage select lists this scene in its cutscene group: '(18) Get the sacred pearl from Jabun', Pjavdou point 200, layer 8",
+    "The Endless Night ends with the pearl, not a flag: dKy_checkEventNightStop is ENDLESS_NIGHT and not the Nayru symbol (d_kankyo.cpp:3162-3167). ENDLESS_NIGHT stays on (catalog 18-41). Other readers switch the same way: Windfall's people (d_a_npc_people.cpp:5014, 6980 and on), the bomb shop counter (d_a_obj_pbco.cpp:36-48)",
+    "The King of Red Lions then gives hint 0xD5A ('the curse is broken; morning will come', d_a_ship.cpp:359-360, 497-498); reading 0xD5B sets 0x2F20 (:656-657), the next arc's start",
+    "catalog: 0x3920 and Nayru's Pearl off in 17, on in 18 and later"
+   ],
+   "basis": "code+disc",
+   "seen": "The wall's last stage leads into Jabun's cave (the ajav_uzu cutscene moves the boat; what it shows wasn't read); Jabun gives Nayru's Pearl and Link is back outside the cave, and the night ends.",
+   "notes": "0x3920 is read later by the sea chart (d_menu_fmap.cpp:922), the Tingle Tuner (d_a_agb.cpp:1235), Lenzo (d_a_npc_photo.cpp:2202) and the music (JAIZelBasic.cpp:1771)."
+  }
+ ],
+ "unplaced": {
+  "flags": [],
+  "notes": "Nothing from this part is unplaced. Other changes between catalog 17 and 18, left to other parts or chains: 0x3F80 (the King's 'look for Jabun's cave' talk, message 0x1688, d_a_ship.cpp:665-666; also set on boarding after 0x3E10, d_a_player_main.cpp:12464-12467: part B, rung 9); 0x2A20 Grandma healed with the Elixir Soup; 0x3010 the wallet upgrade on Outset; 0x3008 the Bomb Bag upgrade at Eastern Fairy Island; the letters 0x7A03 and 0x9D03; 0x1410, 0x1440 and 0x2F20 (the next arc, placing the pearls)."
+ }
+}
