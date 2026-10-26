@@ -89,6 +89,23 @@ are untested.
 To undo a write, copy the `.before-craft` file back over the card. *Save a copy as .gci…* keeps an
 edited save without touching any card.
 
+## Importing a Dolphin save
+
+BlueWake's Windows and Linux builds have no import screen yet, but the editor can put a Dolphin
+save into a BlueWake card. Only USA (`GZLE01`) in-game saves work, not Dolphin save states. This
+has not yet been tested with a save made by Dolphin.
+
+1. In Dolphin, export the save as a `.gci` with **Tools › Memory Card Manager**. The editor opens
+   `.gci` files only, not whole `.raw` cards.
+2. **Open .gci…**, choose the Dolphin save and the quest log to take from it.
+3. Change anything you like, or nothing.
+4. Under *Write to card*, choose the card with *Browse…* and the quest log to put the save in, then
+   **Write to card**. If you made no changes, answer Yes when asked whether to save anyway.
+
+The card doesn't have to be on the PC that runs BlueWake: copy it to the PC with the editor, write
+to it there, and copy it back. Only *Open card…* needs `bluewake_checkouts` in `config.json`, so
+this works without one as long as the save injector is in this folder.
+
 ## Story presets
 
 The `presets` folder holds reference saves from my own playthrough, at points across the whole
