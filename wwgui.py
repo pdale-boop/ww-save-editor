@@ -566,14 +566,16 @@ class App(tk.Tk):
             ('3.  Make changes.', 'Use the tabs, or start from a story preset. Revert throws away all edits.'),
             ('4.  Review changes.', 'Lists everything that will be written.'),
             ('5.  Write to card.', 'Choose the card and quest log to write into. You are shown what is there first, '
-             'and a backup is kept next to the card as .before-craft.'),
+             'and a backup is kept next to the card as .before-craft (later ones are numbered: '
+             '.before-craft-2, -3, ...).'),
             ('6.  Start BlueWake', 'and load that quest log.'),
         ]
         for r, (head, text) in enumerate(steps):
             ttk.Label(box, text=head, font=('', 10, 'bold')).grid(row=r * 2, column=0, sticky='w', pady=(6 if r else 0, 0))
             ttk.Label(box, text=text, wraplength=330, justify='left').grid(row=r * 2 + 1, column=0, sticky='w')
         ttk.Label(box, foreground='gray', wraplength=330, justify='left', text=(
-            'Undo a write by copying the .before-craft file back over the card. Save a copy as .gci\u2026 '
+            'Undo writes by copying a .before-craft file back over the card; the unnumbered one is the '
+            'card before the first write. Save a copy as .gci\u2026 '
             'keeps an edited save without touching any card. Restart place sets where the save starts; '
             'Story flags controls events and cutscenes, so change those with care.')).grid(
             row=len(steps) * 2, column=0, sticky='w', pady=(12, 0))
@@ -1446,17 +1448,19 @@ class App(tk.Tk):
             shown = subprocess.run([INJECT, 'show', card], capture_output=True, text=True).stdout.strip()
             if not messagebox.askyesno('Write to card', f'Write this save into quest log {target} of\n{card}?\n\n'
                                        f'The card now holds:\n{shown or "(could not read it)"}\n\n'
-                                       'A backup is kept next to it as .before-craft.'):
+                                       'A backup is kept next to it as .before-craft (numbered if one '
+                                       'is already there).'):
                 return
             gci = os.path.join(tempfile.mkdtemp(prefix='wwgui-write-'), 'GZLE01-gczelda.gci')
             s.save(gci)
-            shutil.copy2(card, card + '.before-craft')
+            backup = wwedit.backup_card(card)
             result = subprocess.run([INJECT, 'inject', card, gci, self.slot_box.get(), target, card],
                                     capture_output=True, text=True)
             if result.returncode:
                 return messagebox.showerror('Card', f'Writing to the card failed:\n{result.stdout}{result.stderr}')
             self.remember(card=card)
-            msg = f'Written to quest log {target} of the card ({len(changes)} change(s)); backup kept as .before-craft.'
+            msg = (f'Written to quest log {target} of the card ({len(changes)} change(s)); '
+                   f'backup kept as {os.path.basename(backup)}.')
         else:
             path = filedialog.asksaveasfilename(title='Save a copy', defaultextension='.gci',
                                                 initialfile='GZLE01-gczelda.gci',

@@ -35,8 +35,9 @@ recompilation. Python 3.10+ with Tk; no other dependencies. Read `README.md` for
   (CC0) and should name its source function in a comment (for example `item_func_rope`,
   `dSv_player_get_item_c::onBottleItem`, `dStage_playerInit`). If the decomp doesn't settle
   something, say so in the code and in the UI rather than guessing silently.
-- Never write to a user's card without a backup next to it (`.before-craft`) and a confirmation
-  showing what's in the target quest log. Read cards through a temporary copy.
+- Never write to a user's card without a backup next to it (`.before-craft`, numbered so earlier
+  backups are kept; `wwedit.backup_card`) and a confirmation showing what's in the target quest
+  log. Read cards through a temporary copy.
 - Only offer values the game can produce or handle: health caps at 80 quarters (20 hearts,
   `dMeter_LifeMove`), bait stacks are 3 (`setBaitItem`), the Delivery Bag holds 8 of items
   0x8C–0x9E (0x9F is not a delivery item), restart spawn points must exist in the room's `PLYR`

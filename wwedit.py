@@ -936,6 +936,21 @@ def restart_check(save, place, places):
     return False, 'the game never writes this place when saving'
 
 
+# ---- card backups
+def backup_card(card):
+    """Copy the card next to itself before a write and return the backup's path. An existing
+    backup is never replaced, so the first one keeps the card as it was before any writes:
+    <card>.before-craft, then <card>.before-craft-2, -3 and so on."""
+    import os
+    import shutil
+    path, n = card + '.before-craft', 1
+    while os.path.exists(path):
+        n += 1
+        path = f'{card}.before-craft-{n}'
+    shutil.copy2(card, path)
+    return path
+
+
 # ---- story presets: quest logs from real saves at known points in the story
 NAME, OPTIONS = (0x157, 0x168), (0x19F, 0x1A4)     # player name; options (dSv_player_config_c)
 

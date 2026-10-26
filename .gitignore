@@ -11,7 +11,7 @@ bwinject.exe
 # Personal saves and research data
 catalog/
 *.card
-*.card.before-craft
+*.card.before-craft*
 *.bwstate
 # Machine-specific notes for Claude Code
 CLAUDE.local.md

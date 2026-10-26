@@ -9,7 +9,6 @@ _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)
 import config  # noqa: E402
 import glob
 import os
-import shutil
 import subprocess
 import sys
 
@@ -111,9 +110,9 @@ def main():
     cards = config.cards()
     if cards and os.path.isfile(INJECT) and input('Put it in a test build\'s card, slot 3? [y/N]: ').lower() == 'y':
         card = cards[pick('Card: ', cards)]
-        shutil.copy2(card, card + '.before-craft')
+        backup = wwedit.backup_card(card)
         subprocess.run([INJECT, 'inject', card, gci, '1', '3', card], check=True)
-        print(f'Done; the previous card is saved as {card}.before-craft. Load quest log 3.')
+        print(f'Done; the previous card is saved as {backup}. Load quest log 3.')
 
 
 if __name__ == '__main__':

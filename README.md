@@ -83,10 +83,13 @@ are untested.
    The warnings never block anything, since a save can be out of order on purpose; saving asks
    first if your edits are what put it out of order.
 5. **Write to card**, choosing the quest log to write into. You are shown what the card holds
-   first, and a backup is kept next to it as `.before-craft`.
+   first, and a backup is kept next to it as `.before-craft`. An existing backup is never
+   replaced: later writes are backed up as `.before-craft-2`, `-3` and so on.
 6. **Start BlueWake** and load that quest log.
 
-To undo a write, copy the `.before-craft` file back over the card. *Save a copy as .gci…* keeps an
+To undo writes, copy a backup back over the card: `.before-craft` is the card before the first
+write, and each numbered one is the card before that write. Delete old backups once you no longer
+need them. *Save a copy as .gci…* keeps an
 edited save without touching any card.
 
 ## Importing a Dolphin save
